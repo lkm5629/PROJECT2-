@@ -27,7 +27,7 @@
         </div>
 
         <div class="headerRight headerContent">
-            <button type="button" class="userBtn buttonDark">
+            <button type="button" class="userBtn buttonMain">
                 <svg width="18" height="29" viewBox="0 0 31 29" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
