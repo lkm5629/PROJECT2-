@@ -1,17 +1,18 @@
-window.addEventListener("load", () => {
-    setLayoutHeight();
-    window.addEventListener("resize", setLayoutHeight);
+window.addEventListener("DOMContentLoaded", () => {
+    setLayoutHeight_snb();
+    window.addEventListener("resize", setLayoutHeight_snb);
+    init_snb();
 });
 
-function init() {
-	bind();
+function init_snb() {
+	bind_snb();
 }
 
-function bind() {
-	moveMenu();
+function bind_snb() {
+	moveMenu_snb();
 }
 
-function setLayoutHeight() {
+function setLayoutHeight_snb() {
     const header = document.querySelector(".headerContainer");
     const layout = document.querySelector(".layout");
 
@@ -22,7 +23,7 @@ function setLayoutHeight() {
     layout.style.height = `calc(100vh - ${headerHeight}px)`;
 }
 
-function moveMenu() {
+function moveMenu_snb() {
     const menus = document.querySelectorAll(".menu-label");
 
     if (!menus.length) return;

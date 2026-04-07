@@ -1,26 +1,26 @@
-window.addEventListener("load", () => {
-    init();
+window.addEventListener("DOMContentLoaded", () => {
+    init_header();
 })
 
-function init() {
-    bind();
+function init_header() {
+    bind_header();
 }
 
-function bind() {
-    logoMainMove();
-    // controlUserBtn();
-    moveUserPage();
-    toggleAlarm();
-    closeAlarmBox();
-    deleteAlarm();
-    moveMyPage();
+function bind_header() {
+    logoMainMove_header();
+    // controlUserBtn_header();
+    moveUserPage_header();
+    toggleAlarm_header();
+    closeAlarmBox_header();
+    deleteAlarm_header();
+    moveMyPage_header();
 }
 
 
 /* =========================
    1. 로고 → 메인 이동
 ========================= */
-function logoMainMove() {
+function logoMainMove_header() {
     const logo = document.querySelector(".headerLeft");
 
     if (!logo) return;
@@ -34,7 +34,7 @@ function logoMainMove() {
 /* =========================
    2. 사용자 버튼 권한 처리
 ========================= */
-function controlUserBtn() {
+function controlUserBtn_header() {
     const userBtn = document.querySelector(".userBtn");
 
     if (!userBtn) return;
@@ -50,7 +50,7 @@ function controlUserBtn() {
 /* =========================
    2-1. 사용자관리 페이지 이동
 ========================= */
-function moveUserPage() {
+function moveUserPage_header() {
     const userBtn = document.querySelector(".userBtn");
 
     if (!userBtn) return;
@@ -64,7 +64,7 @@ function moveUserPage() {
 /* =========================
    3. 알림 토글
 ========================= */
-function toggleAlarm() {
+function toggleAlarm_header() {
     const alarmBtn = document.querySelector(".alarmBtn");
     const alarmBox = document.getElementById("alarmBox");
 
@@ -80,7 +80,7 @@ function toggleAlarm() {
 /* =========================
    4. 알림 닫기 버튼
 ========================= */
-function closeAlarmBox() {
+function closeAlarmBox_header() {
     const closeBtn = document.getElementById("closeAlarm");
     const alarmBox = document.getElementById("alarmBox");
 
@@ -95,7 +95,7 @@ function closeAlarmBox() {
 /* =========================
    5. 알림 삭제
 ========================= */
-function deleteAlarm() {
+function deleteAlarm_header() {
     const delBtns = document.querySelectorAll(".delAlarm");
 
     if (!delBtns.length) return;
@@ -112,7 +112,7 @@ function deleteAlarm() {
 /* =========================
    6. 마이페이지 이동
 ========================= */
-function moveMyPage() {
+function moveMyPage_header() {
     const profileBtn = document.querySelector(".profile");
 
     if (!profileBtn) return;

@@ -7,15 +7,6 @@
 
 <%@ page import="java.util.*" %>
 
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>SNB</title>
-</head>
-<body>
-
 <div class="snb">
 
     <ul class="snb-menu">
@@ -58,6 +49,3 @@
     </ul>
 
 </div>
-
-</body>
-</html>

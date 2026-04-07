@@ -34,7 +34,7 @@
 			<%@ include file="/WEB-INF/views/P00_layout/snb.jsp" %>
 		</div>
 		<div class="content">
-			
+			<!-- 작업공간 -->
 		</div>
 	</div>
 	
