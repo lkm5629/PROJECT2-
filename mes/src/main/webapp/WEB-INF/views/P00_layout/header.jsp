@@ -5,14 +5,22 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<%@ page import="java.util.*" %>
+
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="EUC-KR">
-<title>Insert title here</title>
+<title>Header</title>
 </head>
 <body>
+
+	<div class="flex">
+        <div class="logo">
+            <img>
+        </div>
+    </div>
 
 </body>
 </html>
