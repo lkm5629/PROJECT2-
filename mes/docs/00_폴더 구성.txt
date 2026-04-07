@@ -1,0 +1,195 @@
+
+
+layout : 헤더, 사이드바 등 공통요소
+
+mes-project/
+│
+├── src/
+│   └── main/
+│       ├── java/com/mes/
+│       │
+│       │   ├── common/
+│       │   │   ├── config/
+│       │   │   ├── util/
+│       │   │   └── interceptor/
+│       │   │
+│       │   ├── auth/
+│       │   │   ├── controller/AuthController.java
+│       │   │   ├── service/AuthService.java
+│       │   │   ├── dao/AuthDAO.java
+│       │   │   └── dto/UserDTO.java
+│       │   │
+│       │   ├── dashboard/
+│       │   │   ├── controller/DashboardController.java
+│       │   │   ├── service/DashboardService.java
+│       │   │   ├── dao/DashboardDAO.java
+│       │   │   └── dto/DashboardDTO.java
+│       │   │
+│       │   ├── notice/
+│       │   │   ├── controller/NoticeController.java
+│       │   │   ├── service/NoticeService.java
+│       │   │   ├── dao/NoticeDAO.java
+│       │   │   └── dto/NoticeDTO.java
+│       │   │
+│       │   ├── suggestion/
+│       │   │   ├── controller/SuggestionController.java
+│       │   │   ├── service/SuggestionService.java
+│       │   │   ├── dao/SuggestionDAO.java
+│       │   │   └── dto/SuggestionDTO.java
+│       │   │
+│       │   ├── inventory/
+│       │   │   ├── controller/InventoryController.java
+│       │   │   ├── service/InventoryService.java
+│       │   │   ├── dao/InventoryDAO.java
+│       │   │   └── dto/InventoryDTO.java
+│       │   │
+│       │   ├── production/
+│       │   │   ├── controller/ProductionController.java
+│       │   │   ├── service/ProductionService.java
+│       │   │   ├── dao/ProductionDAO.java
+│       │   │   └── dto/ProductionDTO.java
+│       │   │
+│       │   ├── workorder/
+│       │   │   ├── controller/WorkOrderController.java
+│       │   │   ├── service/WorkOrderService.java
+│       │   │   ├── dao/WorkOrderDAO.java
+│       │   │   └── dto/WorkOrderDTO.java
+│       │   │
+│       │   ├── quality/
+│       │   │   ├── controller/QualityController.java
+│       │   │   ├── service/QualityService.java
+│       │   │   ├── dao/QualityDAO.java
+│       │   │   ├── dto/InspectionDTO.java
+│       │   │   ├── dto/ResultDTO.java
+│       │   │   └── dto/DefectDTO.java
+│       │   │
+│       │   ├── equipment/
+│       │   │   ├── controller/EquipmentController.java
+│       │   │   ├── service/EquipmentService.java
+│       │   │   ├── dao/EquipmentDAO.java
+│       │   │   └── dto/EquipmentDTO.java
+│       │   │
+│       │   ├── reporting/
+│       │   │   ├── controller/ReportingController.java
+│       │   │   ├── service/ReportingService.java
+│       │   │   ├── dao/ReportingDAO.java
+│       │   │   └── dto/ReportDTO.java
+│       │   │
+│       │   └── masterdata/
+│       │       ├── controller/MasterDataController.java
+│       │       ├── service/MasterDataService.java
+│       │       ├── dao/MasterDataDAO.java
+│       │       └── dto/
+│       │           ├── BomDTO.java
+│       │           ├── ClientDTO.java
+│       │           ├── ItemDTO.java
+│       │           └── ProcessDTO.java
+│       │
+│       └── resources/
+│           ├── mapper/              # MyBatis SQL
+│           │   ├── notice.xml
+│           │   ├── inventory.xml
+│           │   ├── quality.xml
+│           │   └── ...
+│           │
+│           ├── application.properties
+│           └── logback.xml
+│
+├── src/main/webapp/
+│
+│   ├── WEB-INF/
+│   │   └── views/
+│   │
+│   │       ├── layout/
+│   │       │   ├── header.jsp
+│   │       │   ├── sidebar.jsp
+│   │       │   └── base.jsp
+│   │
+│   │       ├── auth/
+│   │       │   ├── login.jsp
+│   │       │   ├── signup.jsp
+│   │       │   └── mypage.jsp
+│   │
+│   │       ├── dashboard/
+│   │       │   └── dashboard.jsp
+│   │
+│   │       ├── notice/
+│   │       │   ├── list.jsp
+│   │       │   ├── detail.jsp
+│   │       │   ├── create.jsp
+│   │       │   └── update.jsp
+│   │
+│   │       ├── suggestion/
+│   │       │   ├── list.jsp
+│   │       │   ├── detail.jsp
+│   │       │   ├── create.jsp
+│   │       │   └── update.jsp
+│   │
+│   │       ├── inventory/
+│   │       │   ├── inbound.jsp
+│   │       │   └── outbound.jsp
+│   │
+│   │       ├── production/
+│   │       │   ├── plan_create.jsp
+│   │       │   ├── plan_update.jsp
+│   │       │   └── plan_detail.jsp
+│   │
+│   │       ├── workorder/
+│   │       │   ├── create.jsp
+│   │       │   ├── update.jsp
+│   │       │   └── detail.jsp
+│   │
+│   │       ├── quality/
+│   │       │   ├── inspection_detail.jsp
+│   │       │   ├── inspection_create.jsp
+│   │       │   ├── inspection_update.jsp
+│   │       │   ├── result_create.jsp
+│   │       │   └── result_update.jsp
+│   │
+│   │       ├── equipment/
+│   │       │   ├── maintenance_create.jsp
+│   │       │   └── maintenance_update.jsp
+│   │
+│   │       ├── reporting/
+│   │       │   ├── report_create.jsp
+│   │       │   └── report_update.jsp
+│   │
+│   │       └── masterdata/
+│   │           ├── bom_create.jsp
+│   │           ├── bom_update.jsp
+│   │           ├── client_create.jsp
+│   │           ├── client_update.jsp
+│   │           ├── item_create.jsp
+│   │           ├── item_update.jsp
+│   │           ├── process_create.jsp
+│   │           └── process_update.jsp
+│
+│   └── static/
+│       ├── css/
+│       │   ├── common.css
+│       │   ├── layout.css
+│       │   └── page/
+│       │       ├── dashboard.css
+│       │       ├── quality.css
+│       │       └── inventory.css
+│       │
+│       ├── js/
+│       │   ├── common.js
+│       │   ├── api.js
+│       │   └── page/
+│       │       ├── quality.js
+│       │       └── production.js
+│       │
+│       └── images/
+│
+├── database/
+│   ├── schema.sql
+│   └── data.sql
+│
+├── docs/
+│   ├── ERD.png
+│   ├── API.md
+│   └── storyboard/
+│
+├── pom.xml
+└── README.md
