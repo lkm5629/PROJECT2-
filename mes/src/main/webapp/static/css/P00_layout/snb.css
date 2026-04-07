@@ -1,121 +1,53 @@
-@charset "UTF-8";
 
-/* ========= Reset ========= */
-
-:root {
-  --color-bg-hover: #d1d1d1;
-
-  --color-border: #bdbdbd;
-
-  --color-text-sub: #6b7280;
-  --color-text-soft: #9ca3af;
-
-  --color-main-blue: #4774E9;
-  --color-main-hover: #1d4ed8;
-  --color-sub-blue: #AED1FF;
-  --color-sub-hover: #9cbfec;
-  
-  --color-main-red: #E94747;
-  --color-red-hover: #d43a3a;
-  
-  --color-white-hover: #eeeeee;
-
-  --color-success: #16a34a;
-  --color-warning: #f59e0b;
-  --color-danger: #dc2626;
+/* ============ SNB ============= */
+.layout {
+  display: flex;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-button {
-  all: unset;
-  cursor: pointer;
-  
-  border: none;
+.snbContent {
+  width: 220px;
+  background-color: var(--color-main-blue);
 }
 
 
-/* ========= button ========= */
+.snb {
+  	height: 100%;
 
-.buttonMain {
-	display: flex;
-	align-items : center;
-	gap: 10px;
-	padding: 5px 12px;
-	
-	border-radius: 5px;
-	background-color: var(--color-main-blue);
-	
-	color: white;
-	font-size: 14px;
-	font-weight: 700;
+    padding: 20px 20px;
 }
 
-.buttonMain:hover {
-    background-color: var(--color-main-hover);
+.snb-menu {
+    margin: 0;
+    padding: 0;
 }
 
-.buttonSub {
-	display: flex;
-	align-items : center;
-	gap: 10px;
-	padding: 5px 12px;
-	
-	border-radius: 5px;
-	background-color: var(--color-sub-blue);
-	
-	color: white;
-	font-size: 14px;
-	font-weight: 700;
+.snb-item {
+    font-size: 15px;
+    font-weight: 700;
+
+    padding: 10px 5px;
 }
 
-.buttonSub:hover {
-	background-color: var(--color-sub-hover);
+.snb-sub {
+    padding-left: 15px;
+    margin-top: 5px;
 }
 
-.buttonRed {
-	display: flex;
-	align-items : center;
-	gap: 10px;
-	padding: 5px 12px;
-	
-	border-radius: 5px;
-	background-color: var(--color-main-red);
-	
-	color: white;
-	font-size: 14px;
-	font-weight: 700;
+.snb-sub-item {
+    font-size: 14px;
+    font-weight: 500;
+
+    padding: 5px 0;
 }
 
-.buttonRed:hover {
-    background-color: var(--color-red-hover);
+.menu-label {
+    display: inline-block;
+    transition: 0.2s;
+    
+    color: white;
 }
 
-.buttonRed:hover {
-    background-color: var(--color-red-hover);
-}
-
-.buttonWhite {
-	display: flex;
-	align-items : center;
-	gap: 10px;
-	padding: 5px 12px;
-	
-	border: 1px solid var(--color-border);
-	border-radius: 5px;
-	background-color: white;
-	
-	color: var(--color-text-soft);
-	font-size: 14px;
-	font-weight: 700;
-}
-
-.buttonWhite:hover {
-	background-color: var(--color-white-hover);
+.menu-label:hover {
+    opacity: 0.7;
+    cursor: pointer;
 }

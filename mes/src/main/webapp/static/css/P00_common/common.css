@@ -1,0 +1,127 @@
+@charset "UTF-8";
+
+/* ========= Reset ========= */
+
+:root {
+  --color-bg-hover: #d1d1d1;
+
+  --color-border: #bdbdbd;
+
+  --color-text-sub: #6b7280;
+  --color-text-soft: #9ca3af;
+
+  --color-main-blue: #4774E9;
+  --color-main-hover: #1d4ed8;
+  --color-sub-blue: #AED1FF;
+  --color-sub-hover: #9cbfec;
+  
+  --color-main-red: #E94747;
+  --color-red-hover: #d43a3a;
+  
+  --color-white-hover: #eeeeee;
+
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100%
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+  
+  border: none;
+}
+
+li {
+	list-style : none;
+}
+
+
+/* ========= button ========= */
+
+.buttonMain {
+	display: flex;
+	align-items : center;
+	gap: 10px;
+	padding: 5px 12px;
+	
+	border-radius: 5px;
+	background-color: var(--color-main-blue);
+	
+	color: white;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.buttonMain:hover {
+    background-color: var(--color-main-hover);
+}
+
+.buttonSub {
+	display: flex;
+	align-items : center;
+	gap: 10px;
+	padding: 5px 12px;
+	
+	border-radius: 5px;
+	background-color: var(--color-sub-blue);
+	
+	color: white;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.buttonSub:hover {
+	background-color: var(--color-sub-hover);
+}
+
+.buttonRed {
+	display: flex;
+	align-items : center;
+	gap: 10px;
+	padding: 5px 12px;
+	
+	border-radius: 5px;
+	background-color: var(--color-main-red);
+	
+	color: white;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.buttonRed:hover {
+    background-color: var(--color-red-hover);
+}
+
+.buttonRed:hover {
+    background-color: var(--color-red-hover);
+}
+
+.buttonWhite {
+	display: flex;
+	align-items : center;
+	gap: 10px;
+	padding: 5px 12px;
+	
+	border: 1px solid var(--color-border);
+	border-radius: 5px;
+	background-color: white;
+	
+	color: var(--color-text-soft);
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.buttonWhite:hover {
+	background-color: var(--color-white-hover);
+}
+
