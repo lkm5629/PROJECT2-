@@ -3,20 +3,22 @@
 /* ========= Reset ========= */
 
 :root {
-  --font-family: "Pretendard", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --color-bg-hover: #d1d1d1;
 
-  --color-bg: #f5f7fb;
-  --color-surface: #ffffff;
-  --color-surface-muted: #f8fafc;
   --color-border: #bdbdbd;
 
-  --color-text: #111827;
   --color-text-sub: #6b7280;
   --color-text-soft: #9ca3af;
 
-  --color-primary: #338AFB;
-  --color-primary-hover: #1d4ed8;
-  --color-primary-soft: #dbeafe;
+  --color-main-blue: #4774E9;
+  --color-main-hover: #1d4ed8;
+  --color-sub-blue: #AED1FF;
+  --color-sub-hover: #9cbfec;
+  
+  --color-main-red: #E94747;
+  --color-red-hover: #d43a3a;
+  
+  --color-white-hover: #eeeeee;
 
   --color-success: #16a34a;
   --color-warning: #f59e0b;
@@ -38,22 +40,92 @@ button {
   border: none;
 }
 
-.buttonDark {
+
+/* ========= button ========= */
+
+.buttonMain {
 	display: flex;
 	align-items : center;
 	gap: 10px;
-	padding: 5px 10px;
+	padding: 5px 12px;
 	
 	border-radius: 5px;
-	
-	background-color: var(--color-primary);
+	background-color: var(--color-main-blue);
 	
 	color: white;
 	font-size: 14px;
 	font-weight: 700;
 }
 
-/* ============================= */
+.buttonMain:hover {
+    background-color: var(--color-main-hover);
+}
+
+.buttonSub {
+	display: flex;
+	align-items : center;
+	gap: 10px;
+	padding: 5px 12px;
+	
+	border-radius: 5px;
+	background-color: var(--color-sub-blue);
+	
+	color: white;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.buttonSub:hover {
+	background-color: var(--color-sub-hover);
+}
+
+.buttonRed {
+	display: flex;
+	align-items : center;
+	gap: 10px;
+	padding: 5px 12px;
+	
+	border-radius: 5px;
+	background-color: var(--color-main-red);
+	
+	color: white;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.buttonRed:hover {
+    background-color: var(--color-red-hover);
+}
+
+.buttonRed:hover {
+    background-color: var(--color-red-hover);
+}
+
+.buttonWhite {
+	display: flex;
+	align-items : center;
+	gap: 10px;
+	padding: 5px 12px;
+	
+	border: 1px solid var(--color-border);
+	border-radius: 5px;
+	background-color: white;
+	
+	color: var(--color-text-soft);
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.buttonWhite:hover {
+	background-color: var(--color-white-hover);
+}
+
+
+
+
+
+
+/* ========= header ========== */
 
 .headerContainer {
     display: flex;
@@ -78,6 +150,8 @@ button {
     position: relative;
 }
 
+
+
 #logo {
     width: 40px;
 }
@@ -92,13 +166,21 @@ button {
     align-items: center;
 }
 
+
+
 .alarmBtn svg {
 	margin-top: 3px;
 }
-
-.profile {
-	font-weight: 700;
+.alarmBtn {
+    border-radius: 7px;
+    
+    padding: 5px 10px;
 }
+.alarmBtn:hover {
+    box-shadow: 0 2px 4px var(--color-bg-hover);
+}
+
+
 
 .alarm-box {
   position: absolute;
@@ -145,4 +227,9 @@ button {
 
 .alarm-item:last-child {
   border-bottom: none;
+}
+
+
+.profile {
+	font-weight: 700;
 }
