@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+/* ========= Reset ========= */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.5;
+}
+
+/* ============================= */
+
+.test {
+	color: red;
+}

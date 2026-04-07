@@ -1,0 +1,86 @@
+@charset "UTF-8";
+
+/* ========= Reset ========= */
+
+:root {
+  --font-family: "Pretendard", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --color-bg: #f5f7fb;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-border: #e5e7eb;
+
+  --color-text: #111827;
+  --color-text-sub: #6b7280;
+  --color-text-soft: #9ca3af;
+
+  --color-primary: #338AFB;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-soft: #dbeafe;
+
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+  
+  border: none;
+}
+
+.buttonDark {
+	display: flex;
+	align-items : center;
+	gap: 10px;
+	padding: 5px 10px;
+	
+	border-radius: 5px;
+	
+	background-color: var(--color-primary);
+	
+	color: white;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+/* ============================= */
+
+.headerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+	
+    padding: 10px;
+
+    border-bottom: 1px solid gray;
+}
+
+.headerContent {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+}
+
+#logo {
+    width: 40px;
+}
+
+.pageName {
+	font-size: 20px;
+	font-weight: 700;
+	
+	margin: 0 10px;
+
+    display: flex;
+    align-items: center;
+}
