@@ -13,6 +13,10 @@
 <head>
 <meta charset="UTF-8">
 <title>작업지시</title>
+
+<link rel="stylesheet" href="/mes/static/css/P00_layout/header.css">
+<script src="/mes/static/js/00_layout/header.js"></script>
+    
 <link rel="stylesheet" href="/mes/static/css/P07_work/main.css">
 </head>
 <body>

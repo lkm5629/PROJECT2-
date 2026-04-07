@@ -8,7 +8,7 @@
   --color-bg: #f5f7fb;
   --color-surface: #ffffff;
   --color-surface-muted: #f8fafc;
-  --color-border: #e5e7eb;
+  --color-border: #bdbdbd;
 
   --color-text: #111827;
   --color-text-sub: #6b7280;
@@ -62,13 +62,20 @@ button {
 	
     padding: 10px;
 
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid var(--color-border);
 }
 
 .headerContent {
 	display: flex;
 	gap: 10px;
 	align-items: center;
+}
+
+.headerRight {
+	gap: 20px;
+	margin-right: 20px;
+
+    position: relative;
 }
 
 #logo {
@@ -83,4 +90,59 @@ button {
 
     display: flex;
     align-items: center;
+}
+
+.alarmBtn svg {
+	margin-top: 3px;
+}
+
+.profile {
+	font-weight: 700;
+}
+
+.alarm-box {
+  position: absolute;
+  top: 50px;   /* 버튼 아래 */
+  right: 100px;
+
+  width: 300px;
+  background-color: white;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  
+  padding: 20px;
+
+  display: none;
+}
+
+.alarm-header {
+	display: flex;
+	justify-content: space-between;
+	
+	font-weight: 700;
+	
+	margin-bottom: 10px;
+}
+
+.alarm-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.alarm-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  
+  font-size: 14px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  
+  gap: 10px;
+}
+
+.alarm-item:last-child {
+  border-bottom: none;
 }
