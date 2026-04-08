@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
     
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -13,36 +13,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="static/css/P00_common/common.css">
+    <link rel="stylesheet" href="static/css/common.css">
     <link rel="stylesheet" href="static/css/join.css">
 </head>
 
 <body>
-    <img class="logo" src="static/images/logo.png" alt="MES �ΰ�"> 
-    <h1>���ݽ��� MES</h1>
-    <h7>���� ���� �ý���</h7>
+    <img class="logo" src="static/images/logo.png" alt="MES 로고"> 
+    <h1>알콜스왑 MES</h1>
+    <h7>제조 실행 시스템</h7>
 	<div class="model-body">
 	<div class="model-high">
-        <h2>ȸ������</h2>
+        <h2>회원가입</h2>
 		<span class="close-btn" >&times;</span>
 	</div>
-		<form>
+		<form method="get" action="/">
 			<div class="center">
-				<input type="text" class="input-1 radius" name="join_name" placeholder="�̸�"><br>
-				<input type="text" class="input-1 radius" name="join_p_no" placeholder="�̸���"><br>
+				<input type="text" class="input-1 radius" name="join_name" placeholder="이름"><br>
+				<input type="text" class="input-1 radius" name="join_p_no" placeholder="이메일"><br>
 				<div class="chain">
-				<input type="text" class="input-2 radius" name="join_id" placeholder="�μ�"><br>
-				<input type="text" class="input-2 radius" name="join_id" placeholder="��å"><br>
-				<input type="text" class="input-2 radius" name="join_id" placeholder="�ڰ���"><br>
+				<input type="text" class="input-2 radius" name="join_id" placeholder="부서"><br>
+				<input type="text" class="input-2 radius" name="join_id" placeholder="직책"><br>
+				<input type="text" class="input-2 radius" name="join_id" placeholder="자격증"><br>
 				</div>
 				<br>
 				
-				<input type="text" class="input-1 radius" name="join_id" placeholder="����ó"><br>
-				<input type="password" class="input-1 radius" name="login_pw" placeholder="��й�ȣ�� �Է����ּ���."><br>
-				<input type="password" class="input-1 radius" name="login_pw" placeholder="��й�ȣ Ȯ��"><br>
-				<input type="submit" class="btn-1 radius" placeholder="�α���" name="login_btn"><br>
+				<input type="text" class="input-1 radius" name="join_id" placeholder="연락처"><br>
+				<input type="password" class="input-1 radius" name="login_pw" placeholder="비밀번호를 입력해주세요."><br>
+				<input type="password" class="input-1 radius" name="login_pw" placeholder="비밀번호 확인"><br>
+				<input type="submit" class="btn-1 radius" placeholder="로그인" name="login_btn"><br>
 			</div>
 		</form>
-		<a href="login.jsp">�̹� ȸ���̽Ű���? (�α���)</a>
+		<a href="login.jsp">이미 회원이신가요? (로그인)</a>
 	</div>
 
 
