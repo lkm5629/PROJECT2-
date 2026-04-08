@@ -1,0 +1,541 @@
+@charset "utf-8";
+
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Pretendard", "Malgun Gothic", sans-serif;
+    }
+
+    body {
+      background: #f6f7f9;
+      color: #222;
+      padding: 24px 18px 40px;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      font-size: 34px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #111;
+    }
+
+    .page-desc {
+      font-size: 15px;
+      color: #777;
+      margin-bottom: 28px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .summary-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 26px 24px;
+      min-height: 120px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .summary-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 22px;
+    }
+
+    .summary-card .count {
+      font-size: 42px;
+      font-weight: 800;
+      color: #111;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 22px 18px 18px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .panel-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #222;
+    }
+
+    .panel-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      width: 340px;
+      max-width: 100%;
+    }
+
+    .search-box input {
+      width: 100%;
+      height: 44px;
+      border: 1px solid #d9dde5;
+      border-radius: 10px;
+      padding: 0 14px 0 42px;
+      font-size: 14px;
+      color: #333;
+      outline: none;
+      background: #fff;
+    }
+
+    .search-box input::placeholder {
+      color: #9aa1ac;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      color: #98a0ab;
+    }
+
+    .add-btn {
+      height: 44px;
+      padding: 0 18px;
+      border: none;
+      border-radius: 10px;
+      background: #3b82f6;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .add-btn:hover {
+      background: #2563eb;
+    }
+
+    .table-wrap {
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      background: #fafafa;
+      font-size: 15px;
+      font-weight: 700;
+      color: #444;
+      text-align: left;
+      padding: 18px 22px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    tbody td {
+      padding: 18px 22px;
+      font-size: 14px;
+      color: #333;
+      border-bottom: 1px solid #eef1f4;
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 68px;
+      height: 28px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.supplier {
+      background: #3b82f6;
+      color: #fff;
+    }
+
+    .badge.customer {
+      background: #dbeafe;
+      color: #4f8ef7;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .icon-btn {
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .icon-btn.edit {
+      color: #444;
+    }
+
+    .icon-btn.delete {
+      color: #ef4444;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .pagination a {
+      text-decoration: none;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .pagination a.active {
+      color: #111;
+      font-weight: 800;
+    }
+
+    @media (max-width: 900px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-top {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .panel-actions {
+        justify-content: space-between;
+      }
+
+      .search-box {
+        width: 100%;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        min-width: 760px;
+      }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .modal_popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      min-width: 300px;
+    }
+
+    .close_btn {
+      margin-top: 20px;
+      padding: 10px 16px;
+      border: none;
+      background: #333;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .vendor_info {
+      border: 1px solid black;
+    }
+
+    .modal_popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      min-width: 700px;
+    }
+
+    .modal_form_row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .modal_form_group {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .modal_form_group label {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    /* 거래처 상세 */
+    .vendor_info {
+      width: 100%;
+      height: 40px;
+      border: 1px solid #d9dde5;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 14px;
+    }
+
+    .detail_btn_area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .close_btn,
+    .edit_btn {
+      min-width: 90px;
+      height: 40px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      margin: 0;
+    }
+
+    .close_btn {
+      background: #333;
+    }
+
+    .edit_btn {
+      background: #3b82f6;
+    }
+
+    /* 거래처 등록 모달 */
+    .add_vendor_modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+
+    .add_vendor_modal_popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      min-width: 700px;
+    }
+
+    .add_vendor_modal_title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #222;
+      margin-bottom: 20px;
+    }
+
+    .add_modal_form_row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .add_modal_form_group {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .add_modal_form_group label {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    .add_vendor_info {
+      width: 100%;
+      height: 40px;
+      border: 1px solid #d9dde5;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 14px;
+    }
+
+    .add_vendor_btn_area {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .add_vendor_close_btn,
+    .add_vendor_save_btn {
+      min-width: 90px;
+      height: 40px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .add_vendor_close_btn {
+      background: #333;
+      color: #fff;
+    }
+
+    .add_vendor_save_btn {
+      background: #3b82f6;
+      color: #fff;
+    }
+
+    /* 거래처 수정 모달 */
+    .edit_vendor_modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001;
+    }
+
+    .edit_vendor_modal_popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      min-width: 700px;
+    }
+
+    .edit_vendor_modal_title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #222;
+      margin-bottom: 20px;
+    }
+
+    .edit_modal_form_row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .edit_modal_form_group {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .edit_modal_form_group label {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    .edit_vendor_info {
+      width: 100%;
+      height: 40px;
+      border: 1px solid #d9dde5;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 14px;
+    }
+
+    .edit_vendor_btn_area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .edit_vendor_close_btn,
+    .edit_vendor_save_btn {
+      min-width: 90px;
+      height: 40px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .edit_vendor_close_btn {
+      background: #333;
+    }
+
+    .edit_vendor_save_btn {
+      background: #3b82f6;
+    }
