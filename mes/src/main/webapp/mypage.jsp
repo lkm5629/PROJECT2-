@@ -52,20 +52,24 @@
 							<input type="text" name="mp-name" class="input-3 radius"> 
 						</div>
 						<div class="mp-chain">
-							<span>이메일</span> 
-							<input type="text" name="mp-email" class="input-3 radius">
+							<span>연락처</span> 
+							<input type="text" name="mp-p_no" class="input-3 radius">
 						</div>
 						<div class="mp-chain">
 							 <span>부서</span>
 							<input type="text" name="mp-dept" class="input-3 radius">
 						</div>
 						<div class="mp-chain">
-							<span>연락처</span> 
-							<input type="text" name="mp-p_no" class="input-3 radius">
+							<span>비밀번호</span> 
+							<input type="text" name="mp-pw" class="input-3 radius">
 						</div>
 						<div class="mp-chain">
-							 <span>가입일</span> 
-							 <input type="text" name="mp-h_date" readonly="readonly" class="input-3 radius">
+							<span>비밀번호 확인</span> 
+							<input type="text" name="mp-pw2" class="input-3 radius">
+						</div>
+						<div class="mp-chain">
+							 <span>입사일</span> 
+							 <input type="date" name="mp-h_date" class="input-3 radius">
 						</div>
 						<div class="mp-chain">
 							 <span> </span>	
