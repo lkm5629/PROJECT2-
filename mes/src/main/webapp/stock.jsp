@@ -58,17 +58,17 @@
 
 				<!-- 필터 / 검색 -->
 				<div class="filter-bar">
+		
+					
 					<select>
-						<option>회사명</option>
-						<option name="company" value="1">A사</option>
-						<option name="company" value="2">B사</option>
+						<option>자재 대분류</option>
+						<option>완제품</option>
+						<option>반제품</option>
 					</select>
-					기간<input type="date">
-					<input type="date">
 					<select>
-						<option>자재분류</option>
-						<option name="stockCategory" value="1">원자재</option>
-						<option name="stockCategory" value="2">완제품</option>
+						<option>자재 소분류</option>
+						<option>알콜</option>
+						<option>알콜솜</option>
 					</select>
 					<div class="search-wrap">
 						<input type="text" placeholder="자재명 또는 자재코드로 검색하여 광색" />
@@ -160,6 +160,7 @@
 						</tbody>
 					</table>
 				</div>
+				
 
 
 				<!-- 작업공간 -->
