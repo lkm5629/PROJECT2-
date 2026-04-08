@@ -35,7 +35,7 @@
 	</div>
 		<form method="get" action="/">
 			<div class="center">
-				<input type="text" class="input-1 radius" name="login_id" placeholder="아이디를 입력해주세요."><br>
+				<input type="text" class="input-1 radius" name="login_id" placeholder="사원번호를 입력해주세요."><br>
 				<input type="password" class="input-1 radius" name="login_pw" placeholder="비밀번호를 입력해주세요."><br>
 				<button type="submit" class="buttonMain"  name="login_btn">로그인</button><br>
 			</div>
