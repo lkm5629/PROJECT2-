@@ -13,7 +13,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="static/css/P00_common/common.css">
+    <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
+
+	<link rel="stylesheet" href="/mes/static/css/P00_layout/header.css">
+	<script src="/mes/static/js/00_layout/header.js"></script>
+
+	<link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
+	<script src="/mes/static/js/00_layout/snb.js"></script>
     <link rel="stylesheet" href="static/css/join.css">
 </head>
 
