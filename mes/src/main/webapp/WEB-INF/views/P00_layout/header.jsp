@@ -9,16 +9,16 @@
 
 <div class="headerContainer">
     <div class="headerLeft headerContent">
-        <div class="logo">
-            <img id="logo" src="/mes/static/images/logo.png">
+        <div class="logo_header">
+            <img id="logo_header" src="/mes/static/images/logo.png">
         </div>
-        <div class="pageName">
+        <div class="pageName_header">
             MES
         </div>
     </div>
 
     <div class="headerRight headerContent">
-        <button type="button" class="userBtn buttonMain">
+        <button type="button" class="userBtn_header buttonMain">
             <svg width="18" height="29" viewBox="0 0 31 29" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -42,7 +42,7 @@
             사용자 관리
         </button>
 
-        <button type="button" class="alarmBtn">
+        <button type="button" class="alarmBtn_header">
             <svg width="20" height="20" viewBox="0 0 47 47" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -56,10 +56,10 @@
             </svg>
         </button>
 
-        <div id="alarmBox" class="alarm-box">
+        <div id="alarmBox_header" class="alarm-box_header">
             <div class="alarm-header">
                 <span>알림 내역</span>
-                <button id="closeAlarm">
+                <button id="closeAlarm_header">
                     <svg width="11" height="11" viewBox="0 0 11 11" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path d="M10.5 0.5L0.5 10.5" stroke="#000001" stroke-linecap="round"
@@ -70,12 +70,12 @@
                 </button>
             </div>
 
-            <ul class="alarm-list">
-                <li class="alarm-item">
+            <ul class="alarm-list_header">
+                <li class="alarm-item_header">
                     <div>
                         [작업지시] 새로운 작업 내역이 업로드되었습니다.
                     </div>
-                    <button class="delAlarm">
+                    <button class="delAlarm_header">
                         <svg width="9" height="9" viewBox="0 0 11 11" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M10.5 0.5L0.5 10.5" stroke="#000001" stroke-linecap="round"
@@ -85,11 +85,11 @@
                         </svg>
                     </button>
                 </li>
-                <li class="alarm-item">
+                <li class="alarm-item_header">
                     <div>
                         [재고] 부족한 재고가 발생하였습니다.
                     </div>
-                    <button class="delAlarm">
+                    <button class="delAlarm_header">
                         <svg width="9" height="9" viewBox="0 0 11 11" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M10.5 0.5L0.5 10.5" stroke="#000001" stroke-linecap="round"
@@ -99,11 +99,11 @@
                         </svg>
                     </button>
                 </li>
-                <li class="alarm-item">
+                <li class="alarm-item_header">
                     <div>
                         [출하] 오늘 출하 일정이 있습니다.
                     </div>
-                    <button class="delAlarm">
+                    <button class="delAlarm_header">
                         <svg width="9" height="9" viewBox="0 0 11 11" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M10.5 0.5L0.5 10.5" stroke="#000001" stroke-linecap="round"
@@ -116,7 +116,7 @@
             </ul>
         </div>
 
-        <button type="button" class="profile">
+        <button type="button" class="profile_header">
             이름 (사원번호)
         </button>
     </div>
