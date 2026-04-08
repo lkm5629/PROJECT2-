@@ -30,11 +30,6 @@
 	border-radius: 10px;
 }
 
-body {
-	display : flex;
-	justify-content : center;
-	align-items : center;
-}
 
 .mp-chain {
 	width: 400px;
@@ -78,4 +73,11 @@ form {
 	flex-direction: column;
 	justify-content: space-between;
 	
+}
+.snb-bro {
+	width: 1000px;
+	height: 900px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
 }
