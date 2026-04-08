@@ -8,7 +8,7 @@ body {
 }
 .input-1 {
     width : 350px;
-    height : 30px;
+    height : 50px;
     padding-left : 15px;
     box-sizing : border-box;
     
@@ -90,6 +90,13 @@ a {
 	color : black;
 	margin-right : 150px;
 	text-decoration : none;
+}
+button {
+	width : 320px;
+    height : 40px;
+    display : flex;
+    justify-content : center;
+    align-items : center;
 }
 
 
