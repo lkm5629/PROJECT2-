@@ -18,6 +18,10 @@
 	align-items: center;
 }
 
+.headerLeft {
+	cursor: pointer;
+}
+
 .headerRight {
 	gap: 20px;
 	margin-right: 20px;
@@ -27,11 +31,11 @@
 
 
 
-#logo {
+#logo_header {
     width: 40px;
 }
 
-.pageName {
+.pageName_header {
 	font-size: 20px;
 	font-weight: 700;
 	
@@ -43,21 +47,21 @@
 
 
 
-.alarmBtn svg {
+.alarmBtn_header svg {
 	margin-top: 3px;
 }
-.alarmBtn {
+.alarmBtn_header {
     border-radius: 7px;
     
     padding: 5px 10px;
 }
-.alarmBtn:hover {
+.alarmBtn_header:hover {
     box-shadow: 0 2px 4px var(--color-bg-hover);
 }
 
 
 
-.alarm-box {
+.alarm-box_header {
   position: absolute;
   top: 50px;   /* 버튼 아래 */
   right: 100px;
@@ -81,13 +85,13 @@
 	margin-bottom: 10px;
 }
 
-.alarm-list {
+.alarm-list_header {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.alarm-item {
+.alarm-item_header {
   padding: 10px;
   border-bottom: 1px solid #ccc;
   
@@ -100,11 +104,11 @@
   gap: 10px;
 }
 
-.alarm-item:last-child {
+.alarm-item_header:last-child {
   border-bottom: none;
 }
 
 
-.profile {
+.profile_header {
 	font-weight: 700;
 }
