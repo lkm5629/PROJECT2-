@@ -14,7 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="static/css/P00_common/common.css">
-    <link rel="stylesheet" href="static/css/common.css">
     <link rel="stylesheet" href="static/css/join.css">
 </head>
 
@@ -30,18 +29,18 @@
 		<form method="get" action="/">
 			<div class="center">
 				<input type="text" class="input-1 radius" name="join_name" placeholder="이름"><br>
-				<input type="text" class="input-1 radius" name="join_p_no" placeholder="이메일"><br>
+				<input type="text" class="input-1 radius" name="join_email" placeholder="이메일"><br>
 				<div class="chain">
-				<input type="text" class="input-2 radius" name="join_id" placeholder="부서"><br>
-				<input type="text" class="input-2 radius" name="join_id" placeholder="직책"><br>
-				<input type="text" class="input-2 radius" name="join_id" placeholder="자격증"><br>
+				<input type="text" class="input-2 radius" name="join_dept" placeholder="부서"><br>
+				<input type="text" class="input-2 radius" name="join_job" placeholder="직책"><br>
+				<input type="text" class="input-2 radius" name="join_license" placeholder="자격증"><br>
 				</div>
 				<br>
 				
-				<input type="text" class="input-1 radius" name="join_id" placeholder="연락처"><br>
-				<input type="password" class="input-1 radius" name="login_pw" placeholder="비밀번호를 입력해주세요."><br>
-				<input type="password" class="input-1 radius" name="login_pw" placeholder="비밀번호 확인"><br>
-				<input type="submit" class="btn-1 radius" placeholder="로그인" name="login_btn"><br>
+				<input type="text" class="input-1 radius" name="join_p_no" placeholder="연락처"><br>
+				<input type="password" class="input-1 radius" name="join_pw" placeholder="비밀번호를 입력해주세요."><br>
+				<input type="password" class="input-1 radius" name="join_pw2" placeholder="비밀번호 확인"><br>
+				<button type="submit" class="buttonMain"  name="login_btn">회원가입</button><br>
 			</div>
 		</form>
 		<a href="login.jsp">이미 회원이신가요? (로그인)</a>
