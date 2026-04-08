@@ -13,14 +13,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Document</title>
-<link rel="stylesheet" href="static/css/P00_common/common.css">
+<link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
+
+<link rel="stylesheet" href="/mes/static/css/P00_layout/header.css">
+<script src="/mes/static/js/00_layout/header.js"></script>
+
+<link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
+<script src="/mes/static/js/00_layout/snb.js"></script>
 <link rel="stylesheet" href="static/css/mypage.css">
 </head>
 
 <body>
-	<header class="radius"> 헤더 자리. </header>
-	<div class="dash-body">
-		<div class="snb radius">snb</div>
+
+
+<%@ include file="/WEB-INF/views/P00_layout/header.jsp" %>
+    
+    <div class="layout_snb">
+        <div class="snbContent">
+            <%@ include file="/WEB-INF/views/P00_layout/snb.jsp" %>
+        </div>
+        <div class="content">
+            
 		<div class="snb-bro">
 			<div class="title-box">
 				<h1>마이페이지</h1>
@@ -69,7 +82,13 @@
 				</div>
 			</div>
 		</div>
-	</div>
+            
+            
+        </div>
+    </div>
+    
+	
+		
 
 
 </body>
