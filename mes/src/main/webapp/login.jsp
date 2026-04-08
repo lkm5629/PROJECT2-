@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -13,26 +13,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="static/css/P00_common/common.css">
+    <link rel="stylesheet" href="static/css/common.css">
     <link rel="stylesheet" href="static/css/login.css">
 </head>
 
 <body>
-    <img class="logo" src="static/images/logo.png" alt="MES ·Î°í"> 
-    <h1>¾ËÄÝ½º¿Ò MES</h1>
-    <h7>Á¦Á¶ ½ÇÇà ½Ã½ºÅÛ</h7>
+    <img class="logo" src="static/images/logo.png" alt="MES ë¡œê³ "> 
+    <h1>ì•Œì½œìŠ¤ì™‘ MES</h1>
+    <h7>ì œì¡° ì‹¤í–‰ ì‹œìŠ¤í…œ</h7>
 	<div class="model-body">
 	<div class="model-high">
-        <h2>·Î±×ÀÎ</h2>
+        <h2>ë¡œê·¸ì¸</h2>
 		<span class="close-btn" >&times;</span>
 	</div>
-		<form>
+		<form method="get" action="/">
 			<div class="center">
-				<input type="text" class="input-1 radius" name="login_id" placeholder="¾ÆÀÌµð¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä."><br>
-				<input type="password" class="input-1 radius" name="login_pw" placeholder="ºñ¹Ð¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä."><br>
-				<input type="submit" class="btn-1 radius" placeholder="·Î±×ÀÎ" name="login_btn"><br>
+				<input type="text" class="input-1 radius" name="login_id" placeholder="ì•„ì´ë””ë¥¼ ìž…ë ¥í•´ì£¼ì„¸ìš”."><br>
+				<input type="password" class="input-1 radius" name="login_pw" placeholder="ë¹„ë°€ë²ˆí˜¸ë¥¼ ìž…ë ¥í•´ì£¼ì„¸ìš”."><br>
+				<button type="submit" class="buttonMain"  name="login_btn">ë¡œê·¸ì¸</button><br>
 			</div>
 		</form>
-		<a href="join.jsp">¾ÆÁ÷ È¸¿øÀÌ ¾Æ´Ï½Å°¡¿ä? (È¸¿ø°¡ÀÔ)</a>
+		<a href="join.jsp">ì•„ì§ íšŒì›ì´ ì•„ë‹ˆì‹ ê°€ìš”? (íšŒì›ê°€ìž…)</a>
 	</div>
 
 
