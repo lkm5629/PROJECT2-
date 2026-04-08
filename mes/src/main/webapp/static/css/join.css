@@ -10,17 +10,13 @@ body {
     width : 350px;
     height : 50px;
     padding-left : 15px;
-    box-sizing : border-box;
-    
-    
+    box-sizing : border-box;    
 }
 .input-2 {
     width : 100px;
     height : 30px;
-    padding-left : 15px;
-    box-sizing : border-box;
-    
-    
+    padding-left : 10px;
+    box-sizing : border-box;    
 }
 .btn-1 {
     width : 350px;
