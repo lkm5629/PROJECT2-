@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="EUC-KR"%>
     
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -13,16 +13,27 @@
     <meta charset="EUC-KR">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="static/css/P00_common/common.css">
+    <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
+
+    <link rel="stylesheet" href="/mes/static/css/P00_layout/header.css">
+    <script src="/mes/static/js/00_layout/header.js"></script>
+
+	<link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
+	<script src="/mes/static/js/00_layout/snb.js"></script>
     <link rel="stylesheet" href="static/css/dashboard.css">
 </head>
 
 <body>
-    <header class="radius">
-    헤더 자리.
-    </header>
-    <div class="dash-body">
-    <div class="snb radius">snb</div>
+
+ <%@ include file="/WEB-INF/views/P00_layout/header.jsp" %>
+    
+    <div class="layout_snb">
+        <div class="snbContent">
+            <%@ include file="/WEB-INF/views/P00_layout/snb.jsp" %>
+        </div>
+        <div class="content">
+           
+
     <div class="snb-bro">
     <div class="title-box">
     <h1>알콜스왑 MES</h1>
@@ -51,8 +62,15 @@
 	  <h3>건의사항</h3>
 	  </div>
 	</div>
+	</div>
+			
+
+        </div>
     </div>
-    </div>
+
+
+    
+    
 
 
 </body>
