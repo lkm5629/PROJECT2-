@@ -35,7 +35,7 @@ function logoMainMove_header() {
    2. 사용자 버튼 권한 처리
 ========================= */
 function controlUserBtn_header() {
-    const userBtn = document.querySelector(".userBtn");
+    const userBtn = document.querySelector(".userBtn_header");
 
     if (!userBtn) return;
 
@@ -51,7 +51,7 @@ function controlUserBtn_header() {
    2-1. 사용자관리 페이지 이동
 ========================= */
 function moveUserPage_header() {
-    const userBtn = document.querySelector(".userBtn");
+    const userBtn = document.querySelector(".userBtn_header");
 
     if (!userBtn) return;
 
@@ -65,8 +65,8 @@ function moveUserPage_header() {
    3. 알림 토글
 ========================= */
 function toggleAlarm_header() {
-    const alarmBtn = document.querySelector(".alarmBtn");
-    const alarmBox = document.getElementById("alarmBox");
+    const alarmBtn = document.querySelector(".alarmBtn_header");
+    const alarmBox = document.getElementById("alarmBox_header");
 
     if (!alarmBtn || !alarmBox) return;
 
@@ -81,8 +81,8 @@ function toggleAlarm_header() {
    4. 알림 닫기 버튼
 ========================= */
 function closeAlarmBox_header() {
-    const closeBtn = document.getElementById("closeAlarm");
-    const alarmBox = document.getElementById("alarmBox");
+    const closeBtn = document.getElementById("closeAlarm_header");
+    const alarmBox = document.getElementById("alarmBox_header");
 
     if (!closeBtn || !alarmBox) return;
 
@@ -96,13 +96,13 @@ function closeAlarmBox_header() {
    5. 알림 삭제
 ========================= */
 function deleteAlarm_header() {
-    const delBtns = document.querySelectorAll(".delAlarm");
+    const delBtns = document.querySelectorAll(".delAlarm_header");
 
     if (!delBtns.length) return;
 
     delBtns.forEach(btn => {
         btn.addEventListener("click", (e) => {
-            const item = e.target.closest(".alarm-item");
+            const item = e.target.closest(".alarm-item_header");
             if (item) item.remove();
         });
     });
@@ -113,7 +113,7 @@ function deleteAlarm_header() {
    6. 마이페이지 이동
 ========================= */
 function moveMyPage_header() {
-    const profileBtn = document.querySelector(".profile");
+    const profileBtn = document.querySelector(".profile_header");
 
     if (!profileBtn) return;
 
