@@ -1,0 +1,60 @@
+@charset "EUC-KR";
+
+
+
+header {
+	width : 1440px;
+	height : 100px;
+}
+.snb {
+	width : 280px;
+	height : 1500px;
+}
+.snb-bro {
+	width : 1160px;
+	height : 1500px;
+	
+}
+.title-box {
+	width : 1160px;
+	height : 120px;
+	padding-left : 25px; 
+}
+.board-box {
+	width : 1160px;
+	height : 1380px;
+	display : flex;
+	flex-wrap : wrap;
+	justify-content : space-between;
+}
+.dash-body{
+	width : 1440px;
+	height : 1500px;
+	display : flex;
+	justify-content : space-between;
+}
+.box-type1 {
+	width : 540px;
+	height : 400px;
+	padding : 0px 10px;
+	margin : 0px 15px; 
+	flex-shirink : 0;
+} 
+.box-type2 {
+	width : 540px;
+	height : 450px;
+	padding : 0px 10px;
+	margin : 0px 15px; 
+	flex-shirink : 0;
+} 
+.box-type3 {
+	width : 360px;
+	height : 380px;
+	padding : 0px 10px;
+	margin : 0px 12px; 
+	flex-shirink : 0;
+} 
+.radius {
+	border : 1px solid black;
+	border-radius : 10px;
+}
