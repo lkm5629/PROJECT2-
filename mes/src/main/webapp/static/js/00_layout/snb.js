@@ -14,17 +14,22 @@ function bind_snb() {
 
 function setLayoutHeight_snb() {
     const header = document.querySelector(".headerContainer");
-    const layout = document.querySelector(".layout");
+    const layout = document.querySelector(".layout_snb");
 
     if (!header || !layout) return;
 
     const headerHeight = header.offsetHeight;
 
     layout.style.height = `calc(100vh - ${headerHeight}px)`;
+    
+    console.log(header)
+    console.log(layout)
+    console.log(headerHeight)
+    console.log(layout.style.height)
 }
 
 function moveMenu_snb() {
-    const menus = document.querySelectorAll(".menu-label");
+    const menus = document.querySelectorAll(".menu-label_snb");
 
     if (!menus.length) return;
 
@@ -33,63 +38,63 @@ function moveMenu_snb() {
             const id = menu.id;
 
             switch (id) {
-                case "dashboard":
+                case "dashboard_snb":
                     location.href = "/mes/dashboard";
                     break;
 
-                case "plan":
+                case "plan_snb":
                     location.href = "/mes/plan";
                     break;
 
-                case "wo":
+                case "wo_snb":
                     location.href = "/mes/workorder";
                     break;
 
-                case "qc":
+                case "qc_snb":
                     location.href = "/mes/qc";
                     break;
 
-                case "stock":
+                case "stock_snb":
                     location.href = "/mes/stock";
                     break;
 
-                case "ioIn":
+                case "ioIn_snb":
                     location.href = "/mes/stock/in";
                     break;
 
-                case "ioOut":
+                case "ioOut_snb":
                     location.href = "/mes/stock/out";
                     break;
 
-                case "eq":
+                case "eq_snb":
                     location.href = "/mes/equipment";
                     break;
 
-                case "report":
+                case "report_snb":
                     location.href = "/mes/report";
                     break;
 
-                case "defReport":
+                case "defReport_snb":
                     location.href = "/mes/report/defect";
                     break;
 
-                case "masterData":
+                case "masterData_snb":
                     location.href = "/mes/master";
                     break;
 
-                case "notice":
+                case "notice_snb":
                     location.href = "/mes/notice";
                     break;
 
-                case "suggestion":
+                case "suggestion_snb":
                     location.href = "/mes/suggestion";
                     break;
 
-                case "mypage":
+                case "mypage_snb":
                     location.href = "/mes/user/mypage";
                     break;
                     
-                case "userManage":
+                case "userManage_snb":
                 	location.href = "/mes/user/userManage";
                 	break;
             }
