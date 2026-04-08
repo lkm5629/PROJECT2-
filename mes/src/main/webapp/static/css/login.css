@@ -14,11 +14,7 @@ body {
     
     
 }
-.btn-1 {
-    width : 350px;
-    height : 50px;
-    
-}
+
 h2 {
     width : 370px;
     height : 50px;
@@ -73,4 +69,10 @@ a {
 	margin-right : 100px;
 	text-decoration : none;
 }
-
+button {
+	width : 320px;
+    height : 40px;
+    display : flex;
+    justify-content : center;
+    align-items : center;
+}
