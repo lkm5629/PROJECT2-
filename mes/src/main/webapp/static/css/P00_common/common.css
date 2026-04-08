@@ -125,3 +125,6 @@ li {
 	background-color: var(--color-white-hover);
 }
 
+.content {
+	padding: 15px 30px;
+}
