@@ -18,17 +18,17 @@
 </head>
 
 <body>
-    <header>
+    <header class="radius">
     헤더 자리.
     </header>
     <div class="dash-body">
-    <div class="snb">snb</div>
+    <div class="snb radius">snb</div>
     <div class="snb-bro">
-    <div class="title-header">
+    <div class="title-box">
     <h1>알콜스왑 MES</h1>
     <h7>제조 실행 시스템</h7>    
     </div>
-	<div class="board-body">
+	<div class="board-box">
 	  <div class="box-type1 radius">
 	  <h3>공정 진행률</h3>
 	  </div>
