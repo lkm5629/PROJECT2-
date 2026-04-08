@@ -1,5 +1,3 @@
-@charset "UTF-8";
-
 * {
 	box-sizing: border-box;
 	
@@ -91,6 +89,7 @@
 .filter-bar {
 	display: flex;
 	align-items: center;
+	flex-wrap: wrap;          /* ★ 넘치면 줄바꿈 */
 	gap: 10px;
 	margin-top: 24px;
 }
@@ -104,17 +103,46 @@
 	color: #333;
 	cursor: pointer;
 	outline: none;
+	min-width: 0;
+	max-width: 140px;
+	flex-shrink: 1;
+}
+
+.filter-bar > input[type="text"] {
+	padding: 7px 12px;
+	border: 1px solid #d0d5dd;
+	border-radius: 6px;
+	font-size: 13px;
+	outline: none;
+	color: #333;
+	min-width: 0;
+	max-width: 120px;
+	flex-shrink: 1;
+}
+
+.filter-bar input[type="date"] {
+	padding: 7px 8px;
+	border: 1px solid #d0d5dd;
+	border-radius: 6px;
+	font-size: 13px;
+	outline: none;
+	color: #333;
+	min-width: 0;
+	max-width: 140px;
+	flex-shrink: 1;
 }
 
 .search-wrap {
 	display: flex;
 	align-items: center;
 	flex: 1;
+	min-width: 200px;         /* ★ 이 이하로 좁아지면 다음 줄로 */
 	gap: 8px;
 }
 
 .search-wrap input {
 	flex: 1;
+	min-width: 0;
 	padding: 7px 12px;
 	border: 1px solid #d0d5dd;
 	border-radius: 6px;
@@ -136,6 +164,7 @@
 	font-size: 13px;
 	cursor: pointer;
 	white-space: nowrap;
+	flex-shrink: 0;
 }
 
 .btn-search:hover {
@@ -166,19 +195,17 @@ th {
 	font-size: 10px;
 	font-weight: 600;
 	color: #555;
-	border-bottom: 1px solid #e4e7ef;
+	border: 1px solid #e4e7ef;
 }
 
 td {
 	padding: 11px 14px;
 	font-size: 10px;
 	color: #444;
-	border-bottom: 1px solid #f0f2f5;
+	border: 1px solid #e4e7ef;
 }
 
-tbody tr:last-child td {
-	border-bottom: none;
-}
+
 
 tbody tr:hover {
 	background: #f8f9fc;
@@ -256,24 +283,46 @@ html, body {
 
 .layout {
     display: flex;
-    min-height: 100vh;   전체 뷰포트 높이
+    min-height: 100vh;   
     padding-top: 0px;
 }
 
 .snbContent {
     flex-shrink: 0; 
     z-index: 10;
-         snb 너비 고정
 }
 
 /* content가 남은 공간 전체를 차지해야 함 */
 .content {
 	 z-index: 1;
-    flex: 1;             layout 안에서 나머지 공간 차지
+    flex: 1;             
     display: flex;
     justify-content: center;
     align-items: cneter;
-    min-width: 0;        flex 자식 overflow 방지
+    min-width: 0;       
 }
 
+/* ── 페이지 헤더 ── */
+.page-header {
+    position: relative;
+    padding-right: 10px;
+}
 
+.btn-register {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    padding: 8px 18px;
+    background: #4a4a6a;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-register:hover {
+    background: #363659;
+}

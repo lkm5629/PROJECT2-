@@ -1,0 +1,86 @@
+@charset "EUC-KR";
+
+header {
+	width: 1440px;
+	height: 100px;
+}
+
+.snb {
+	width: 280px;
+	height: 1000px;
+}
+
+.snb-bro {
+	width: 1160px;
+	height: 1000px;
+}
+
+.title-box {
+	width: 1160px;
+	height: 120px;
+	padding-left: 25px;
+}
+
+.board-box {
+	width: 1160px;
+	height: 880px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.dash-body {
+	width: 1440px;
+	height: 1100px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.box-type4 {
+	width: 540px;
+	height: 800px;
+	padding: 0px 10px;
+	margin: 0px 15px;
+	flex-shirink: 0;
+	padding: 0px 60px;
+}
+
+.radius {
+	border: 1px solid black;
+	border-radius: 10px;
+}
+
+.input-3 {
+	height: 40px;
+}
+
+.mp-tool {
+	width: 440px;
+	height: 600px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.mp-chain {
+	width: 400px;
+	height: 70px;
+	display: flex;
+	flex-direction: column;
+}
+
+.mp-title {
+	width: 400px;
+	height: 100px;
+	display: flex;
+	flex-direction: column;
+	margin-top: 10px;
+	margin-bottom: 40px;
+}
+
+button {
+	height: 40px;
+	display: flex;
+	justify-content: center; /* 가로 가운데 */
+	align-items: center;
+}
