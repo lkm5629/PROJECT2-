@@ -3,18 +3,18 @@
 	
 }
 
-/* ── 페이지 래퍼 ── */
+ /* ── 페이지 래퍼 ── */
 .page-wrapper {
 	font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 	background: #f4f6f9;
 	color: #333;
 	font-size: 14px;
-	padding: 32px 36px;
+	
 	max-width: 1100px;
 	margin: 0 auto;
 }
 
-/* ── 페이지 헤더 ── */
+ /* ── 페이지 헤더 ── */
 .page-header h1 {
 	font-size: 20px;
 	font-weight: 700;
@@ -27,7 +27,7 @@
 	margin-top: 4px;
 }
 
-/* ── 요약 카드 3개 ── */
+ /* ── 요약 카드 3개 ── */
 .summary-cards {
 	display: flex;
 	gap: 16px;
@@ -73,7 +73,7 @@
 	background: #e04444;
 }
 
-/* 부족재고 카드에 강아지 아이콘 */
+ /* 부족재고 카드에 강아지 아이콘 */
 .summary-card.shortage {
 	position: relative;
 }
@@ -85,7 +85,7 @@
 	font-size: 22px;
 }
 
-/* ── 필터 / 검색 바 ── */
+ /* ── 필터 / 검색 바 ── */
 .filter-bar {
 	display: flex;
 	align-items: center;
@@ -140,7 +140,7 @@
 	background: #363659;
 }
 
-/* ── 테이블 ── */
+ /* ── 테이블 ── */
 .table-wrap {
 	margin-top: 16px;
 	background: #fff;
@@ -161,7 +161,7 @@ thead tr {
 th {
 	padding: 11px 14px;
 	text-align: left;
-	font-size: 13px;
+	font-size: 10px;
 	font-weight: 600;
 	color: #555;
 	border-bottom: 1px solid #e4e7ef;
@@ -169,7 +169,7 @@ th {
 
 td {
 	padding: 11px 14px;
-	font-size: 13px;
+	font-size: 10px;
 	color: #444;
 	border-bottom: 1px solid #f0f2f5;
 }
@@ -182,7 +182,7 @@ tbody tr:hover {
 	background: #f8f9fc;
 }
 
-/* 관리 버튼 */
+ /* 관리 버튼 */
 .action-btns {
 	display: flex;
 	gap: 10px;
@@ -254,24 +254,24 @@ html, body {
 
 .layout {
     display: flex;
-    min-height: 100vh;   /* 전체 뷰포트 높이 */
+    min-height: 100vh;   전체 뷰포트 높이
     padding-top: 0px;
 }
 
 .snbContent {
     flex-shrink: 0; 
     z-index: 10;
-         /* snb 너비 고정 */
+         snb 너비 고정
 }
 
 /* content가 남은 공간 전체를 차지해야 함 */
 .content {
 	 z-index: 1;
-    flex: 1;             /* layout 안에서 나머지 공간 차지 */
+    flex: 1;             layout 안에서 나머지 공간 차지
     display: flex;
     justify-content: center;
     align-items: cneter;
-    min-width: 0;        /* flex 자식 overflow 방지 */
+    min-width: 0;        flex 자식 overflow 방지
 }
 
 
