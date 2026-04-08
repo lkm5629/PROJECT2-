@@ -1,21 +1,167 @@
 @charset "UTF-8";
 
-/* ========= Reset ========= */
-* {
-  box-sizing: border-box;
+.content {
+	width: 100%;
 }
 
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
+/* 페이지 상단 */
+.pageName {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-body {
-  margin: 0;
+.pageName h2 {
+    font-size: 22px;
+    margin-bottom: 4px;
 }
 
-/* ============================= */
+.pageName p {
+    font-size: 13px;
+    color: #888;
+}
 
-.test {
-	color: red;
+/* 버튼 */
+.addBtn {
+	padding: 7px 12px;
+}
+
+/* 목록 */
+.list {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 30px;
+    border: 1px solid #eee;
+}
+
+.listTop {
+    margin-bottom: 15px;
+}
+
+.listTop h3 {
+    font-size: 20px;
+}
+
+/* 검색 */
+.search-tools {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.search-tools select {
+    padding: 5px;
+    
+    color: var(--color-text-soft);
+
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.search-tools .date {
+    color: var(--color-text-soft);
+    
+    padding : 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.search-tools .category {
+	display: flex;
+	gap: 10px;
+}
+
+.search-area {
+    display: flex;
+    gap: 8px;
+}
+
+.search-area input {
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 220px;
+}
+
+
+/* 테이블 */
+.work-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.work-table th,
+.work-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+}
+.work-table th {
+	font-size: 15px;
+	color: white;
+}
+
+.work-table thead {
+    background-color: var(--color-main-blue);
+}
+
+.work-table tbody tr {
+	cursor: pointer;
+}
+
+/* 상태 뱃지 */
+.status {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: white;
+}
+
+.before {
+	background-color : var(--color-sub-hover);
+}
+
+.ongoing {
+	background-color : var(--color-main-blue);
+}
+
+.finish {
+	background-color : var(--color-success);
+}
+
+.qcFin {
+	background-color : white;
+	color : var(--color-text-sub);
+	border : 1px solid var(--color-text-sub);
+}
+
+.hold {
+	background-color : gray;
+}
+
+.status.waiting {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.status.progress {
+    background-color: #ffeaa7;
+    color: #d35400;
+}
+
+.status.done {
+    background-color: #d4f5d4;
+    color: #27ae60;
+}
+
+
+/* 페이징 */
+.page {
+	text-align : center;
+	
+	margin : 15px 0;
+	
+	font-size : 14px
 }

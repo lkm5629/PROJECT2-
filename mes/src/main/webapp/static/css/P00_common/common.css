@@ -45,6 +45,16 @@ li {
 	list-style : none;
 }
 
+a {
+  text-decoration: none; /* 밑줄 제거 */
+  color: inherit;        /* 부모 요소의 글자 색상 상속 */
+  cursor: pointer;       /* 마우스 포인터 유지 (필요시 default로 변경) */
+}
+
+a:hover {
+  text-decoration: none; /* 호버 시에도 밑줄 없음 */
+}
+
 
 /* ========= button ========= */
 
