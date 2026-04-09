@@ -33,7 +33,7 @@
         <h2>로그인</h2>
 		<span class="close-btn" >&times;</span>
 	</div>
-		<form method="get" action="/">
+		<form method="get" action="login">
 			<div class="center">
 				<input type="text" class="input-1 radius" name="login_id" placeholder="사원번호를 입력해주세요."><br>
 				<input type="password" class="input-1 radius" name="login_pw" placeholder="비밀번호를 입력해주세요."><br>
@@ -41,6 +41,7 @@
 			</div>
 		</form>
 		<a href="join.jsp">아직 회원이 아니신가요? (회원가입)</a>
+		<div>http://localhost:8080/mes/login.jsp</div>
 	</div>
 
 
