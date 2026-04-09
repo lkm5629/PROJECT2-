@@ -13,6 +13,8 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import P00_layout.LoggableStatement;
+import P01_auth.DTO.UserWoDTO;
+import P06_prod.DTO.PlanWoDTO;
 
 public class WoDAO {
 	
@@ -25,16 +27,11 @@ public class WoDAO {
 
 		try {
 
-			// JNDI πÊΩƒ
-			// context.xmlø° ¿÷¥¬ DB ¡§∫∏∑Œ ƒø≥ÿº« «Æ¿ª ∞°¡Æø¬¥Ÿ
 			Context ctx = new InitialContext();
-			// DataSource : ƒø≥ÿº« «Æ ∞¸∏Æ¿⁄
 			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
 
-			// DB ¡¢º”(±◊∑±µ• ¿Ã¡¶ ƒø≥ÿº« «Æ∑Œ)
 			conn = dataFactory.getConnection();
 
-			// SQL ¡ÿ∫Ò
 			String query = "SELECT "
 					+ "    wo.*, "
 					+ "	   worker.ename workerName, "
@@ -60,10 +57,8 @@ public class WoDAO {
 					+ "where wo.deleted is null";
 			ps = conn.prepareStatement(query);
 
-			// SQL Ω««‡ π◊ ∞·∞˙ »Æ∫∏
 			rs = ps.executeQuery();
 
-			// ∞·∞˙ »∞øÎ
 			while (rs.next()) {
 				
 				String woId = rs.getString("wo_id");
@@ -86,7 +81,6 @@ public class WoDAO {
 				String group = rs.getString("g_id");
 				
 
-				// DTO ø° ≥÷±‚
 				WoDTO dto = new WoDTO();
 				
 				dto.setWoId(woId);
@@ -153,16 +147,11 @@ public class WoDAO {
 
 		try {
 
-			// JNDI πÊΩƒ
-			// context.xmlø° ¿÷¥¬ DB ¡§∫∏∑Œ ƒø≥ÿº« «Æ¿ª ∞°¡Æø¬¥Ÿ
 			Context ctx = new InitialContext();
-			// DataSource : ƒø≥ÿº« «Æ ∞¸∏Æ¿⁄
 			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
 
-			// DB ¡¢º”(±◊∑±µ• ¿Ã¡¶ ƒø≥ÿº« «Æ∑Œ)
 			conn = dataFactory.getConnection();
 
-			// SQL ¡ÿ∫Ò
 			String query = "SELECT "
 					+ "    wo.*, "
 					+ "    worker.ename workerName, "
@@ -222,10 +211,8 @@ public class WoDAO {
 			    ps.setString(idx++, keyword);
 			}
 
-			// SQL Ω««‡ π◊ ∞·∞˙ »Æ∫∏
 			rs = ps.executeQuery();
 
-			// ∞·∞˙ »∞øÎ
 			while (rs.next()) {
 
 				String woId = rs.getString("wo_id");
@@ -248,7 +235,6 @@ public class WoDAO {
 				String group = rs.getString("g_id");
 				
 
-				// DTO ø° ≥÷±‚
 				WoDTO dto = new WoDTO();
 				
 				dto.setWoId(woId);
@@ -313,16 +299,11 @@ public class WoDAO {
 
 		try {
 
-			// JNDI πÊΩƒ
-			// context.xmlø° ¿÷¥¬ DB ¡§∫∏∑Œ ƒø≥ÿº« «Æ¿ª ∞°¡Æø¬¥Ÿ
 			Context ctx = new InitialContext();
-			// DataSource : ƒø≥ÿº« «Æ ∞¸∏Æ¿⁄
 			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
 
-			// DB ¡¢º”(±◊∑±µ• ¿Ã¡¶ ƒø≥ÿº« «Æ∑Œ)
 			conn = dataFactory.getConnection();
 
-			// SQL ¡ÿ∫Ò
 			String query = "SELECT "
 					+ "    wo.*, "
 					+ "	   worker.ename workerName, "
@@ -351,10 +332,8 @@ public class WoDAO {
 			ps = conn.prepareStatement(query);
 			ps.setString(1, dto.getWoId());
 
-			// SQL Ω««‡ π◊ ∞·∞˙ »Æ∫∏
 			rs = ps.executeQuery();
 
-			// ∞·∞˙ »∞øÎ
 			while (rs.next()) {
 				
 				String woId = rs.getString("wo_id");
@@ -377,7 +356,6 @@ public class WoDAO {
 				String group = rs.getString("g_id");
 				
 
-				// DTO ø° ≥÷±‚
 				dto.setWoId(woId);
 				dto.setWorkDate(workDate);
 				dto.setPlanId(planId);
@@ -440,26 +418,19 @@ public class WoDAO {
 
 		try {
 
-			// JNDI πÊΩƒ
-			// context.xmlø° ¿÷¥¬ DB ¡§∫∏∑Œ ƒø≥ÿº« «Æ¿ª ∞°¡Æø¬¥Ÿ
 			Context ctx = new InitialContext();
-			// DataSource : ƒø≥ÿº« «Æ ∞¸∏Æ¿⁄
 			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
 
-			// DB ¡¢º”(±◊∑±µ• ¿Ã¡¶ ƒø≥ÿº« «Æ∑Œ)
 			conn = dataFactory.getConnection();
 
-			// SQL ¡ÿ∫Ò
 			String query = " SELECT count(*) cnt from (select * from work_order where deleted is null) ";
 			
 			ps= new LoggableStatement(conn, query);
 			
-			// SQL Ω««‡ π◊ ∞·∞˙ »Æ∫∏
 			rs = ps.executeQuery();
 			
 			
 
-			// ∞·∞˙ »∞øÎ
 			while (rs.next()) {
 				
 				cnt = rs.getInt("cnt");
@@ -509,16 +480,11 @@ public class WoDAO {
 
 		try {
 
-			// JNDI πÊΩƒ
-			// context.xmlø° ¿÷¥¬ DB ¡§∫∏∑Œ ƒø≥ÿº« «Æ¿ª ∞°¡Æø¬¥Ÿ
 			Context ctx = new InitialContext();
-			// DataSource : ƒø≥ÿº« «Æ ∞¸∏Æ¿⁄
 			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
 
-			// DB ¡¢º”(±◊∑±µ• ¿Ã¡¶ ƒø≥ÿº« «Æ∑Œ)
 			conn = dataFactory.getConnection();
 
-			// SQL ¡ÿ∫Ò
 			String query = "SELECT COUNT(DISTINCT wo.wo_id) "
                     + "FROM work_order wo "
                     + "LEFT OUTER JOIN user_info worker "
@@ -531,7 +497,6 @@ public class WoDAO {
                     + "    ON pp.item_id = i.item_id "
                     + "WHERE wo.deleted IS NULL";
 			
-			 // ¡∂∞« µø¿œ«œ∞‘ ¿Ø¡ˆ
 	        if (search.getStatus() != 0) {
 	            query += " AND wo.wostatus_no = " + search.getStatus();
 	        }
@@ -555,7 +520,6 @@ public class WoDAO {
 			
 			
 			
-			// ∆ƒ∂ÛπÃ≈Õ πŸ¿Œµ˘ (º¯º≠ µø¿œ!)
 	        if (search.getsDate() != null && !search.getsDate().isEmpty()) {
 	            ps.setString(idx++, search.getsDate());
 	        }
@@ -570,7 +534,6 @@ public class WoDAO {
 	            ps.setString(idx++, keyword);
 	        }
 			
-			// SQL Ω««‡ π◊ ∞·∞˙ »Æ∫∏
 			rs = ps.executeQuery();
 			
 			
@@ -579,7 +542,6 @@ public class WoDAO {
 	        }
 			
 
-			// ∞·∞˙ »∞øÎ
 			while (rs.next()) {
 				
 				cnt = rs.getInt("cnt");
@@ -617,5 +579,296 @@ public class WoDAO {
 		return cnt;
 
 	} // countSearch
+	
+	
+	public List<PlanWoDTO> planList () {
+		List<PlanWoDTO> list = new ArrayList<>();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT p.*, d.eName dName "
+					+ "FROM production_plan p "
+					+ "	LEFT OUTER JOIN user_info d "
+					+ "		ON p.emp_id = d.emp_id "
+					+ "WHERE p.status=0 or p.status=1 ";
+			ps = conn.prepareStatement(query);
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				String planId = rs.getString("plan_id");
+				int planQty = rs.getInt("plan_qty");
+				int prevQty = rs.getInt("prev_qty");
+				Date sDate = rs.getDate("plan_sdate");
+				Date eDate = rs.getDate("plan_edate");
+				int planStatus = rs.getInt("status");
+				String itemId = rs.getString("item_id");
+				String dId = rs.getString("emp_id");
+				String dName = rs.getString("dName");
+
+				PlanWoDTO dto = new PlanWoDTO();
+				
+				dto.setPlanId(planId);
+				dto.setPlanQty(planQty);
+				dto.setPrevQty(prevQty);
+				dto.setsDate(sDate);
+				dto.seteDate(eDate);
+				dto.setPlanStatus(planStatus);
+				dto.setItemId(itemId);
+				dto.setdId(dId);
+				dto.setdName(dName);
+				
+				list.add(dto);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return list;
+	}
+	
+	
+	public PlanWoDTO getPlan (PlanWoDTO planDTO) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		PlanWoDTO dto = new PlanWoDTO();
+		
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT p.*, d.eName dName "
+					+ "FROM production_plan p "
+					+ "	LEFT OUTER JOIN user_info d "
+					+ "		ON p.emp_id = d.emp_id "
+					+ "WHERE plan_id=? ";
+			ps = conn.prepareStatement(query);
+			ps.setString(1, planDTO.getPlanId());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				String planId = rs.getString("plan_id");
+				int planQty = rs.getInt("plan_qty");
+				int prevQty = rs.getInt("prev_qty");
+				Date sDate = rs.getDate("plan_sdate");
+				Date eDate = rs.getDate("plan_edate");
+				int planStatus = rs.getInt("status");
+				String itemId = rs.getString("item_id");
+				String dId = rs.getString("emp_id");
+				String dName = rs.getString("dName");
+
+				dto.setPlanId(planId);
+				dto.setPlanQty(planQty);
+				dto.setPrevQty(prevQty);
+				dto.setsDate(sDate);
+				dto.seteDate(eDate);
+				dto.setPlanStatus(planStatus);
+				dto.setItemId(itemId);
+				dto.setdId(dId);
+				dto.setdName(dName);
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return dto;
+	}
+	
+	public List<UserWoDTO> searchWorker(String keyword) {
+	    List<UserWoDTO> list = new ArrayList<>();
+	    
+	    Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+	    try {
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+			
+			String sql = "SELECT emp_id, eName " +
+	    				"FROM user_info " +
+	    				"WHERE emp_id LIKE ? OR eName LIKE ?";
+			
+			ps = conn.prepareStatement(sql);
+			
+			String param = "%" + (keyword == null ? "" : keyword) + "%";
+	        ps.setString(1, param);
+	        ps.setString(2, param);
+
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            UserWoDTO dto = new UserWoDTO();
+	            dto.setEmpId(rs.getString("emp_id"));
+	            dto.seteName(rs.getString("eName"));
+	            list.add(dto);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+	    return list;
+	}
+	
+	
+	
+	public int addOrder(WoAddDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI Î∞©Ïãù
+			// context.xmlÏóê ÏûàÎäî DB Ï†ïÎ≥¥Î°ú Ïª§ÎÑ•ÏÖò ÌíÄÏùÑ Í∞ÄÏ†∏Ïò®Îã§
+			Context ctx = new InitialContext();
+			// DataSource : Ïª§ÎÑ•ÏÖò ÌíÄ Í¥ÄÎ¶¨Ïûê
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB Ï†ëÏÜç(Í∑∏Îü∞Îç∞ Ïù¥Ï†ú Ïª§ÎÑ•ÏÖò ÌíÄÎ°ú)
+			conn = dataFactory.getConnection();
+
+			// SQL Ï§ÄÎπÑ
+			String query = "INSERT INTO WORK_order (wo_id, workdate, plan_id, wostatus_no, wo_qty, emp_id) "
+					+ "VALUES ('wo_'||wo_seq.nextval, to_date(?), ?, 10, ?, ?) ";
+			ps = conn.prepareStatement(query);
+			ps.setString(1, dto.getWorkDate());
+			ps.setString(2, dto.getPlanId());
+			ps.setInt(3, dto.getWoQty());
+			ps.setString(4, dto.getWorker());
+
+			// SQL Ïã§Ìñâ Î∞è Í≤∞Í≥º ÌôïÎ≥¥
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // update
 
 }
