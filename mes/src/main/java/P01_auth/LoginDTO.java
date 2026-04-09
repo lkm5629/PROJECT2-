@@ -6,22 +6,37 @@ public class LoginDTO {
 	
 	String empid;
 	String ename;
-	String phone;
+	long phone;
 	String password;
 	String password2;
 	String mgr;
 	String license;
 	String deptno;
+	String deptname;
 	
+	Date hiredate;
+	
+	
+
 	
 	@Override
 	public String toString() {
 		return "LoginDTO [empid=" + empid + ", ename=" + ename + ", phone=" + phone + ", password=" + password
 				+ ", password2=" + password2 + ", mgr=" + mgr + ", license=" + license + ", deptno=" + deptno
-				+ ", hiredate=" + hiredate + "]";
+				+ ", deptname=" + deptname + ", hiredate=" + hiredate + "]";
 	}
 	
 	
+	public String getDeptname() {
+		return deptname;
+	}
+
+
+	public void setDeptname(String deptname) {
+		this.deptname = deptname;
+	}
+
+
 	public String getEmpid() {
 		return empid;
 	}
@@ -34,10 +49,10 @@ public class LoginDTO {
 	public void setEname(String ename) {
 		this.ename = ename;
 	}
-	public String getPhone() {
+	public long getPhone() {
 		return phone;
 	}
-	public void setPhone(String phone) {
+	public void setPhone(long phone) {
 		this.phone = phone;
 	}
 	public String getPassword() {
@@ -76,7 +91,6 @@ public class LoginDTO {
 	public void setHiredate(Date hiredate) {
 		this.hiredate = hiredate;
 	}
-	Date hiredate;
 	
 
 }
