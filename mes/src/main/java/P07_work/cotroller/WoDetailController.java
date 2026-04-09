@@ -17,12 +17,10 @@ public class WoDetailController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/workorder doGet ½ÇÇà");
+		System.out.println("/workorder doGet ì‹¤í–‰");
 
-		// ¿äÃ»ÀÇ ÇÑ±Û ±úÁü ¹æÁö
-		request.setCharacterEncoding("utf-8");
-		// ÀÀ´äÀÇ ÇÑ±Û ±úÁü ¹æÁö
-		response.setContentType("text/html; charset=utf-8;");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8;");
 		
 		setting(request, response);
 		
@@ -30,23 +28,20 @@ public class WoDetailController extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/workorder doPost ½ÇÇà");
+		System.out.println("/workorder doPost ì‹¤í–‰");
 
-		// ¿äÃ»ÀÇ ÇÑ±Û ±úÁü ¹æÁö
-		request.setCharacterEncoding("utf-8");
-		// ÀÀ´äÀÇ ÇÑ±Û ±úÁü ¹æÁö
-		response.setContentType("text/html; charset=utf-8;");
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8;");
 		
 	}
 	
 	protected void setting (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/workorder setting ½ÇÇà");
+		System.out.println("/workorder setting ì‹¤í–‰");
 		
 		String woId = request.getParameter("woId");
 		WoDTO dto = new WoDTO();
 		dto.setWoId(woId);
 		
-		// DB¿¡¼­ ¸ðµç ¸ñ·Ï °¡Á®¿À±â
 		WoService service = new WoService();
 		dto = service.detail(dto);
 		
