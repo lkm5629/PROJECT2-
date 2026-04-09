@@ -10,7 +10,7 @@ vendorList.forEach(function (vendor) {
     vendor.addEventListener('click', function () {
         console.log("클릭됨")
         //모달 블럭으로 화면에 띄움
-        modal.style.display = 'block'
+        modal.style.display = 'flex'
     });
 });
 
@@ -35,7 +35,7 @@ const add_vendor_close_btn = document.querySelector('.add_vendor_close_btn')//�
 const add_vendor_save_btn = document.querySelector('.add_vendor_save_btn')//등록
 //거래처 등록 버튼 누르면
 add_btn.addEventListener('click', function(){
-    add_vendor_modal.style.display = 'block';
+    add_vendor_modal.style.display = 'flex';
 })
 
 //닫기 버튼 눌렀을 시
@@ -62,7 +62,7 @@ const editVendorCloseBtn = document.getElementById('editVendorCloseBtn');
 const editVendorSaveBtn = document.getElementById('editVendorSaveBtn');
 //수정 버튼 클릭 시
 detailEditBtn.addEventListener('click',function(){
-    editVendorModal.style.display='block'
+    editVendorModal.style.display='flex'
 	modal.style.display = 'none'
 })
 

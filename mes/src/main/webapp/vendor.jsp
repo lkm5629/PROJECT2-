@@ -58,7 +58,7 @@
 
 						<div class="panel-actions">
 							<div class="search-box">
-								<span class="search-icon">🔍</span>
+								
 								<input type="text" placeholder="거래처명/담당자/연락처 검색..." />
 							</div>
 							<button class="add-btn">+ 거래처 등록</button>
