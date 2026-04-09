@@ -141,21 +141,6 @@
 	background-color : gray;
 }
 
-.status.waiting {
-    background-color: #e0e0e0;
-    color: #333;
-}
-
-.status.progress {
-    background-color: #ffeaa7;
-    color: #d35400;
-}
-
-.status.done {
-    background-color: #d4f5d4;
-    color: #27ae60;
-}
-
 
 /* 페이징 */
 .page {
