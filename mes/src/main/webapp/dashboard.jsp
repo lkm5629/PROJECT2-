@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding=UTF-8"%>
     
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -36,30 +36,30 @@
 
     <div class="snb-bro">
     <div class="title-box">
-    <h1>¾ËÄÝ½º¿Ò MES</h1>
-    <h7>Á¦Á¶ ½ÇÇà ½Ã½ºÅÛ</h7>    
+    <h1>ì•Œì½œìŠ¤ì™‘ MES</h1>
+    <h7>ì œì¡° ì‹¤í–‰ ì‹œìŠ¤í…œ</h7>    
     </div>
 	<div class="board-box">
 	  <div class="box-type1 radius">
-	  <h3>°øÁ¤ ÁøÇà·ü</h3>
+	  <h3>ê³µì • ì§„í–‰ë¥ </h3>
 	  </div>
 	  <div class="box-type1 radius">
-	  <h3>ºÒ·®·ü</h3>
+	  <h3>ë¶ˆëŸ‰ë¥ </h3>
 	  </div>
 	  <div class="box-type2 radius">
-	  <h3>ÀÏº¯ »ý»ê ÇöÈ²</h3>
+	  <h3>ì¼ë³€ ìƒì‚° í˜„í™©</h3>
 	  </div>
 	  <div class="box-type2 radius">
-	  <h3>ºÒ·® À¯Çüº° ºÐÆ÷</h3>
+	  <h3>ë¶ˆëŸ‰ ìœ í˜•ë³„ ë¶„í¬</h3>
 	  </div>
 	  <div class="box-type3 radius">
-	  <h3>¾Ë¸²</h3>
+	  <h3>ì•Œë¦¼</h3>
 	  </div>
 	  <div class="box-type3 radius">
-	  <h3>°øÁö»çÇ×</h3>
+	  <h3>ê³µì§€ì‚¬í•­</h3>
 	  </div>
 	  <div class="box-type3 radius">
-	  <h3>°ÇÀÇ»çÇ×</h3>
+	  <h3>ê±´ì˜ì‚¬í•­</h3>
 	  </div>
 	</div>
 	</div>
