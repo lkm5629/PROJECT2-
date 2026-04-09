@@ -92,147 +92,93 @@
 									<th>품목그룹</th>
 									<th>품목명</th>
 									<th>규격</th>
-									<th>용액</th>
+
 									<th>단위</th>
 									<th>관리</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>V001</td>
-									<td>완제품</td>
-									<td>알콜솝 소(3X3) - 에탄올</td>
-									<td><span class="badge">3×3</span></td>
-									<td>에탄올</td>
-									<td>box</td>
-									<td>
-										<div class="action-btns">
-											<button type="button" class="icon-btn edit">✏</button>
-											<button type="button" class="icon-btn delete">🗑</button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>V002</td>
-									<td>완제품</td>
-									<td>알콜솝 소(3X3) - 이소프로판올</td>
-									<td><span class="badge">3×3</span></td>
-									<td>이소프로판올</td>
-									<td>box</td>
-									<td>
-										<div class="action-btns">
-											<button type="button" class="icon-btn edit">✏</button>
-											<button type="button" class="icon-btn delete">🗑</button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>V003</td>
-									<td>완제품</td>
-									<td>알콜솝 소(5X5) - 에탄올</td>
-									<td><span class="badge">3×3</span></td>
-									<td>에탄올</td>
-									<td>box</td>
-									<td>
-										<div class="action-btns">
-											<button type="button" class="icon-btn edit">✏</button>
-											<button type="button" class="icon-btn delete">🗑</button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>V004</td>
-									<td>완제품</td>
-									<td>알콜솝 대(5X5) - 에탄올</td>
-									<td><span class="badge large">5×5</span></td>
-									<td>에탄올</td>
-									<td>box</td>
-									<td>
-										<div class="action-btns">
-											<button type="button" class="icon-btn edit">✏</button>
-											<button type="button" class="icon-btn delete">🗑</button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>V005</td>
-									<td>완제품</td>
-									<td>알콜솝 대(5X5) - 이소프로판올</td>
-									<td><span class="badge large">5×5</span></td>
-									<td>이소프로판올</td>
-									<td>box</td>
-									<td>
-										<div class="action-btns">
-											<button type="button" class="icon-btn edit">✏</button>
-											<button type="button" class="icon-btn delete">🗑</button>
-										</div>
-									</td>
-								</tr>
+								<c:forEach var="item" items="${itemList }">
+									<tr>
+										<td>${item.item_id }</td>
+										<td><c:if test="${item.g_id == 30 }">
+												완제품
+											</c:if> <c:if test="${item.g_id == 20 }">
+												반제품
+											</c:if> <c:if test="${item.g_id == 10 }">
+												원자재
+											</c:if></td>
+										<td>${item.item_name }</td>
+										<td>${item.unit }</td>
+										<td>${item.spec }</td>
+										<%-- 										<td>${item.itemgroup_name }</td> --%>
+										<td>
+											<div class="action-btns">
+												<button type="button" class="icon-btn edit">수정</button>
+												<button type="button" class="icon-btn delete">삭제</button>
+											</div>
+										</td>
+									</tr>
+								</c:forEach>
 							</tbody>
 						</table>
 
 						<div class="pagination">
-							<a href="#">&lt;</a>
-							<a href="#" class="active">1</a>
-							<a href="#">2</a>
-							<a href="#">3</a>
-							<a href="#">4</a>
-							<a href="#">5</a>
-							<a href="#">&gt;</a>
+							<a href="#">&lt;</a> <a href="#" class="active">1</a> <a href="#">2</a>
+							<a href="#">3</a> <a href="#">4</a> <a href="#">5</a> <a href="#">&gt;</a>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<!-- 네 JS에 맞춘 수정 모달 -->
 			<div class="edit_item_modal">
 				<div class="edit_item_modal_popup">
 					<h3 class="edit_item_modal_title">품목마스터 수정</h3>
 
 					<div class="edit_item_form_row">
 						<div class="edit_item_form_group code">
-							<label>품목코드</label>
-							<input class="edit_item_info readonly" type="text" value="item_001" readonly>
+							<label>품목코드</label> <input class="edit_item_info readonly"
+								type="text" value="item_001" readonly>
 						</div>
 
 						<div class="edit_item_form_group group">
-							<label>품목 그룹</label>
-							<select class="edit_item_info">
-								<option selected>완제품</option>
-								<option>반자재</option>
-								<option>원자재</option>
+							<label>품목 그룹</label> <select class="edit_item_info">
+								<option value="30" selected>완제품</option>
+								<option value="20">반자재</option>
+								<option value="10">원자재</option>
 							</select>
 						</div>
 
 						<div class="edit_item_form_group small">
-							<label>규격</label>
-							<select class="edit_item_info">
+							<label>규격</label> <select class="edit_item_info">
 								<option selected>3×3</option>
 								<option>5×5</option>
 							</select>
 						</div>
 
 						<div class="edit_item_form_group small">
-							<label>용액</label>
-							<select class="edit_item_info">
-								<option selected>에탄올</option>
-								<option>이소프로판올</option>
+
 							</select>
 						</div>
 
 						<div class="edit_item_form_group small">
-							<label>단위</label>
-							<select class="edit_item_info">
+							<label>단위</label> <select class="edit_item_info">
 								<option selected>box</option>
-								<option>ea</option>
+								<option>mL</option>
 							</select>
 						</div>
 					</div>
 
 					<div class="edit_item_form_row second">
-						<div class="edit_item_form_group full">
+						<div class="edit_item_form_group name-group">
 							<label>품목명</label>
-							<input class="edit_item_info" type="text" value="알콜솝 소(3X3) - 에탄올">
+							<div class="edit_item_name_wrap">
+								<input id="edit_item_info" type="text" value="알콜솝 소(3X3) - 에탄올">
+								<ul id="ul_li">
+
+								</ul>
+								<button type="button" id="edit_item_search_btn">검색</button>
+							</div>
 						</div>
 					</div>
 
@@ -245,6 +191,59 @@
 		</div>
 	</div>
 
-	<script src="${pageContext.request.contextPath}/static/js/11_masterdata/item_master.js"></script>
+<!-- 	등록 모달 -->
+	<div class="add_item_modal" id="addItemModal" style="display: none;">
+		<div class="add_item_modal_popup">
+			<h3 class="add_item_modal_title">품목 등록</h3>
+
+			<div class="add_item_form_row">
+				<div class="add_item_form_group code">
+					<label>품목코드</label> <input type="text" id="add_item_id"
+						class="add_item_info" placeholder="예: raw_1004">
+				</div>
+
+				<div class="add_item_form_group group">
+					<label>품목 그룹</label> <select id="add_g_id" class="add_item_info">
+						<option value="">선택</option>
+						<option value="10">raw</option>
+						<option value="20">semi</option>
+						<option value="30">fin</option>
+					</select>
+				</div>
+
+				<div class="add_item_form_group small">
+					<label>규격</label> <input type="number" id="add_spec"
+						class="add_item_info" placeholder="예: 5">
+				</div>
+
+				<div class="add_item_form_group small">
+					<label>단위</label> <select id="add_unit" class="add_item_info">
+						<option value="">선택</option>
+						<option value="L">L</option>
+						<option value="m">m</option>
+						<option value="cm">cm</option>
+						<option value="장">장</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="add_item_form_row second">
+				<div class="add_item_form_group name-group">
+					<label>품목명</label> <input type="text" id="add_item_name"
+						class="add_item_info" placeholder="품목명을 입력하세요">
+				</div>
+			</div>
+
+			<div class="add_item_btn_area">
+				<button type="button" class="add_item_close_btn"
+					id="cancelAddItemModal">닫기</button>
+				<button type="button" class="add_item_save_btn"
+					id="saveAddItemModal">등록</button>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="${pageContext.request.contextPath}/static/js/11_masterdata/item_master.js"></script>
 </body>
 </html>
