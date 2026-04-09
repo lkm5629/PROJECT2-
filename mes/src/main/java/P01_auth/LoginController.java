@@ -18,8 +18,8 @@ public class LoginController extends HttpServlet {
 		// TODO Auto-generated method stub
 
 		// 한글깨짐 방지
-		request.setCharacterEncoding("utf-8");
-		response.setContentType("text/html; charset=utf-8");
+		request.setCharacterEncoding("UTF-8");
+//		response.setContentType("text/html; charset=UTF-8");
 		
 		
 		String id = request.getParameter("login_id");
