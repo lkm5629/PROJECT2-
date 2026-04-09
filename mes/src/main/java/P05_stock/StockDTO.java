@@ -26,47 +26,32 @@ public class StockDTO {
 	
 	// 제품 아이디
 	private String item_id;
-	private String itemgroup_name;
-	private String Item_name;
+	private String g_id;
+	private String item_name;
+	
 	private String unit;
-	private Integer sepc;
+	private Integer spec;
 	
 	// lot 코드
-	String lot_id;
-	int lot_qty;
-	Date expiry_date;
-	String lotdeleted;
+	private String lot_id;
+	private int lot_qty;
+	private Date expiry_date;
+	private String lotdeleted;
+	
+	
 	
 	// user_info
-	String emp_id;
-	public String getEmp_id() {
-		return emp_id;
-	}
-	public void setEmp_id(String emp_id) {
-		this.emp_id = emp_id;
-	}
-	public String getEname() {
-		return ename;
-	}
-	public void setEname(String ename) {
-		this.ename = ename;
-	}
-	public String getDept_no() {
-		return dept_no;
-	}
-	public void setDept_no(String dept_no) {
-		this.dept_no = dept_no;
-	}
-	public int getRetire() {
-		return retire;
-	}
-	public void setRetire(int retire) {
-		this.retire = retire;
-	}
-	String ename;
-	String dept_no;
-	int retire;
 	
+	private String ename;
+	private String dept_no;
+	private Integer retire;
+	private String emp_id;
+	
+	// paging
+	int start;
+	int end;
+	int page;
+	int size;
 	
 	
 	
@@ -94,17 +79,23 @@ public class StockDTO {
 	public void setIo_id(String io_id) {
 		this.io_id = io_id;
 	}
-	public Date getI0_time() {
+	public Date getIo_time() {
 		return io_time;
 	}
-	public void setI0_time(Date i0_time) {
-		this.io_time = i0_time;
+	public void setIo_time(Date io_time) {
+		this.io_time = io_time;
 	}
 	public String getDeleted() {
 		return deleted;
 	}
 	public void setDeleted(String deleted) {
 		this.deleted = deleted;
+	}
+	public int getIo_type() {
+		return io_type;
+	}
+	public void setIo_type(int io_type) {
+		this.io_type = io_type;
 	}
 	public String getIo_reason() {
 		return io_reason;
@@ -130,29 +121,24 @@ public class StockDTO {
 	public void setItem_id(String item_id) {
 		this.item_id = item_id;
 	}
-	public String getItemgroup_name() {
-		return itemgroup_name;
+	public String getG_id() {
+		return g_id;
 	}
-	public void setItemgroup_name(String itemgroup_name) {
-		this.itemgroup_name = itemgroup_name;
+	public void setG_id(String g_id) {
+		this.g_id = g_id;
 	}
-	public String getItem_name() {
-		return Item_name;
-	}
-	public void setItem_name(String item_name) {
-		Item_name = item_name;
-	}
+	
 	public String getUnit() {
 		return unit;
 	}
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
-	public Integer getSepc() {
-		return sepc;
+	public Integer getSpec() {
+		return spec;
 	}
-	public void setSepc(Integer sepc) {
-		this.sepc = sepc;
+	public void setSpec(Integer spec) {
+		this.spec = spec;
 	}
 	public String getLot_id() {
 		return lot_id;
@@ -178,22 +164,81 @@ public class StockDTO {
 	public void setLotdeleted(String lotdeleted) {
 		this.lotdeleted = lotdeleted;
 	}
-	
-	public int getIo_type() {
-		return io_type;
+	public String getEname() {
+		return ename;
 	}
-	public void setIo_type(int io_type) {
-		this.io_type = io_type;
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+	public String getDept_no() {
+		return dept_no;
+	}
+	public void setDept_no(String dept_no) {
+		this.dept_no = dept_no;
+	}
+	public Integer getRetire() {
+		return retire;
+	}
+	public void setRetire(Integer retire) {
+		this.retire = retire;
+	}
+	public String getEmp_id() {
+		return emp_id;
+	}
+	public void setEmp_id(String emp_id) {
+		this.emp_id = emp_id;
+	}
+	
+	
+	
+	public int getStart() {
+		return start;
+	}
+	public void setStart(int start) {
+		this.start = start;
+	}
+	public int getEnd() {
+		return end;
+	}
+	public void setEnd(int end) {
+		this.end = end;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public int getSize() {
+		return size;
+	}
+	public void setSize(int size) {
+		this.size = size;
+	}
+	public String getItem_name() {
+		return item_name;
+	}
+	public void setItem_name(String item_name) {
+		this.item_name = item_name;
 	}
 	@Override
 	public String toString() {
 		return "StockDTO [stock_id=" + stock_id + ", stock_no=" + stock_no + ", safe_no=" + safe_no + ", io_id=" + io_id
 				+ ", io_time=" + io_time + ", deleted=" + deleted + ", io_type=" + io_type + ", io_reason=" + io_reason
-				+ ", vender_id=" + vender_id + ", vender_name=" + vender_name + ", item_id=" + item_id
-				+ ", itemgroup_name=" + itemgroup_name + ", Item_name=" + Item_name + ", unit=" + unit + ", sepc="
-				+ sepc + ", lot_id=" + lot_id + ", lot_qty=" + lot_qty + ", expiry_date=" + expiry_date
-				+ ", lotdeleted=" + lotdeleted + "]";
+				+ ", vender_id=" + vender_id + ", vender_name=" + vender_name + ", item_id=" + item_id + ", g_id="
+				+ g_id + ", Item_name=" + item_name + ", unit=" + unit + ", spec=" + spec + ", lot_id=" + lot_id
+				+ ", lot_qty=" + lot_qty + ", expiry_date=" + expiry_date + ", lotdeleted=" + lotdeleted + ", ename="
+				+ ename + ", dept_no=" + dept_no + ", retire=" + retire + ", emp_id=" + emp_id + ", start=" + start
+				+ ", end=" + end + ", page=" + page + ", size=" + size + "]";
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
