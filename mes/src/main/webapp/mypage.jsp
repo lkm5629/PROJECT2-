@@ -5,6 +5,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
+<%@page import="P01_auth.LoginDTO"%>
+<%@page import="java.util.*"%>
+
 
 <!DOCTYPE html>
 <html lang="kr">
@@ -45,31 +48,32 @@
 						<h3>사용자 정보</h3>
 						<span>기본 계정 및 계정 설정</span>
 					</div>
-					<form method="get" action="">
+					<form method="get" action="/login">
+					    <input type="hidden" name="mp_empid" value="${list[0].empid}">
 						<div class="mp-tool">
 						<div class="mp-chain">
 							<span>이름</span> 
-							<input type="text" name="mp-name" class="input-3 radius"> 
+							<input type="text" name="mp-name" class="input-3 radius" value="${ list[0].ename }"> 
 						</div>
 						<div class="mp-chain">
 							<span>연락처</span> 
-							<input type="text" name="mp-p_no" class="input-3 radius">
+							<input type="text" name="mp-phone" class="input-3 radius" value="${ list[0].phone }">
 						</div>
 						<div class="mp-chain">
 							 <span>부서</span>
-							<input type="text" name="mp-dept" class="input-3 radius">
+							 <div class="input-3 radius">부서명 : ${ list[0].deptname } &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 부서번호: ${ list[0].deptno }</div> 
 						</div>
 						<div class="mp-chain">
-							<span>비밀번호</span> 
-							<input type="text" name="mp-pw" class="input-3 radius">
+							<span>비밀번호 변경</span> 
+							<input type="text" name="mp-pw" class="input-3 radius" placeholder="사용할 새 비밀번호를 입력해주세요.">
 						</div>
 						<div class="mp-chain">
 							<span>비밀번호 확인</span> 
-							<input type="text" name="mp-pw2" class="input-3 radius">
+							<input type="text" name="mp-pw2" class="input-3 radius" placeholder="새 비밀번호 확인">
 						</div>
 						<div class="mp-chain">
 							 <span>입사일</span> 
-							 <input type="date" name="mp-h_date" class="input-3 radius">
+							 <div class="input-3 radius">${ list[0].hiredate }</div>
 						</div>
 						<div class="mp-chain">
 							 <span> </span>	
