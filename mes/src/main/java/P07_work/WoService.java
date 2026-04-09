@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import P06_prod.DTO.PlanWoDTO;
+
 public class WoService {
 	
 	public Map getList(WoDTO dto) {
@@ -53,6 +55,26 @@ public class WoService {
 	public WoDTO detail(WoDTO dto) {
 		WoDAO dao = new WoDAO();
 		return dao.detail(dto);
+	}
+	
+	public List planList () {
+		WoDAO dao = new WoDAO();
+		return dao.planList();
+	}
+	
+	public PlanWoDTO getPlan(PlanWoDTO dto) {
+		WoDAO dao = new WoDAO();
+		return dao.getPlan(dto);
+	}
+	
+	public List searchWorker(String keyword) {
+	    WoDAO dao = new WoDAO();
+	    return dao.searchWorker(keyword);
+	}
+	
+	public int addOrder(WoAddDTO dto) {
+		WoDAO dao = new WoDAO();
+		return dao.addOrder(dto);
 	}
 
 }
