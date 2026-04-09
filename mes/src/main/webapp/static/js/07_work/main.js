@@ -8,6 +8,7 @@ function init() {
 
 function bind() {
 	reset();
+	addWo();
 }
 
 function reset() {
@@ -31,4 +32,12 @@ function resetPartial() {
     const keyword = form.querySelector("input[name='keyword']").value;
 
     location.href = `/mes/worklist`;
+}
+
+function addWo() {
+	const addBtn = document.querySelector(".addBtn");
+	
+	addBtn.addEventListener ("click", () => {
+		window.location.href = "/mes/workadd";
+	})
 }

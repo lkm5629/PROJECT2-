@@ -29,6 +29,8 @@
 </head>
 <body>
 
+<!-- 	LOT, BOM, 공정 내용 추가해야 함 -->
+
 	<%@ include file="/WEB-INF/views/P00_layout/header.jsp" %>
 	
 	<div class="layout_snb">
@@ -58,26 +60,24 @@
 		                <strong>작업정보</strong>
 		                <span class="sub">생산계획 : (${woInfo != null ? woInfo.planId : '-'})</span>
 		            </div>
-		            <span class="status">
-		            	<c:if test="${ woInfo.wostatus == 10 }">
-		            		작업 전
-		            	</c:if>
-		            	<c:if test="${ woInfo.wostatus == 20 }">
-		            		작업 중
-		            	</c:if>
-		            	<c:if test="${ woInfo.wostatus == 30 }">
-		            		작업 완료
-		            	</c:if>
-		            	<c:if test="${ woInfo.wostatus == 40 }">
-		            		검사 완료
-		            	</c:if>
-		            	<c:if test="${ woInfo.wostatus == 50 }">
-		            		보류
-		            	</c:if>
-		            	<c:if test="${ woInfo == null }">
-		            		-
-		            	</c:if>
-		            </span>
+	            	<c:if test="${ woInfo.wostatus == 10 }">
+	            		<span class="status before">작업 전</span>
+	            	</c:if>
+	            	<c:if test="${ woInfo.wostatus == 20 }">
+	            		<span class="status ongoing">작업 중</span>
+	            	</c:if>
+	            	<c:if test="${ woInfo.wostatus == 30 }">
+	            		<span class="status finish">작업 완료</span>
+	            	</c:if>
+	            	<c:if test="${ woInfo.wostatus == 40 }">
+	            		<span class="status qcFin">검사 완료</span>
+	            	</c:if>
+	            	<c:if test="${ woInfo.wostatus == 50 }">
+	            		<span class="status hold">보류</span>
+	            	</c:if>
+	            	<c:if test="${ woInfo == null }">
+	            		<span class="status">-</span>
+	            	</c:if>
 		        </div>
 		
 		        <div class="info-grid">
@@ -105,17 +105,17 @@
 		        <!-- 진행률 -->
 		        <div class="progress-area">
 		            <div class="progress-header">
-		                <span>진행률</span>
+		                <span class="progress-title">진행률</span>
 		                <span class="percent">( ${woInfo != null ? woInfo.prevQty : ' - '} / ${woInfo != null ? woInfo.planQty : ' - '} ) <strong>${woInfo != null ? (woInfo.prevQty/woInfo.planQty)*100 : ' - '}%</strong></span>
 		            </div>
 		
 		            <div class="progress-bar">
-		                <div class="progress-fill" style="width: 85%;"></div>
+		                <div class="progress-fill" style="width: ${woInfo != null ? (woInfo.prevQty/woInfo.planQty)*100 : '0'}%;"></div>
 		            </div>
 		        </div>
 		    </div>
 		
-		
+			
 		    <!-- BOM -->
 		    <div class="card">
 		        <div class="card-header">
