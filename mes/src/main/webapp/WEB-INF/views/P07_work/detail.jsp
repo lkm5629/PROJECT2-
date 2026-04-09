@@ -13,7 +13,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>작업 상세 페이지</title>
 
 <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
 
@@ -36,7 +36,147 @@
 			<%@ include file="/WEB-INF/views/P00_layout/snb.jsp" %>
 		</div>
 		<div class="content">
-			
+		    <!-- 상단 타이틀 영역 -->
+		    <div class="page-header">
+		        <div class="title-group">
+		            <h2>작업기록</h2>
+		            <p class="sub-text">작업코드 : 작업 ID</p>
+		        </div>
+		
+		        <div class="button-group">
+		            <button class="buttonWhite">← 목록으로</button>
+		            <button class="buttonSub">내용 수정</button>
+		            <button class="buttonMain">지시 수정</button>
+		        </div>
+		    </div>
+		
+		
+		    <!-- 작업정보 -->
+		    <div class="card">
+		        <div class="card-header">
+		            <div>
+		                <strong>작업정보</strong>
+		                <span class="sub">생산계획 : (생산계획 ID)</span>
+		            </div>
+		            <span class="badge">진행중</span>
+		        </div>
+		
+		        <div class="info-grid">
+		            <div class="info-box">
+		                <span class="label">작업일</span>
+		                <span class="value">2026-04-03</span>
+		            </div>
+		
+		            <div class="info-box">
+		                <span class="label">작업자</span>
+		                <span class="value">김작업 (작업자 코드)</span>
+		            </div>
+		
+		            <div class="info-box">
+		                <span class="label">제품</span>
+		                <span class="value">제품 ID (제품명)</span>
+		            </div>
+		
+		            <div class="info-box">
+		                <span class="label">완제품 LOT</span>
+		                <span class="value">LOT 코드</span>
+		            </div>
+		        </div>
+		
+		        <!-- 진행률 -->
+		        <div class="progress-area">
+		            <div class="progress-header">
+		                <span>진행률</span>
+		                <span class="percent">(850 / 1,000) <strong>85%</strong></span>
+		            </div>
+		
+		            <div class="progress-bar">
+		                <div class="progress-fill" style="width: 85%;"></div>
+		            </div>
+		        </div>
+		    </div>
+		
+		
+		    <!-- BOM -->
+		    <div class="card">
+		        <div class="card-header">
+		            <strong>BOM (자재 구성)</strong>
+		        </div>
+		
+		        <table class="table">
+		            <thead>
+		                <tr>
+		                    <th>자재코드 (자재명)</th>
+		                    <th>소요량</th>
+		                    <th>단위</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                <tr>
+		                    <td>자재 ID (자재명)</td>
+		                    <td>1</td>
+		                    <td>장</td>
+		                </tr>
+		                <tr>
+		                    <td>자재 ID (자재명)</td>
+		                    <td>1</td>
+		                    <td>장</td>
+		                </tr>
+		                <tr>
+		                    <td>자재 ID (자재명)</td>
+		                    <td>1</td>
+		                    <td>장</td>
+		                </tr>
+		                <tr>
+		                    <td>자재 ID (자재명)</td>
+		                    <td>1</td>
+		                    <td>장</td>
+		                </tr>
+		            </tbody>
+		        </table>
+		    </div>
+		
+		
+		    <!-- 공정 정보 -->
+		    <div class="card">
+		        <div class="card-header">
+		            <strong>공정 정보</strong>
+		        </div>
+		
+		        <div class="process-list">
+		            <div class="process-item">
+		                <div class="step">1</div>
+		                <div>
+		                    <div class="process-title">용액 합침</div>
+		                    <div class="process-desc">재단된 원단을 용액에 합침</div>
+		                </div>
+		            </div>
+		
+		            <div class="process-item">
+		                <div class="step">2</div>
+		                <div>
+		                    <div class="process-title">롤러 프레싱</div>
+		                    <div class="process-desc">롤러로 이동, 과다 용액 제거</div>
+		                </div>
+		            </div>
+		
+		            <div class="process-item">
+		                <div class="step">3</div>
+		                <div>
+		                    <div class="process-title">포장 준비</div>
+		                    <div class="process-desc">포장지 위로 이동</div>
+		                </div>
+		            </div>
+		
+		            <div class="process-item">
+		                <div class="step">4</div>
+		                <div>
+		                    <div class="process-title">포장지 실링</div>
+		                    <div class="process-desc">포장지 4면 heat sealing</div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
 		</div>
 	</div>
 
