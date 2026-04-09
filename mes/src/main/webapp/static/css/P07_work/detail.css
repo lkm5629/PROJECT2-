@@ -51,9 +51,37 @@
 
 .status {
     background: #ddd;
-    padding: 5px 10px;
-    border-radius: 6px;
+    padding: 5px 15px;
+    border-radius: 20px;
     font-size: 12px;
+    
+    font-size: 12px;
+    color: white;
+}
+
+.before {
+	background-color : var(--color-sub-hover);
+}
+
+.ongoing {
+	background-color : var(--color-main-blue);
+}
+
+.finish {
+	background-color : var(--color-success);
+}
+
+.qcFin {
+	background-color : white;
+	color : var(--color-text-sub);
+	border : 1px solid var(--color-text-sub);
+	
+	color : var(--color-text-sub);
+	border : 1px solid var(--color-text-sub);
+}
+
+.hold {
+	background-color : gray;
 }
 
 
@@ -83,6 +111,9 @@
 
 
 /* 진행률 */
+.progress-title {
+	font-weight: 700;
+}
 .progress-area {
     margin-top: 20px;
 }
@@ -96,13 +127,13 @@
 .progress-bar {
     width: 100%;
     height: 10px;
-    background: #ddd;
+    background: var(--color-sub-blue);
     border-radius: 5px;
 }
 
 .progress-fill {
     height: 100%;
-    background: #555;
+    background: var(--color-main-blue);
     border-radius: 5px;
 }
 
