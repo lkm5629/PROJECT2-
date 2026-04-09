@@ -19,13 +19,16 @@ function setLayoutHeight_snb() {
     if (!header || !layout) return;
 
     const headerHeight = header.offsetHeight;
-
-    layout.style.height = `calc(100vh - ${headerHeight}px)`;
     
-    console.log(header)
-    console.log(layout)
-    console.log(headerHeight)
-    console.log(layout.style.height)
+    const viewportHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    const vhHeight = viewportHeight - headerHeight;
+    const docHeight = documentHeight - headerHeight;
+
+    const finalHeight = Math.max(vhHeight, docHeight);
+
+    layout.style.height = finalHeight + "px";
 }
 
 function moveMenu_snb() {
@@ -47,7 +50,7 @@ function moveMenu_snb() {
                     break;
 
                 case "wo_snb":
-                    location.href = "/mes/workorder";
+                    location.href = "/mes/worklist";
                     break;
 
                 case "qc_snb":
