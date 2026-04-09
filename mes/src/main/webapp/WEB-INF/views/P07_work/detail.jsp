@@ -40,11 +40,11 @@
 		    <div class="page-header">
 		        <div class="title-group">
 		            <h2>작업기록</h2>
-		            <p class="sub-text">작업코드 : 작업 ID</p>
+		            <p class="sub-text">작업코드 : ${woInfo != null ? woInfo.woId : '-'}</p>
 		        </div>
 		
 		        <div class="button-group">
-		            <button class="buttonWhite">← 목록으로</button>
+		            <button class="buttonWhite">목록으로</button>
 		            <button class="buttonSub">내용 수정</button>
 		            <button class="buttonMain">지시 수정</button>
 		        </div>
@@ -56,30 +56,49 @@
 		        <div class="card-header">
 		            <div>
 		                <strong>작업정보</strong>
-		                <span class="sub">생산계획 : (생산계획 ID)</span>
+		                <span class="sub">생산계획 : (${woInfo != null ? woInfo.planId : '-'})</span>
 		            </div>
-		            <span class="badge">진행중</span>
+		            <span class="status">
+		            	<c:if test="${ woInfo.wostatus == 10 }">
+		            		작업 전
+		            	</c:if>
+		            	<c:if test="${ woInfo.wostatus == 20 }">
+		            		작업 중
+		            	</c:if>
+		            	<c:if test="${ woInfo.wostatus == 30 }">
+		            		작업 완료
+		            	</c:if>
+		            	<c:if test="${ woInfo.wostatus == 40 }">
+		            		검사 완료
+		            	</c:if>
+		            	<c:if test="${ woInfo.wostatus == 50 }">
+		            		보류
+		            	</c:if>
+		            	<c:if test="${ woInfo == null }">
+		            		-
+		            	</c:if>
+		            </span>
 		        </div>
 		
 		        <div class="info-grid">
 		            <div class="info-box">
 		                <span class="label">작업일</span>
-		                <span class="value">2026-04-03</span>
+		                <span class="value">${woInfo != null ? woInfo.workDate : ' - '}</span>
 		            </div>
 		
 		            <div class="info-box">
 		                <span class="label">작업자</span>
-		                <span class="value">김작업 (작업자 코드)</span>
+		                <span class="value">${woInfo != null ? woInfo.wName : ' - '}(${woInfo != null ? woInfo.worker : ' - '})</span>
 		            </div>
 		
 		            <div class="info-box">
 		                <span class="label">제품</span>
-		                <span class="value">제품 ID (제품명)</span>
+		                <span class="value">${woInfo != null ? woInfo.itemId : ' - '}(${woInfo != null ? woInfo.itemName : ' - '})</span>
 		            </div>
 		
 		            <div class="info-box">
 		                <span class="label">완제품 LOT</span>
-		                <span class="value">LOT 코드</span>
+		                <span class="value"> - </span>
 		            </div>
 		        </div>
 		
@@ -87,7 +106,7 @@
 		        <div class="progress-area">
 		            <div class="progress-header">
 		                <span>진행률</span>
-		                <span class="percent">(850 / 1,000) <strong>85%</strong></span>
+		                <span class="percent">( ${woInfo != null ? woInfo.prevQty : ' - '} / ${woInfo != null ? woInfo.planQty : ' - '} ) <strong>${woInfo != null ? (woInfo.prevQty/woInfo.planQty)*100 : ' - '}%</strong></span>
 		            </div>
 		
 		            <div class="progress-bar">
