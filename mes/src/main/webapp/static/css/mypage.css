@@ -52,6 +52,7 @@ header {
 
 .input-3 {
 	height: 40px;
+	padding-left : 15px;
 }
 
 .mp-tool {
@@ -83,4 +84,7 @@ button {
 	display: flex;
 	justify-content: center; /* 가로 가운데 */
 	align-items: center;
+}
+.hidden {
+	display : none;
 }
