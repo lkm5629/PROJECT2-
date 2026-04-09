@@ -40,7 +40,9 @@
 				<button type="submit" class="buttonMain"  name="login_btn">로그인</button><br>
 			</div>
 		</form>
-		<a href="join.jsp">아직 회원이 아니신가요? (회원가입)</a>
+		<c:if test=" ${not empty error} ">
+		<div style="color: red; ">${error}</div>
+		</c:if>
 		<div>http://localhost:8080/mes/login.jsp</div>
 	</div>
 
