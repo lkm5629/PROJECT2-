@@ -32,14 +32,13 @@
         <h2>회원가입</h2>
 		<span class="close-btn" >&times;</span>
 	</div>
-		<form method="get" action="/">
+		<form method="get" action="login">
 			<div class="center">
 				<input type="text" class="input-1 radius" name="join_name" placeholder="이름"><br>
-				<input type="text" class="input-1 radius" name="join_emp_id" placeholder="사원번호"><br>
-				<input type="text" class="input-1 radius" name="join_p_no" placeholder="연락처"><br>
+				<input type="text" class="input-1 radius" name="join_phone" placeholder="연락처"><br>
 				
 				<div class="chain">
-				<input type="text" class="input-2 radius" name="join_dept" placeholder="부서"><br>
+				<input type="text" class="input-2 radius" name="join_dept" placeholder="부서번호"><br>
 				<input type="text" class="input-2 radius" name="join_mgr" placeholder="상사 사원번호"><br>
 				<input type="text" class="input-2 radius" name="join_license" placeholder="자격증"><br>
 				</div>
@@ -47,10 +46,10 @@
 				
 				<input type="password" class="input-1 radius" name="join_pw" placeholder="비밀번호를 입력해주세요."><br>
 				<input type="password" class="input-1 radius" name="join_pw2" placeholder="비밀번호 확인"><br>
-				<button type="submit" class="buttonMain"  name="login_btn">회원가입</button><br>
+				<button type="submit" class="buttonMain"  name="join_btn">회원가입</button><br>
 			</div>
 		</form>
-		<a href="login.jsp">이미 회원이신가요? (로그인)</a>
+		<a href="mypage.jsp">직원 등록? (관리자 마이페이지)</a>
 	</div>
 
 
