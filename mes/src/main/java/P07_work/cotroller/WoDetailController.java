@@ -26,6 +26,7 @@ public class WoDetailController extends HttpServlet {
 		
 		setting(request, response);
 		
+		request.getRequestDispatcher("/WEB-INF/views/P07_work/detail.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -39,7 +40,7 @@ public class WoDetailController extends HttpServlet {
 	}
 	
 	protected void setting (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/worklist setting 실행");
+		System.out.println("/workorder setting 실행");
 		
 		String woId = request.getParameter("woId");
 		WoDTO dto = new WoDTO();
@@ -53,7 +54,6 @@ public class WoDetailController extends HttpServlet {
 		
 		// forward
 		request.setAttribute("woInfo", dto);
-		
 	}
 
 }
