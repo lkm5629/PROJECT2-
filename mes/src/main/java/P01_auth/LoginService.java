@@ -7,31 +7,43 @@ public class LoginService {
 	
 	public List<LoginDTO> login(LoginDTO d) {
 		System.out.println("/login service.login() 실행 ");
+		
+		//실무 함수 소환
 		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
 		return a.login(d);				
 	}
 	
 	public int edit(LoginDTO d) {
 		System.out.println("/login service.edit() 실행 ");
+		
+		//실무 함수 소환
 		LoginDAO a = new LoginDAO();
+		
+		//일단 수정요청자의 각 정보들을 조회해서 호출
 		LoginDTO dto = a.editCheck(d);
 		
-		if( !dto.getEname().equals(d.getEname()) ) {
-			
-		} else {
-			d.setEname(dto.getEname());
-		}
-		if( !dto.getPassword().equals(d.getPassword()) ) {
-			
-		} else {
-			d.setPassword(dto.getPassword());
-		}
-		if( dto.getPhone() != d.getPhone() ) {
-			
-		} else {
-			d.setPassword(dto.getPassword());
-		}
+		System.out.println(dto);
+		System.out.println(d);
 		
+		
+		//controller에서 	받아온 값이 null이거나 ""이라면 기존 값 덮어 씌우기	
+		if(   d.getEname() == null ||
+				( d.getEname() == null && d.getEname().trim().length() == 0 ) ) {
+			d.setEname(dto.getEname());			
+		} 
+		
+		if(d.getPassword() == null 
+				|| (d.getPassword() != null && d.getPassword().trim().length() == 0) ) {
+			d.setPassword(dto.getPassword());
+		} 
+		
+		if( d.getPhone() == 0 ) {
+			d.setPhone(dto.getPhone());			
+		} 
+		
+		//정보수정 실행 결과 리턴.
 		return a.edit(d);
 		
 		
@@ -44,7 +56,7 @@ public class LoginService {
 		//바구니 소환
 		List list = new ArrayList();
 		
-		//실무 함수뭉치 소환
+		//실무 함수 소환
 		LoginDAO a = new LoginDAO();
 		
 		//회원가입
