@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
@@ -15,7 +16,10 @@ public class LoginController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("/login doget 실행" );
 		// TODO Auto-generated method stub
+		
+		// 주소 : http://localhost:8080/mes/login.jsp
 
 		// 한글깨짐 방지
 		request.setCharacterEncoding("UTF-8");
@@ -24,6 +28,8 @@ public class LoginController extends HttpServlet {
 		LoginService s = new LoginService();
 		// 데이터 바구니 소환
 		LoginDTO d = new LoginDTO();
+		
+		
 		
 		//전화번호. 숫자 21억 넘어서 long으로 저장.
 		long phone = 0;
@@ -35,7 +41,7 @@ public class LoginController extends HttpServlet {
 		
 		
 		//로그인 로직
-		if(id != null && pw != null) { 	
+		if( (id != null && pw != null) && id.trim().length() > 0 && pw.trim().length() > 0) { 	
 			System.out.println("/login doget.login 실행" );
 			
 			
@@ -50,16 +56,40 @@ public class LoginController extends HttpServlet {
 			if(list.size() == 1  ) {
 				System.out.println("로그인 성공");
 				
-				request.setAttribute("list", list);
-				request.getRequestDispatcher("/mypage.jsp").forward(request, response);
+				//세션 소환
+				HttpSession session = request.getSession();				
+				
+				session.setAttribute("dto", list.get(0));
+			    session.setAttribute("login", "true");
+				response.sendRedirect(request.getContextPath() + "/mypage.jsp");
 				return;
 				
 				//없다면 로그인 실패 메세지와 함께 로그인 페이지로.
 			} else {
 				System.out.println("로그인 실패");
-				request.setAttribute("error", "로그인에 실패했습니다.");
+				request.setAttribute("error", "아이디 또는 비밀번호가 일치하지 않습니다.");
+				request.setAttribute("empid", id);
 				request.getRequestDispatcher("/login.jsp").forward(request, response);
 			}			
+			
+		}
+		
+		//이 값이 있다면 로그아웃으로
+		String logout = request.getParameter("logout");
+		
+		//로그아웃 로직 
+		//이 값이면 로그아웃로직 실행
+		if ("logout".equals(logout)){
+			
+			//세션 소환
+			HttpSession outSession = request.getSession(false);
+			
+			//세션이 있다면 삭제
+			if(outSession != null) {
+				outSession.invalidate();
+			}
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			return;			
 			
 		}
 		
@@ -115,6 +145,7 @@ public class LoginController extends HttpServlet {
 		}
 		
 		// 이 값들이 있다면 정보 수정으로
+		String mp_empid = request.getParameter("mp_empid");
 		String mp_name = request.getParameter("mp_name");
 		String mp_phone = request.getParameter("mp_phone");
 		String mp_pw = request.getParameter("mp_pw");
@@ -122,31 +153,49 @@ public class LoginController extends HttpServlet {
 		
 		
 		// 정보 수정 로직
-		if(mp_name != null || mp_phone !=null || (mp_pw != null) ) {
+		if( !("".equals(mp_name)) || !("".equals(mp_phone)) || !("".equals(mp_pw)) ) {
+			System.out.println("/login doget.edit 실행" );
+
 			
-			//공백제거
+			//만약 null이 아니라면 공백 제거 후 덮어씌우기
+			if (mp_empid != null) mp_empid = mp_empid.trim();
 			if (mp_name != null) mp_name = mp_name.trim();
 			if (mp_phone != null) mp_phone = mp_phone.trim();
 			if (mp_pw != null) mp_pw = mp_pw.trim();
 			if (mp_pw2 != null) mp_pw2 = mp_pw2.trim();
 			
+			//empid 바구니에 넣기.
+			d.setEmpid(mp_empid);
+			
 			//값이 있고, 길이가 0이 아니라면 바구니에 넣기.
-			if( mp_name != null && mp_pw.length() > 0) {
+			//이름
+			if( mp_name != null && mp_name.length() > 0) {
 				d.setEname(mp_name);
 			} 
-			if( mp_phone != null && mp_pw.length() > 0) {
+			//연락처
+			if( mp_phone != null && mp_phone.length() > 0) {
 				phone = Integer.parseInt(mp_phone);
 				d.setPhone(phone);
 			} 
+			//비밀번호			
 			if( (mp_pw != null && mp_pw2 != null) && mp_pw.equals(mp_pw2) && mp_pw.length() > 0 ) {
 				d.setPassword(mp_pw);
 			} else if((mp_pw != null && mp_pw2 != null) && !mp_pw.equals(mp_pw2) && mp_pw.length() > 0 ) {
+				//비밀번호가 일치하지 않으면 null 실행
+				d.setPassword(null);
+				
 				System.out.println("비밀번호가 서로 일치하지 않습니다.");
-				request.setAttribute("error", "비밀번호가 서로 일치하지 않습니다.");
-				request.getRequestDispatcher("/mypage.jsp").forward(request, response);
+				request.setAttribute("error", "비밀번호가 서로 일치하지 않습니다. 비밀번호 변경에 실패했습니다.");
 			}
 			
-			s.edit(d);
+			
+			
+			if(s.edit(d) > 0) {
+				System.out.println("정보수정이 완료 되었습니다.");
+			} else {
+				System.out.println("정보수정에 실패 했습니다.");				
+			}
+			request.getRequestDispatcher("/mypage.jsp").forward(request, response);
 			
 		}
 		
