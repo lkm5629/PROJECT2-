@@ -60,7 +60,7 @@
 								</div>
 								<div class="mp-chain">
 									<span>연락처</span> <input type="text" name="mp_phone"
-										class="input-3 radius" value="${ dto.phone }">
+										class="input-3 radius" value="<fmt:formatNumber value='${dto.phone}' pattern='00000000000' groupingUsed='false'/>">
 								</div>
 								<div class="mp-chain">
 									<span>부서</span>
