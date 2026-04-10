@@ -1,26 +1,20 @@
 package P05_stock;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-import P00_layout.LoggableStatement;
 
 public class StockDAO {
 
-    // JNDI 방식으로 커넥션 풀에서 DB 연결 가져오기
     private Connection getConn() {
         Connection conn = null;
         try {
-            // context.xml에 설정된 커넥션 풀 관리자 가져오기
             Context ctx = new InitialContext();
             DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
-            // 커넥션 풀에서 DB 연결 획득
             conn = dataFactory.getConnection();
         } catch (Exception e) {
             e.printStackTrace();
@@ -28,20 +22,46 @@ public class StockDAO {
         return conn;
     }
 
-    // 전체 입출고 건수 조회 (페이징 totalCount 계산용)
-    public int selectTotal() {
+    public int selectTotal(StockDTO stockDTO) {
         int totalCount = 0;
         try (
             Connection conn = getConn();
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(*) cnt FROM io"
+                "SELECT COUNT(*) cnt FROM io i " +
+                "JOIN vendor v    ON i.vendor_id = v.vendor_id " +
+                "JOIN item it     ON i.item_id   = it.item_id " +
+                "JOIN lot l       ON i.lot_id    = l.lot_id " +
+                "JOIN user_info u ON i.emp_id    = u.emp_id " +
+                "WHERE 1=1 " +
+                "AND (? IS NULL OR i.io_type = ?) " +
+                "AND (? IS NULL OR v.vendor_id = ?) " +
+                "AND (? IS NULL OR it.g_id = ?) " +
+                "AND (? IS NULL OR it.item_id = ?) " +
+                "AND (? IS NULL OR i.io_time >= TO_DATE(?, 'YYYY-MM-DD')) " +
+                "AND (? IS NULL OR i.io_time <= TO_DATE(?, 'YYYY-MM-DD') + 1) " +
+                "AND (? IS NULL OR it.item_name LIKE ? OR it.item_id LIKE ?)"
             );
         ) {
+            String ioType   = stockDTO.getFilterIoType();
+            String vendorId = stockDTO.getFilterVendorId();
+            String gId      = stockDTO.getFilterGId();
+            String itemId   = stockDTO.getFilterItemId();
+            String dateFrom = stockDTO.getFilterDateFrom();
+            String dateTo   = stockDTO.getFilterDateTo();
+            String keyword  = stockDTO.getFilterKeyword();
+            String kwLike   = (keyword != null && !keyword.isEmpty()) ? "%" + keyword + "%" : null;
+
+            int idx = 1;
+            ps.setString(idx++, ioType);   ps.setString(idx++, ioType);
+            ps.setString(idx++, vendorId); ps.setString(idx++, vendorId);
+            ps.setString(idx++, gId);      ps.setString(idx++, gId);
+            ps.setString(idx++, itemId);   ps.setString(idx++, itemId);
+            ps.setString(idx++, dateFrom); ps.setString(idx++, dateFrom);
+            ps.setString(idx++, dateTo);   ps.setString(idx++, dateTo);
+            ps.setString(idx++, kwLike);   ps.setString(idx++, kwLike); ps.setString(idx++, kwLike);
+
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    // 전체 건수 추출
-                    totalCount = rs.getInt("cnt");
-                }
+                if (rs.next()) totalCount = rs.getInt("cnt");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,14 +69,11 @@ public class StockDAO {
         return totalCount;
     }
 
-    // 입출고 목록 조회 (페이징 적용)
-    // io, vendor, item, lot, user_info 테이블 JOIN
     public List<StockDTO> select(StockDTO stockDTO) {
         List<StockDTO> list = new ArrayList<>();
         try (
             Connection conn = getConn();
             PreparedStatement ps = conn.prepareStatement(
-                // 페이징 처리: rownum으로 start ~ end 범위 추출
                 "SELECT * FROM ( " +
                 "    SELECT rownum AS rnum, e.* FROM ( " +
                 "        SELECT " +
@@ -81,61 +98,69 @@ public class StockDAO {
                 "            u.retire, " +
                 "            u.emp_id " +
                 "        FROM io i " +
-                // 거래처 정보 JOIN
                 "        JOIN vendor v    ON i.vendor_id = v.vendor_id " +
-                // 자재 정보 JOIN
                 "        JOIN item it     ON i.item_id   = it.item_id " +
-                // LOT 정보 JOIN
                 "        JOIN lot l       ON i.lot_id    = l.lot_id " +
-                // 작업자 정보 JOIN
                 "        JOIN user_info u ON i.emp_id    = u.emp_id " +
-                // 입출고일 내림차순 정렬
+                "        WHERE 1=1 " +
+                "        AND (? IS NULL OR i.io_type = ?) " +
+                "        AND (? IS NULL OR v.vendor_id = ?) " +
+                "        AND (? IS NULL OR it.g_id = ?) " +
+                "        AND (? IS NULL OR it.item_id = ?) " +
+                "        AND (? IS NULL OR i.io_time >= TO_DATE(?, 'YYYY-MM-DD')) " +
+                "        AND (? IS NULL OR i.io_time <= TO_DATE(?, 'YYYY-MM-DD') + 1) " +
+                "        AND (? IS NULL OR it.item_name LIKE ? OR it.item_id LIKE ?) " +
                 "        ORDER BY i.io_time DESC " +
                 "    ) e " +
-                // 페이징 범위 조건 (start ~ end)
                 ") WHERE rnum >= ? AND rnum <= ?"
             );
         ) {
-            // 페이징 파라미터 바인딩
-            ps.setInt(1, stockDTO.getStart());
-            ps.setInt(2, stockDTO.getEnd());
+            // 필터 파라미터 바인딩
+            String ioType   = stockDTO.getFilterIoType();
+            String vendorId = stockDTO.getFilterVendorId();
+            String gId      = stockDTO.getFilterGId();
+            String itemId   = stockDTO.getFilterItemId();
+            String dateFrom = stockDTO.getFilterDateFrom();
+            String dateTo   = stockDTO.getFilterDateTo();
+            String keyword  = stockDTO.getFilterKeyword();
+            String kwLike   = (keyword != null && !keyword.isEmpty()) ? "%" + keyword + "%" : null;
+
+            int idx = 1;
+            ps.setString(idx++, ioType);   ps.setString(idx++, ioType);
+            ps.setString(idx++, vendorId); ps.setString(idx++, vendorId);
+            ps.setString(idx++, gId);      ps.setString(idx++, gId);
+            ps.setString(idx++, itemId);   ps.setString(idx++, itemId);
+            ps.setString(idx++, dateFrom); ps.setString(idx++, dateFrom);
+            ps.setString(idx++, dateTo);   ps.setString(idx++, dateTo);
+            ps.setString(idx++, kwLike);   ps.setString(idx++, kwLike); ps.setString(idx++, kwLike);
+
+            // 페이징
+            ps.setInt(idx++, stockDTO.getStart());
+            ps.setInt(idx++, stockDTO.getEnd());
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    // 조회 결과를 DTO에 담기
                     StockDTO dto = new StockDTO();
-
-                    // io 테이블
                     dto.setIo_id(rs.getString("io_id"));
                     dto.setIo_time(rs.getDate("io_time"));
                     dto.setDeleted(rs.getString("deleted"));
                     dto.setIo_type(rs.getInt("io_type"));
                     dto.setIo_reason(rs.getString("io_reason"));
-
-                    // vendor 테이블
                     dto.setVender_id(rs.getString("vendor_id"));
                     dto.setVender_name(rs.getString("vendor_name"));
-
-                    // item 테이블
                     dto.setItem_id(rs.getString("item_id"));
                     dto.setG_id(rs.getString("g_id"));
                     dto.setItem_name(rs.getString("item_name"));
                     dto.setUnit(rs.getString("unit"));
                     dto.setSpec(rs.getInt("spec"));
-
-                    // lot 테이블
                     dto.setLot_id(rs.getString("lot_id"));
                     dto.setLot_qty(rs.getInt("lot_qty"));
                     dto.setExpiry_date(rs.getDate("expiry_date"));
                     dto.setLotdeleted(rs.getString("lotdeleted"));
-
-                    // user_info 테이블
                     dto.setEname(rs.getString("ename"));
                     dto.setDept_no(rs.getString("dept_no"));
                     dto.setRetire(rs.getInt("retire"));
                     dto.setEmp_id(rs.getString("emp_id"));
-
-                    // list에 추가
                     list.add(dto);
                 }
             }
@@ -144,56 +169,91 @@ public class StockDAO {
         }
         return list;
     }
-    
-    
- // io INSERT + lot INSERT
+
     public void insert(StockDTO dto) {
         Connection conn = null;
         PreparedStatement ps = null;
-        
+        ResultSet rs = null;
+
         try {
             conn = getConn();
             conn.setAutoCommit(false);
-            
-            // lot INSERT - 모달에서 입력받은 lot_id 직접 사용
-            String lotSql = "INSERT INTO lot (lot_id, item_id, lot_qty, expiry_date, deleted) " +
-                            "VALUES (?, ?, ?, ?, 'N')";
-            ps = conn.prepareStatement(lotSql);
-            ps.setString(1, dto.getLot_id());
-            ps.setString(2, dto.getItem_id());
-            ps.setInt(3, dto.getLot_qty());
-            ps.setDate(4, dto.getExpiry_date());
+
+            String lotId = null;
+            String ioId  = null;
+
+            if (dto.getIo_type() == 0) {
+                // ── 입고: lot_seq로 새 LOT ID 생성 ──────────────
+                ps = conn.prepareStatement(
+                    "SELECT 'LOT_' || lot_seq.nextval AS lot_id FROM dual"
+                );
+                rs = ps.executeQuery();
+                if (rs.next()) lotId = rs.getString("lot_id");
+                rs.close();
+                ps.close();
+
+                // lot INSERT
+                ps = conn.prepareStatement(
+                    "INSERT INTO lot (lot_id, item_id, lot_qty, expiry_date, deleted) " +
+                    "VALUES (?, ?, ?, ?, 'N')"
+                );
+                ps.setString(1, lotId);
+                ps.setString(2, dto.getItem_id());
+                ps.setInt(3, dto.getLot_qty());
+                ps.setDate(4, dto.getExpiry_date());
+                ps.executeUpdate();
+                ps.close();
+
+                // 입고 io_id 생성
+                ps = conn.prepareStatement(
+                    "SELECT 'IN_' || in_seq.nextval AS io_id FROM dual"
+                );
+                rs = ps.executeQuery();
+                if (rs.next()) ioId = rs.getString("io_id");
+                rs.close();
+                ps.close();
+
+            } else {
+                // ── 출고: 기존 LOT 참조 ──────────────────────────
+                lotId = dto.getLot_id();
+
+                // 출고 io_id 생성
+                ps = conn.prepareStatement(
+                    "SELECT 'OUT_' || out_seq.nextval AS io_id FROM dual"
+                );
+                rs = ps.executeQuery();
+                if (rs.next()) ioId = rs.getString("io_id");
+                rs.close();
+                ps.close();
+            }
+
+            // ── io INSERT (입고/출고 공통) ────────────────────────
+            ps = conn.prepareStatement(
+                "INSERT INTO io (io_id, io_time, io_type, io_reason, vendor_id, item_id, lot_id, emp_id, deleted) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'N')"
+            );
+            ps.setString(1, ioId);
+            ps.setDate(2, dto.getIo_time());
+            ps.setInt(3, dto.getIo_type());
+            ps.setString(4, dto.getIo_reason());
+            ps.setString(5, dto.getVender_id());
+            ps.setString(6, dto.getItem_id());
+            ps.setString(7, lotId);
+            ps.setString(8, dto.getEmp_id());
             ps.executeUpdate();
-            ps.close();
-            
-            // io_type에 따라 시퀀스 분기
-            // 0: 입고 → io_seq / 1: 출고 → out_seq
-            String seq = (dto.getIo_type() == 0) ? "in_seq.nextval" : "out_seq.nextval";
-            
-            // io INSERT
-            String ioSql = "INSERT INTO io (io_id, io_time, io_type, io_reason, vendor_id, item_id, lot_id, emp_id, deleted) " +
-                           "VALUES (" + seq + ", ?, ?, ?, ?, ?, ?, ?, 'N')";
-            ps = conn.prepareStatement(ioSql);
-            ps.setDate(1, dto.getIo_time());
-            ps.setInt(2, dto.getIo_type());
-            ps.setString(3, dto.getIo_reason());
-            ps.setString(4, dto.getVender_id());
-            ps.setString(5, dto.getItem_id());
-            ps.setString(6, dto.getLot_id());
-            ps.setString(7, dto.getEmp_id());
-            ps.executeUpdate();
-            
+
             conn.commit();
-            
+
         } catch (Exception e) {
-            try { if(conn != null) conn.rollback(); } catch (Exception ex) { ex.printStackTrace(); }
+            try { if (conn != null) conn.rollback(); } catch (Exception ex) { ex.printStackTrace(); }
             e.printStackTrace();
         } finally {
-            try { if(ps != null) ps.close(); } catch (Exception e) { e.printStackTrace(); }
-            try { if(conn != null) conn.close(); } catch (Exception e) { e.printStackTrace(); }
+            try { if (rs   != null) rs.close();   } catch (Exception e) { e.printStackTrace(); }
+            try { if (ps   != null) ps.close();   } catch (Exception e) { e.printStackTrace(); }
+            try { if (conn != null) conn.close(); } catch (Exception e) { e.printStackTrace(); }
         }
     }
-    
+
     public List<StockDTO> selectVendorList() {
         List<StockDTO> list = new ArrayList<>();
         try (
@@ -203,19 +263,18 @@ public class StockDAO {
             );
             ResultSet rs = ps.executeQuery();
         ) {
-            while(rs.next()) {
+            while (rs.next()) {
                 StockDTO dto = new StockDTO();
                 dto.setVender_id(rs.getString("vendor_id"));
                 dto.setVender_name(rs.getString("vendor_name"));
                 list.add(dto);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
     }
-    
- // 자재 목록 조회
+
     public List<StockDTO> selectItemList() {
         List<StockDTO> list = new ArrayList<>();
         try (
@@ -225,7 +284,7 @@ public class StockDAO {
             );
             ResultSet rs = ps.executeQuery();
         ) {
-            while(rs.next()) {
+            while (rs.next()) {
                 StockDTO dto = new StockDTO();
                 dto.setItem_id(rs.getString("item_id"));
                 dto.setItem_name(rs.getString("item_name"));
@@ -234,10 +293,144 @@ public class StockDAO {
                 dto.setUnit(rs.getString("unit"));
                 list.add(dto);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
     }
+
+    public List<StockDTO> selectGroupList() {
+        List<StockDTO> list = new ArrayList<>();
+        try (
+            Connection conn = getConn();
+            PreparedStatement ps = conn.prepareStatement(
+                "SELECT g_id FROM item GROUP BY g_id ORDER BY g_id"
+            );
+            ResultSet rs = ps.executeQuery();
+        ) {
+            while (rs.next()) {
+                StockDTO dto = new StockDTO();
+                dto.setG_id(rs.getString("g_id"));
+                list.add(dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // 입고 목록 조회 (출고 등록 시 AJAX 참조용)
+    public List<StockDTO> selectInList() {
+        List<StockDTO> list = new ArrayList<>();
+        try (
+            Connection conn = getConn();
+            PreparedStatement ps = conn.prepareStatement(
+                "SELECT " +
+                "    i.io_id, " +
+                "    it.item_id, " +
+                "    it.item_name, " +
+                "    it.spec, " +
+                "    it.unit, " +
+                "    l.lot_id, " +
+                "    l.lot_qty " +
+                "FROM io i " +
+                "JOIN item it  ON i.item_id   = it.item_id " +
+                "JOIN lot l    ON i.lot_id     = l.lot_id " +
+                "WHERE i.io_type = 0 " +
+                "AND i.deleted  = 'N' " +
+                "ORDER BY i.io_time DESC"
+            );
+            ResultSet rs = ps.executeQuery();
+        ) {
+            while (rs.next()) {
+                StockDTO dto = new StockDTO();
+                dto.setIo_id(rs.getString("io_id"));
+                dto.setItem_id(rs.getString("item_id"));
+                dto.setItem_name(rs.getString("item_name"));
+                dto.setSpec(rs.getInt("spec"));
+                dto.setUnit(rs.getString("unit"));
+                dto.setLot_id(rs.getString("lot_id"));
+                dto.setLot_qty(rs.getInt("lot_qty"));
+                list.add(dto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+ // selectAvailableLotList() 추가
+    public List<StockDTO> selectAvailableLotList(String keyword) {
+        List<StockDTO> list = new ArrayList<>();
+        try (
+            Connection conn = getConn();
+            PreparedStatement ps = conn.prepareStatement(
+                "SELECT l.lot_id, l.lot_qty, l.expiry_date, " +
+                "       it.item_id, it.item_name, it.spec, it.unit " +
+                "FROM lot l " +
+                "JOIN item it ON l.item_id = it.item_id " +
+                "WHERE l.deleted = 'N' " +
+                "AND EXISTS ( " +
+                "    SELECT 1 FROM io " +
+                "    WHERE io.lot_id  = l.lot_id " +
+                "    AND   io.io_type = 0 " +   // ← 입고(0)
+                "    AND   io.deleted = 'N' " +
+                ") " +
+                "AND (it.item_name LIKE ? OR l.lot_id LIKE ?) " +
+                "ORDER BY l.lot_id DESC"
+            );
+        ) {
+            String kw = "%" + (keyword == null ? "" : keyword) + "%";
+            ps.setString(1, kw);
+            ps.setString(2, kw);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    StockDTO dto = new StockDTO();
+                    dto.setLot_id(rs.getString("lot_id"));
+                    dto.setLot_qty(rs.getInt("lot_qty"));
+                    dto.setExpiry_date(rs.getDate("expiry_date"));
+                    dto.setItem_id(rs.getString("item_id"));
+                    dto.setItem_name(rs.getString("item_name"));
+                    dto.setSpec(rs.getInt("spec"));
+                    dto.setUnit(rs.getString("unit"));
+                    list.add(dto);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public List<StockDTO> selectUserList(String keyword) {
+        List<StockDTO> list = new ArrayList<>();
+        try (
+            Connection conn = getConn();
+            PreparedStatement ps = conn.prepareStatement(
+                "SELECT emp_id, ename, dept_no " +
+                "FROM user_info " +
+                "WHERE (retire = 0 OR retire IS NULL) " +
+                "AND (ename LIKE ? OR emp_id LIKE ?) " +
+                "ORDER BY ename"
+            );
+        ) {
+            String kw = "%" + (keyword == null ? "" : keyword) + "%";
+            ps.setString(1, kw);
+            ps.setString(2, kw);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    StockDTO dto = new StockDTO();
+                    dto.setEmp_id(rs.getString("emp_id"));
+                    dto.setEname(rs.getString("ename"));
+                    dto.setDept_no(rs.getString("dept_no"));
+                    list.add(dto);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
     
 }

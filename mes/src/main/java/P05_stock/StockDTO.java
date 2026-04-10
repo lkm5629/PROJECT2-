@@ -53,8 +53,26 @@ public class StockDTO {
 	int page;
 	int size;
 	
+	// filter
+	
+	private String filterIoType;
+	private String filterVendorId;
+	private String filterGId;
+	private String filterItemId;
+	private String filterDateFrom;
+	private String filterDateTo;
+	private String filterKeyword;
+	private String filterEmpId;
 	
 	
+	
+	
+	public String getFilterEmpId() {
+		return filterEmpId;
+	}
+	public void setFilterEmpId(String filterEmpId) {
+		this.filterEmpId = filterEmpId;
+	}
 	public String getStock_id() {
 		return stock_id;
 	}
@@ -220,17 +238,72 @@ public class StockDTO {
 	}
 	public void setItem_name(String item_name) {
 		this.item_name = item_name;
+		
+		
+		
+		
+	}
+	public String getFilterIoType() {
+		return filterIoType;
+	}
+	public void setFilterIoType(String filterIoType) {
+		this.filterIoType = filterIoType;
+	}
+	public String getFilterVendorId() {
+		return filterVendorId;
+	}
+	public void setFilterVendorId(String filterVendorId) {
+		this.filterVendorId = filterVendorId;
+	}
+	public String getFilterGId() {
+		return filterGId;
+	}
+	public void setFilterGId(String filterGId) {
+		this.filterGId = filterGId;
+	}
+	public String getFilterItemId() {
+		return filterItemId;
+	}
+	public void setFilterItemId(String filterItemId) {
+		this.filterItemId = filterItemId;
+	}
+	public String getFilterDateFrom() {
+		return filterDateFrom;
+	}
+	public void setFilterDateFrom(String filterDateFrom) {
+		this.filterDateFrom = filterDateFrom;
+	}
+	public String getFilterDateTo() {
+		return filterDateTo;
+	}
+	public void setFilterDateTo(String filterDateTo) {
+		this.filterDateTo = filterDateTo;
+	}
+	public String getFilterKeyword() {
+		return filterKeyword;
+	}
+	public void setFilterKeyword(String filterKeyword) {
+		this.filterKeyword = filterKeyword;
 	}
 	@Override
 	public String toString() {
 		return "StockDTO [stock_id=" + stock_id + ", stock_no=" + stock_no + ", safe_no=" + safe_no + ", io_id=" + io_id
 				+ ", io_time=" + io_time + ", deleted=" + deleted + ", io_type=" + io_type + ", io_reason=" + io_reason
 				+ ", vender_id=" + vender_id + ", vender_name=" + vender_name + ", item_id=" + item_id + ", g_id="
-				+ g_id + ", Item_name=" + item_name + ", unit=" + unit + ", spec=" + spec + ", lot_id=" + lot_id
+				+ g_id + ", item_name=" + item_name + ", unit=" + unit + ", spec=" + spec + ", lot_id=" + lot_id
 				+ ", lot_qty=" + lot_qty + ", expiry_date=" + expiry_date + ", lotdeleted=" + lotdeleted + ", ename="
 				+ ename + ", dept_no=" + dept_no + ", retire=" + retire + ", emp_id=" + emp_id + ", start=" + start
-				+ ", end=" + end + ", page=" + page + ", size=" + size + "]";
+				+ ", end=" + end + ", page=" + page + ", size=" + size + ", filterIoType=" + filterIoType
+				+ ", filterVendorId=" + filterVendorId + ", filterGId=" + filterGId + ", filterItemId=" + filterItemId
+				+ ", filterDateFrom=" + filterDateFrom + ", filterDateTo=" + filterDateTo + ", filterKeyword="
+				+ filterKeyword + ", filterEmpId=" + filterEmpId + "]";
 	}
+	
+	
+	
+	
+	
+	
 	
 	
 	
