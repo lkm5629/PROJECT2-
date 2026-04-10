@@ -70,6 +70,7 @@ public class LoginController extends HttpServlet {
 				request.setAttribute("error", "아이디 또는 비밀번호가 일치하지 않습니다.");
 				request.setAttribute("empid", id);
 				request.getRequestDispatcher("/login.jsp").forward(request, response);
+				return;
 			}			
 			
 		}
@@ -140,6 +141,7 @@ public class LoginController extends HttpServlet {
 					//에러값과 함께 회원가입 페이지로 추방
 					request.setAttribute("error", "회원가입에 실패했습니다. 다시.");
 					request.getRequestDispatcher("/join.jsp").forward(request, response);
+					return;
 				}		
 			
 		}
@@ -153,7 +155,7 @@ public class LoginController extends HttpServlet {
 		
 		
 		// 정보 수정 로직
-		if( !("".equals(mp_name)) || !("".equals(mp_phone)) || !("".equals(mp_pw)) ) {
+		if( !(mp_name == null && "".equals(mp_name)) || !(mp_phone == null && "".equals(mp_phone)) || !(mp_pw == null && "".equals(mp_pw)) ) {
 			System.out.println("/login doget.edit 실행" );
 
 			
@@ -196,6 +198,7 @@ public class LoginController extends HttpServlet {
 				System.out.println("정보수정에 실패 했습니다.");				
 			}
 			request.getRequestDispatcher("/mypage.jsp").forward(request, response);
+			return;
 			
 		}
 		
