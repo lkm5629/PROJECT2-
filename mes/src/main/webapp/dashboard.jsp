@@ -42,6 +42,7 @@
 	<div class="board-box">
 	  <div class="box-type1 radius">
 	  <h3>공정 진행률</h3>
+	  <div>차트 1</div>
 	  </div>
 	  <div class="box-type1 radius">
 	  <h3>불량률</h3>
