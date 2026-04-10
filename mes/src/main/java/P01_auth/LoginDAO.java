@@ -240,7 +240,7 @@ public class LoginDAO {
 	}
 
 	public LoginDTO editCheck(LoginDTO d) {
-		System.out.println("/login DAO.edit 실행");
+		System.out.println("/login DAO.editCheck 실행");
 
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -261,8 +261,8 @@ public class LoginDAO {
 			conn = dataFactory.getConnection();
 
 			// SQL 준비
-			String query = " select ename, phone, password user_info ";
-				   query += " where u.emp_id = ? ";
+			String query = " select ename, phone, password from user_info ";
+				   query += " where emp_id = ? ";
 
 			ps = conn.prepareStatement(query);
 			ps.setString(1, d.getEmpid());
@@ -332,8 +332,8 @@ public class LoginDAO {
 
 			// SQL 준비
 			String query = " update user_info ";
-			query += " set ename = ?,  phone = ?, pw = ? ";
-			query += " where u.emp_id = ? ";
+			query += " set ename = ?,  phone = ?, password = ? ";
+			query += " where emp_id = ? ";
 
 			ps = conn.prepareStatement(query);
 			ps.setString(1, d.getEname());
@@ -367,7 +367,7 @@ public class LoginDAO {
 			}
 
 		}
-		System.out.println("회원가입 결과 : " + count + " 0이상이면 성공. -1이면 실패 ");
+		System.out.println("정보 수정 결과 : " + count + " 0이상이면 성공. -1이면 실패 ");
 		return count;
 
 	}
