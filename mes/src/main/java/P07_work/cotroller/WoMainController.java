@@ -19,12 +19,10 @@ import P07_work.WoService;
 public class WoMainController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/worklist doGet ½ÇÇà");
+		System.out.println("/worklist doGet ì‹¤í–‰");
 		
 
-		// ¿äÃ»ÀÇ ÇÑ±Û ±úÁü ¹æÁö
 		request.setCharacterEncoding("utf-8");
-		// ÀÀ´äÀÇ ÇÑ±Û ±úÁü ¹æÁö
 		response.setContentType("text/html; charset=utf-8;");
 
 		String cmd = request.getParameter("cmd");
@@ -46,15 +44,13 @@ public class WoMainController extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// ¿äÃ»ÀÇ ÇÑ±Û ±úÁü ¹æÁö
 		request.setCharacterEncoding("utf-8");
-		// ÀÀ´äÀÇ ÇÑ±Û ±úÁü ¹æÁö
 		response.setContentType("text/html; charset=utf-8;");
-		System.out.println("/worklist doPost ½ÇÇà");
+		System.out.println("/worklist doPost ì‹¤í–‰");
 	}
 	
 	protected void getList (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/worklist getList ½ÇÇà");
+		System.out.println("/worklist getList ì‹¤í–‰");
 		
 		int size = 10;
 		int page = 1;
@@ -71,7 +67,6 @@ public class WoMainController extends HttpServlet {
 		dto.setSize(size);
 		dto.setPage(page);
 		
-		// DB¿¡¼­ ¸ðµç ¸ñ·Ï °¡Á®¿À±â
 		WoService service = new WoService();
 		Map woMap = service.getList(dto);
 		
@@ -81,7 +76,7 @@ public class WoMainController extends HttpServlet {
 	}
 	
 	protected void search (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/worklist search ½ÇÇà");
+		System.out.println("/worklist search ì‹¤í–‰");
 		
 
 		int size = 10;
@@ -118,7 +113,7 @@ public class WoMainController extends HttpServlet {
 		}
 		
 		String keyword = "";
-		keyword = request.getParameter("keyword");
+		keyword = request.getParameter("keyword").trim();
 		
 		SearchDTO search = new SearchDTO();
 		
@@ -127,7 +122,6 @@ public class WoMainController extends HttpServlet {
 		search.seteDate(eDateStr);
 		search.setKeyword(keyword);
 		
-		// DB¿¡¼­ ¸ðµç ¸ñ·Ï °¡Á®¿À±â
 		WoService service = new WoService();
 		Map map = service.search(dto, search);
 		
@@ -137,7 +131,7 @@ public class WoMainController extends HttpServlet {
 	}
 	
 	protected void detail (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/worklist detail ½ÇÇà");
+		System.out.println("/worklist detail ì‹¤í–‰");
 		
 		String woId = request.getParameter("woId");
 		

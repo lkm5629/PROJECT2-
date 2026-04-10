@@ -46,9 +46,15 @@
 		        </div>
 		
 		        <div class="button-group">
-		            <button class="buttonWhite">목록으로</button>
-		            <button class="buttonSub">내용 수정</button>
-		            <button class="buttonMain">지시 수정</button>
+			        <a href="/mes/worklist">
+			            <button type="button" class="buttonWhite">목록으로</button>
+			        </a>
+			        <a href="/mes/womodify?woId=${woInfo.woId}">
+			            <button type="button" class="buttonMain">지시 수정</button>
+			        </a>
+			        <a href="/mes/contentmodify?woId=${woInfo.woId}">
+			            <button type="button" class="buttonSub">내용 수정</button>
+			        </a>
 		        </div>
 		    </div>
 		
@@ -60,19 +66,19 @@
 		                <strong>작업정보</strong>
 		                <span class="sub">생산계획 : (${woInfo != null ? woInfo.planId : '-'})</span>
 		            </div>
-	            	<c:if test="${ woInfo.wostatus == 10 }">
+	            	<c:if test="${ woInfo.woStatus == 10 }">
 	            		<span class="status before">작업 전</span>
 	            	</c:if>
-	            	<c:if test="${ woInfo.wostatus == 20 }">
+	            	<c:if test="${ woInfo.woStatus == 20 }">
 	            		<span class="status ongoing">작업 중</span>
 	            	</c:if>
-	            	<c:if test="${ woInfo.wostatus == 30 }">
+	            	<c:if test="${ woInfo.woStatus == 30 }">
 	            		<span class="status finish">작업 완료</span>
 	            	</c:if>
-	            	<c:if test="${ woInfo.wostatus == 40 }">
+	            	<c:if test="${ woInfo.woStatus == 40 }">
 	            		<span class="status qcFin">검사 완료</span>
 	            	</c:if>
-	            	<c:if test="${ woInfo.wostatus == 50 }">
+	            	<c:if test="${ woInfo.woStatus == 50 }">
 	            		<span class="status hold">보류</span>
 	            	</c:if>
 	            	<c:if test="${ woInfo == null }">
@@ -106,13 +112,35 @@
 		        <div class="progress-area">
 		            <div class="progress-header">
 		                <span class="progress-title">진행률</span>
-		                <span class="percent">( ${woInfo != null ? woInfo.prevQty : ' - '} / ${woInfo != null ? woInfo.planQty : ' - '} ) <strong>${woInfo != null ? (woInfo.prevQty/woInfo.planQty)*100 : ' - '}%</strong></span>
+		                <span class="percent">( ${woInfo != null ? woInfo.prevQty : ' - '} / ${woInfo != null ? woInfo.woQty : ' - '} ) <strong><fmt:formatNumber value="${woInfo != null ? (woInfo.prevQty/woInfo.woQty)*100 : ' 0 '}" maxFractionDigits="1"/>%</strong></span>
 		            </div>
 		
 		            <div class="progress-bar">
-		                <div class="progress-fill" style="width: ${woInfo != null ? (woInfo.prevQty/woInfo.planQty)*100 : '0'}%;"></div>
+		                <div class="progress-fill" style="width: ${woInfo != null ? (woInfo.prevQty/woInfo.woQty)*100 : '0'}%;"></div>
 		            </div>
 		        </div>
+		    </div>
+		    
+		    
+		    
+		    <!-- 작업지시 상세사항 -->
+		    <div class="card">
+		    	<div class="card-header">
+		    		<strong>작업지시 상세사항</strong>
+		    	</div>
+		    	
+		    	<table class="table">
+		    		<tr>
+		    			<td class="woContent">
+		    				<c:if test="${empty woInfo.content}">
+		    					내용 없음
+		    				</c:if>
+		    				<c:if test="${not empty woInfo.content}">
+		    					${woInfo.content}
+		    				</c:if>
+		    			</td>
+		    		</tr>
+		    	</table>
 		    </div>
 		
 			

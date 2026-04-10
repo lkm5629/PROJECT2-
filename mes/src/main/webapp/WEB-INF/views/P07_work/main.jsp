@@ -128,19 +128,19 @@
 				                <td>${ i.workDate }</td>
 				                <td>${ i.woQty }</td>
 				                <td>
-			                		<c:if test="${ i.wostatus == 10 }">
+			                		<c:if test="${ i.woStatus == 10 }">
 			                			<span class="status before">작업 전</span>
 			                		</c:if>
-			                		<c:if test="${ i.wostatus == 20 }">
+			                		<c:if test="${ i.woStatus == 20 }">
 			                			<span class="status ongoing">작업 중</span>
 			                		</c:if>
-			                		<c:if test="${ i.wostatus == 30 }">
+			                		<c:if test="${ i.woStatus == 30 }">
 			                			<span class="status finish">작업 완료</span>
 			                		</c:if>
-			                		<c:if test="${ i.wostatus == 40 }">
+			                		<c:if test="${ i.woStatus == 40 }">
 			                			<span class="status qcFin">검사 완료</span>
 			                		</c:if>
-			                		<c:if test="${ i.wostatus == 50 }">
+			                		<c:if test="${ i.woStatus == 50 }">
 			                			<span class="status hold">보류</span>
 			                		</c:if>
 				                </td>

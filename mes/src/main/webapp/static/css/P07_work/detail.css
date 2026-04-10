@@ -156,6 +156,12 @@
 }
 
 
+/* 작업지시 */
+.woContent {
+	font-size: 13px;
+	padding: 20px !important;
+}
+
 /* 공정 */
 .process-list {
     display: flex;

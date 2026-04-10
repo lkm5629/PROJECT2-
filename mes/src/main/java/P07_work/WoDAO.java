@@ -54,7 +54,8 @@ public class WoDAO {
 					+ "	ON pp.emp_id = director.emp_id "
 					+ "LEFT OUTER JOIN item i "
 					+ "    ON pp.item_id = i.item_id "
-					+ "where wo.deleted is null";
+					+ "where wo.deleted is null "
+					+ "order by workdate desc";
 			ps = conn.prepareStatement(query);
 
 			rs = ps.executeQuery();
@@ -86,7 +87,7 @@ public class WoDAO {
 				dto.setWoId(woId);
 				dto.setWorkDate(workDate);
 				dto.setPlanId(planId);
-				dto.setWostatus(woStatus);
+				dto.setWoStatus(woStatus);
 				dto.setWoQty(woQty);
 				dto.setDeleted(deleted);
 				dto.setWorker(worker);
@@ -96,7 +97,7 @@ public class WoDAO {
 				dto.setItemId(itemId);
 				dto.setDirector(director);
 				dto.setItemName(itemName);
-				dto.setUnit(unit);
+				dto.setUni(unit);
 				dto.setSpec(spec);
 				dto.setGroup(group);
 				dto.setwName(wName);
@@ -240,7 +241,7 @@ public class WoDAO {
 				dto.setWoId(woId);
 				dto.setWorkDate(workDate);
 				dto.setPlanId(planId);
-				dto.setWostatus(woStatus);
+				dto.setWoStatus(woStatus);
 				dto.setWoQty(woQty);
 				dto.setDeleted(deleted);
 				dto.setWorker(worker);
@@ -250,7 +251,7 @@ public class WoDAO {
 				dto.setItemId(itemId);
 				dto.setDirector(director);
 				dto.setItemName(itemName);
-				dto.setUnit(unit);
+				dto.setUni(unit);
 				dto.setSpec(spec);
 				dto.setGroup(group);
 				dto.setwName(wName);
@@ -309,9 +310,11 @@ public class WoDAO {
 					+ "	   worker.ename workerName, "
 					+ "    pp.status, "
 					+ "    pp.plan_qty, "
-					+ "    pp.prev_qty, "
+					+ "    pp.prev_qty plan_prev, "
 					+ "    pp.item_id, "
 					+ "    pp.emp_id director, "
+					+ "    pp.plan_sdate sdate, "
+					+ "    pp.plan_edate edate, "
 					+ "    director.ename directorName, "
 					+ "    i.item_name, "
 					+ "    i.unit, "
@@ -336,44 +339,62 @@ public class WoDAO {
 
 			while (rs.next()) {
 				
+				// wo
 				String woId = rs.getString("wo_id");
 				Date workDate = rs.getDate("workdate");
-				String planId = rs.getString("plan_id");
 				int woStatus = rs.getInt("wostatus_no");
 				int woQty = rs.getInt("wo_qty");
-				String deleted = rs.getString("deleted");
+				int prevQty = rs.getInt("prev_qty");
 				String worker = rs.getString("emp_id");
 				String wName = rs.getString("workerName");
+				String content = rs.getString("content");
+				String deleted = rs.getString("deleted");
+				
+				// plan
+				String planId = rs.getString("plan_id");
+				Date sDate = rs.getDate("sDate");
+				Date eDate = rs.getDate("eDate");
 				int planStatus = rs.getInt("status");
 				int planQty = rs.getInt("plan_qty");
-				int prevQty = rs.getInt("prev_qty");
-				String itemId = rs.getString("item_id");
+				int planPrev = rs.getInt("plan_prev");
 				String director = rs.getString("director");
 				String dName = rs.getString("directorName");
+				
+				// item
+				String itemId = rs.getString("item_id");
 				String itemName = rs.getString("item_name");
 				String unit = rs.getString("unit");
 				int spec = rs.getInt("spec");
 				String group = rs.getString("g_id");
 				
-
+				
+				// wo
 				dto.setWoId(woId);
 				dto.setWorkDate(workDate);
-				dto.setPlanId(planId);
-				dto.setWostatus(woStatus);
+				dto.setWoStatus(woStatus);
 				dto.setWoQty(woQty);
-				dto.setDeleted(deleted);
+				dto.setPrevQty(prevQty);
 				dto.setWorker(worker);
+				dto.setwName(wName);
+				dto.setContent(content);
+				dto.setDeleted(deleted);
+				
+				//plan
+				dto.setPlanId(planId);
+				dto.setsDate(sDate);
+				dto.seteDate(eDate);
 				dto.setPlanStatus(planStatus);
 				dto.setPlanQty(planQty);
-				dto.setPrevQty(prevQty);
-				dto.setItemId(itemId);
+				dto.setPlanPrev(planPrev);
 				dto.setDirector(director);
+				dto.setdName(dName);
+				
+				// item
+				dto.setItemId(itemId);
 				dto.setItemName(itemName);
-				dto.setUnit(unit);
+				dto.setUni(unit);
 				dto.setSpec(spec);
 				dto.setGroup(group);
-				dto.setwName(wName);
-				dto.setdName(dName);
 				
 			}
 
@@ -829,13 +850,16 @@ public class WoDAO {
 			conn = dataFactory.getConnection();
 
 			// SQL 준비
-			String query = "INSERT INTO WORK_order (wo_id, workdate, plan_id, wostatus_no, wo_qty, emp_id) "
-					+ "VALUES ('wo_'||wo_seq.nextval, to_date(?), ?, 10, ?, ?) ";
-			ps = conn.prepareStatement(query);
+			String query = "INSERT INTO WORK_order (wo_id, workdate, plan_id, wostatus_no, wo_qty, emp_id, content) "
+					+ "VALUES ('wo_'||wo_seq.nextval, to_date(?, 'yyyy-MM-dd'), ?, 10, ?, ?, ?) ";
+			
+			ps = new LoggableStatement(conn, query);
+			
 			ps.setString(1, dto.getWorkDate());
 			ps.setString(2, dto.getPlanId());
 			ps.setInt(3, dto.getWoQty());
 			ps.setString(4, dto.getWorker());
+			ps.setString(5,  dto.getContent());
 
 			// SQL 실행 및 결과 확보
 			result = ps.executeUpdate();
@@ -869,6 +893,203 @@ public class WoDAO {
 		} // finally
 
 		return result;
-	} // update
+	} // add
+	
+
+	
+	public int modifyOrder(WoAddDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+		
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE WORK_ORDER "
+					+ "SET workdate = to_date(?, 'yyyy-MM-dd'), "
+					+ "	wo_qty = ?, "
+					+ "	emp_id = ?, "
+					+ "	content = ? "
+					+ "WHERE wo_id = ?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, dto.getWorkDate());
+			ps.setInt(2, dto.getWoQty());
+			ps.setString(3, dto.getWorker());
+			ps.setString(4, dto.getContent());
+			ps.setString(5, dto.getWoId());
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // modify
+	
+	
+	public int deleteOrder(String woId) {
+		System.out.println("DTO : " + woId);
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "UPDATE WORK_ORDER SET deleted = 'Y' WHERE wo_id=?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, woId);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // delete
+	
+	public int updateContent(String woId, int status, int prevQty) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+		
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE work_order "
+					+ "SET wostatus_no=?, prev_qty=? "
+					+ "WHERE wo_id=?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setInt(1, status);
+			ps.setInt(2, prevQty);
+			ps.setString(3, woId);
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // modify
 
 }
