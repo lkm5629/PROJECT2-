@@ -1,1 +1,517 @@
-@charset "EUC-KR";
+/* 式式 CSS Variables 式式 */
+:root {
+    --pp-primary:       #2563EB;
+    --pp-primary-hover: #1D4ED8;
+    --pp-danger:        #DC2626;
+    --pp-danger-hover:  #B91C1C;
+    --pp-success:       #16A34A;
+    --pp-warning:       #D97706;
+    --pp-surface:       #FFFFFF;
+    --pp-border:        #E2E8F0;
+    --pp-text-primary:  #0F172A;
+    --pp-text-secondary:#64748B;
+    --pp-text-muted:    #94A3B8;
+    --pp-radius-sm:     6px;
+    --pp-radius-md:     8px;
+    --pp-radius-lg:     12px;
+    --pp-shadow-sm:     0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --pp-transition:    0.15s ease;
+    --pp-font:          'Noto Sans KR', -apple-system, sans-serif;
+}
+
+/* 式式 Page Header 式式 */
+.pp .page-header { margin-bottom: 24px; }
+
+.pp .page-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--pp-text-primary);
+    letter-spacing: -0.3px;
+}
+
+.pp .page-header p {
+    font-size: 13px;
+    color: var(--pp-text-secondary);
+    margin-top: 3px;
+}
+
+.pp .page-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+/* 式式 Card 式式 */
+.pp .card {
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-lg);
+    padding: 24px;
+    box-shadow: var(--pp-shadow-sm);
+}
+
+.pp .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pp-text-secondary);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--pp-border);
+    letter-spacing: 0.1px;
+}
+
+/* 式式 Form 式式 */
+.pp .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.pp .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pp .form-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--pp-text-primary);
+}
+
+.pp .form-label .req {
+    color: var(--pp-danger);
+    margin-left: 2px;
+}
+
+.pp .form-control {
+    height: 40px;
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+    padding: 0 12px;
+    font-size: 14px;
+    color: var(--pp-text-primary);
+    font-family: var(--pp-font);
+    background: var(--pp-surface);
+    outline: none;
+    transition: border-color var(--pp-transition), box-shadow var(--pp-transition);
+    width: 100%;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+}
+
+.pp .form-control::placeholder { color: var(--pp-text-muted); }
+.pp .form-control:hover  { border-color: #CBD5E1; }
+.pp .form-control:focus  {
+    border-color: var(--pp-primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.pp select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%2394A3B8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+}
+
+.pp input[type="date"].form-control {
+    cursor: pointer;
+    color: var(--pp-text-secondary);
+}
+
+/* 式式 Buttons 式式 */
+.pp .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--pp-radius-md);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--pp-font);
+    cursor: pointer;
+    border: none;
+    transition: background var(--pp-transition), transform var(--pp-transition), box-shadow var(--pp-transition);
+    letter-spacing: -0.1px;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.pp .btn:active { transform: scale(0.98); }
+
+.pp .btn-primary { background: var(--pp-primary); color: #fff; }
+.pp .btn-primary:hover { background: var(--pp-primary-hover); box-shadow: 0 2px 8px rgba(37,99,235,0.3); }
+
+.pp .btn-outline {
+    background: var(--pp-surface);
+    color: var(--pp-text-secondary);
+    border: 1px solid var(--pp-border);
+}
+.pp .btn-outline:hover { background: #F8FAFC; color: var(--pp-text-primary); border-color: #CBD5E1; }
+
+.pp .btn-danger { background: var(--pp-danger); color: #fff; }
+.pp .btn-danger:hover { background: var(--pp-danger-hover); }
+
+.pp .btn-danger-outline {
+    background: var(--pp-surface);
+    color: var(--pp-danger);
+    border: 1px solid #FECACA;
+}
+.pp .btn-danger-outline:hover { background: #FEF2F2; }
+
+.pp .btn-success-outline {
+    background: var(--pp-surface);
+    color: var(--pp-success);
+    border: 1px solid #BBF7D0;
+}
+.pp .btn-success-outline:hover { background: #F0FDF4; }
+
+.pp .btn-sm { height: 32px; padding: 0 12px; font-size: 12px; }
+
+/* 式式 Form Actions 式式 */
+.pp .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--pp-border);
+}
+
+/* 式式 Table Toolbar 式式 */
+.pp .table-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.pp .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+    max-width: 280px;
+}
+
+.pp .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--pp-text-muted);
+    pointer-events: none;
+}
+
+.pp .search-input {
+    height: 36px;
+    width: 100%;
+    padding-left: 32px;
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+    font-size: 13px;
+    font-family: var(--pp-font);
+    color: var(--pp-text-primary);
+    outline: none;
+    background: var(--pp-surface);
+    transition: border-color var(--pp-transition), box-shadow var(--pp-transition);
+    box-sizing: border-box;
+}
+
+.pp .search-input::placeholder { color: var(--pp-text-muted); }
+.pp .search-input:focus {
+    border-color: var(--pp-primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.pp .date-input {
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+    font-size: 13px;
+    font-family: var(--pp-font);
+    color: var(--pp-text-secondary);
+    outline: none;
+    background: var(--pp-surface);
+    cursor: pointer;
+    transition: border-color var(--pp-transition);
+    box-sizing: border-box;
+}
+
+.pp .date-input:focus { border-color: var(--pp-primary); }
+
+.pp .toolbar-sep {
+    width: 1px;
+    height: 20px;
+    background: var(--pp-border);
+    margin: 0 2px;
+}
+
+/* 式式 Table 式式 */
+.pp .table-wrap {
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--pp-shadow-sm);
+}
+
+.pp table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--pp-surface);
+}
+
+.pp thead th {
+    background: #F8FAFC;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pp-text-secondary);
+    letter-spacing: 0.2px;
+    border-bottom: 1px solid var(--pp-border);
+    white-space: nowrap;
+}
+
+.pp thead th:first-child { padding-left: 16px; }
+
+.pp tbody tr {
+    border-bottom: 1px solid #F1F5F9;
+    transition: background var(--pp-transition);
+}
+
+.pp tbody tr:last-child { border-bottom: none; }
+.pp tbody tr:hover { background: #F8FAFC; }
+
+.pp tbody td {
+    padding: 13px 14px;
+    font-size: 13px;
+    color: var(--pp-text-primary);
+    vertical-align: middle;
+}
+
+.pp tbody td:first-child { padding-left: 16px; }
+
+.pp .checkbox-col { width: 40px; }
+
+.pp input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--pp-primary);
+    cursor: pointer;
+}
+
+/* 式式 Progress Bar 式式 */
+.pp .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pp .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #E2E8F0;
+    border-radius: 99px;
+    overflow: hidden;
+    min-width: 80px;
+}
+
+.pp .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--pp-primary);
+}
+
+.pp .progress-fill.high { background: var(--pp-primary); }
+.pp .progress-fill.mid  { background: var(--pp-warning); }
+.pp .progress-fill.low  { background: #E2E8F0; }
+
+.pp .progress-pct {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pp-text-secondary);
+    min-width: 32px;
+    text-align: right;
+}
+
+/* 式式 Badge 式式 */
+.pp .badge {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+    white-space: nowrap;
+}
+
+.pp .badge-blue  { background: #DBEAFE; color: #1D4ED8; }
+.pp .badge-gray  { background: #F1F5F9; color: #475569; }
+.pp .badge-green { background: #DCFCE7; color: #15803D; }
+.pp .badge-amber { background: #FEF3C7; color: #B45309; }
+.pp .badge-red   { background: #FEE2E2; color: #B91C1C; }
+
+/* 式式 Section Title 式式 */
+.pp .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pp-text-secondary);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--pp-border);
+}
+
+/* 式式 Info Grid (鼻撮) 式式 */
+.pp .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.pp .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pp .info-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--pp-text-muted);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.pp .info-value {
+    font-size: 14px;
+    color: var(--pp-text-primary);
+}
+
+.pp .info-value.em {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* 式式 Metric Cards 式式 */
+.pp .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.pp .metric-card {
+    background: #F8FAFC;
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pp .metric-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--pp-text-muted);
+    letter-spacing: 0.3px;
+}
+
+.pp .metric-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--pp-text-primary);
+    letter-spacing: -0.5px;
+}
+
+.pp .metric-unit { font-size: 11px; color: var(--pp-text-muted); }
+
+.pp .metric-bar {
+    height: 3px;
+    border-radius: 99px;
+    margin-top: 4px;
+}
+
+.pp .metric-bar.primary { background: var(--pp-primary); }
+.pp .metric-bar.success { background: var(--pp-success); }
+.pp .metric-bar.warning { background: var(--pp-warning); }
+
+/* 式式 Detail Progress 式式 */
+.pp .detail-progress-wrap { margin-top: 8px; }
+
+.pp .detail-progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.pp .detail-progress-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--pp-text-secondary);
+}
+
+.pp .detail-progress-pct {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--pp-primary);
+}
+
+.pp .detail-progress-bar {
+    height: 10px;
+    background: #E2E8F0;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.pp .detail-progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--pp-primary);
+}
+
+.pp .detail-progress-markers {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.pp .detail-progress-markers span { font-size: 10px; color: var(--pp-text-muted); }
+
+/* 式式 Action Header 式式 */
+.pp .action-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+/* 式式 Utility 式式 */
+.pp .text-muted     { color: var(--pp-text-muted); }
+.pp .text-secondary { color: var(--pp-text-secondary); }
+
+/* 式式 Animations 式式 */
+@keyframes pp-progressAnim { from { width: 0; } }
+
+.pp .progress-fill,
+.pp .detail-progress-fill {
+    animation: pp-progressAnim 0.8s cubic-bezier(0.4,0,0.2,1) both;
+}
+
+/* 式式 Responsive 式式 */
+@media (max-width: 900px) {
+    .pp .form-grid   { grid-template-columns: 1fr; }
+    .pp .info-grid   { grid-template-columns: 1fr 1fr; }
+    .pp .metric-grid { grid-template-columns: 1fr; }
+}
