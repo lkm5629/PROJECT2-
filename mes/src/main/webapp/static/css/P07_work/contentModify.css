@@ -1,0 +1,108 @@
+@charset "UTF-8";
+
+/* 전체 영역 */
+.content {
+    width: 100%;
+}
+
+/* 상단 */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title-group h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.sub-text {
+    color: #888;
+    font-size: 14px;
+}
+
+.button-group {
+	display: flex;
+	gap: 10px;
+}
+
+
+/* 버튼 영역 */
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* 서브 타이틀 */
+.sub-title {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+/* 카드 박스 */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #e0e0e0;
+}
+
+.card-header {
+    margin-bottom: 20px;
+}
+
+.card-header strong {
+	font-size: 18px;
+}
+
+.woId {
+	font-size: 14px;
+}
+
+/* 행 구성 */
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* 오른쪽 정렬 (상태 라디오) */
+.right-align {
+    justify-content: flex-end;
+}
+
+/* 입력 그룹 */
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 라벨 */
+.form-group label {
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+
+/* input 공통 */
+.form-group input {
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* readonly 스타일 */
+input[readonly] {
+    background: #eee;
+    cursor: not-allowed;
+}
+
+/* 라디오 버튼 */
+input[radio] {
+    margin-left: 10px;
+    font-size: 14px;
+}
