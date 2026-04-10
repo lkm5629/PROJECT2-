@@ -29,74 +29,79 @@
 <body>
 
 
-<%@ include file="/WEB-INF/views/P00_layout/header.jsp" %>
-    
-    <div class="layout_snb">
-        <div class="snbContent">
-            <%@ include file="/WEB-INF/views/P00_layout/snb.jsp" %>
-        </div>
-        <div class="content">
-            
-		<div class="snb-bro">
-			<div class="title-box">
-				<h1>마이페이지</h1>
-				<h7>제조 실행 시스템</h7>
-			</div>
-			<div class="board-box">
-				<div class="box-type4 radius">
-					<div class="mp-title">
-						<h3>사용자 정보</h3>
-						<span>기본 계정 및 계정 설정</span>
-					</div>
-					<form method="get" action="/login">
-					    <input type="hidden" name="mp_empid" value="${list[0].empid}">
-						<div class="mp-tool">
-						<div class="mp-chain">
-							<span>이름</span> 
-							<input type="text" name="mp-name" class="input-3 radius" value="${ list[0].ename }"> 
-						</div>
-						<div class="mp-chain">
-							<span>연락처</span> 
-							<input type="text" name="mp-phone" class="input-3 radius" value="${ list[0].phone }">
-						</div>
-						<div class="mp-chain">
-							 <span>부서</span>
-							 <div class="input-3 radius">부서명 : ${ list[0].deptname } &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 부서번호: ${ list[0].deptno }</div> 
-						</div>
-						<div class="mp-chain">
-							<span>비밀번호 변경</span> 
-							<input type="text" name="mp-pw" class="input-3 radius" placeholder="사용할 새 비밀번호를 입력해주세요.">
-						</div>
-						<div class="mp-chain">
-							<span>비밀번호 확인</span> 
-							<input type="text" name="mp-pw2" class="input-3 radius" placeholder="새 비밀번호 확인">
-						</div>
-						<div class="mp-chain">
-							 <span>입사일</span> 
-							 <div class="input-3 radius">${ list[0].hiredate }</div>
-						</div>
-						<div class="mp-chain">
-							 <span> </span>	
-							 <button type="submit" name="mp-btn" class="buttonMain">정보	수정</button>
-						</div>
-						</div>
-					</form>
-				</div>
-				<div class="box-type4 radius">
-					<div class="title-box">
-						<h3>내 작업</h3>
-						<span>내 작업 지시서 보여주기</span>
-					</div>
-				</div>
-			</div>
+	<%@ include file="/WEB-INF/views/P00_layout/header.jsp"%>
+
+	<div class="layout_snb">
+		<div class="snbContent">
+			<%@ include file="/WEB-INF/views/P00_layout/snb.jsp"%>
 		</div>
-            
-            
-        </div>
-    </div>
-    
-	
-		
+		<div class="content">
+
+			<div class="snb-bro">
+				<div class="title-box">
+					<h1>마이페이지</h1>
+					<h7>제조 실행 시스템</h7>
+				</div>
+				<div class="board-box">
+					<div class="box-type4 radius">
+						<div class="mp-title">
+							<h3>사용자 정보</h3>
+							<span>기본 계정 및 계정 설정</span>
+							<c:if test="${ not empty error }">
+								<span style="color: red;"> ${ error } </span>
+							</c:if>
+						</div>
+						<form method="get" action="login">
+							<input type="hidden" name="mp_empid" value="${dto.empid}">
+							<div class="mp-tool">
+								<div class="mp-chain">
+									<span>이름</span> <input type="text" name="mp_name"
+										class="input-3 radius" value="${ dto.ename }">
+								</div>
+								<div class="mp-chain">
+									<span>연락처</span> <input type="text" name="mp_phone"
+										class="input-3 radius" value="${ dto.phone }">
+								</div>
+								<div class="mp-chain">
+									<span>부서</span>
+									<div class="input-3 radius">부서명 : ${ dto.deptname }
+										&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 부서번호: ${ dto.deptno }</div>
+								</div>
+								<div class="mp-chain">
+									<span>비밀번호 변경</span> <input type="text" name="mp_pw"
+										class="input-3 radius" placeholder="사용할 새 비밀번호를 입력해주세요.">
+								</div>
+								<div class="mp-chain">
+									<span>비밀번호 확인</span> <input type="text" name="mp_pw2"
+										class="input-3 radius" placeholder="새 비밀번호 확인">
+								</div>
+								<div class="mp-chain">
+									<span>입사일</span>
+									<div class="input-3 radius">${ dto.hiredate }</div>
+								</div>
+								<div class="mp-chain">
+									<span> </span>
+									<button type="submit" name="mp_btn" class="buttonMain">정보
+										수정</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="box-type4 radius">
+						<div class="title-box">
+							<h3>내 작업</h3>
+							<span>내 작업 지시서 보여주기</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+
 
 
 </body>
