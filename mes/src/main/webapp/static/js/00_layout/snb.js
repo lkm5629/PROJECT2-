@@ -54,7 +54,7 @@ function moveMenu_snb() {
                     break;
 
                 case "qc_snb":
-                    location.href = "/mes/qc";
+                    location.href = "/mes/quality";
                     break;
 
                 case "stock_snb":
