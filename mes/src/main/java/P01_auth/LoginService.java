@@ -49,6 +49,20 @@ public class LoginService {
 		
 	}
 	
+	public int changepw(LoginDTO d) {
+		System.out.println("/login service.changepw() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		
+		
+		//정보수정 실행 결과 리턴.
+		return a.changepw(d);
+		
+		
+	}
+	
 	
 	public List join(LoginDTO d) {
 		System.out.println("/login service.join() 실행 ");
