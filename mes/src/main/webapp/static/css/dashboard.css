@@ -34,8 +34,8 @@ header {
 	justify-content : space-between;
 }
 .box-type1 {
-	width : 540px;
-	height : 400px;
+	width : 1160px;
+	height : 430px;
 	padding : 0px 10px;
 	margin : 0px 15px; 
 	flex-shirink : 0;
