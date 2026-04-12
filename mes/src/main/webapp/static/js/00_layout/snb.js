@@ -65,7 +65,7 @@ function moveMenu_snb() {
                     break;
 
                 case "stock_snb":
-                    location.href = "/mes/stock";
+                    location.href = "/mes/iocontroller";
                     break;
 
                 case "ioIn_snb":
@@ -89,7 +89,7 @@ function moveMenu_snb() {
                     break;
 
                 case "masterData_snb":
-                    location.href = "/mes/master";
+                    location.href = "/mes/itemMaster";
                     break;
 
                 case "notice_snb":
