@@ -114,7 +114,6 @@
 hr {
 	margin: 35px 5px;
 }
-
 .progress-title {
 	font-weight: 700;
 }
@@ -131,7 +130,7 @@ hr {
 .progress-bar {
     width: 100%;
     height: 10px;
-    background: var(--color-sub-blue);
+    background: var(--color-sub-red);
     border-radius: 5px;
     
     margin: 30px 0 20px;
@@ -139,7 +138,7 @@ hr {
 
 .progress-fill {
     height: 100%;
-    background: var(--color-main-blue);
+    background: var(--color-main-red);
     border-radius: 5px;
 }
 
@@ -162,41 +161,115 @@ hr {
 }
 
 
-/* 작업지시 */
-.woContent {
+/* 검사지시 */
+.qcContent {
 	font-size: 13px;
 	padding: 20px !important;
 }
 
-/* 공정 */
-.process-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+
+/* 상세내역 */
+.qcDetail {
+	display: flex;
+	align-content: flex-start;
+	gap: 30px;
 }
 
-.process-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
+.defRate {
+	width: 40%;
 }
 
-.step {
-    width: 30px;
-    height: 30px;
-    background: #777;
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.defDetail {
+	width: 60%;
 }
 
-.process-title {
+
+/* 차트 영역 */
+.graphCard {
+	padding: 50px;	
+}
+
+.graph-wrap {
+    position: relative;
+    margin: 0 auto;
+}
+
+/* 중앙 텍스트 */
+.center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.center-text .label {
+    font-size: 14px;
+}
+
+.center-text .value {
+    font-size: 24px;
     font-weight: bold;
 }
 
-.process-desc {
+/* 하단 요약 */
+.summary {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.summary .label {
     font-size: 14px;
-    color: #666;
+}
+
+.summary .value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* 색상 박스 */
+.color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 6px;
+}
+
+.color.pass {
+    background: var(--color-main-blue);
+}
+
+.color.defect {
+    background: var(--color-main-red);
+}
+
+
+/* 불량 상세 */
+.table-contain {
+	padding: 15px;
+}
+
+.defList, .defList th, .defList td {
+	border: none;
+}
+table.defList thead th {
+	background-color: var(--color-main-blue);
+	color: white;
+	text-align: center;
+}
+
+table.defList th, table.defList td {
+	padding: 10px;
+	font-size: 13px;
+}
+
+.defList tbody tr {
+	border-bottom: 1px solid var(--color-border);
+}
+
+.defList .defCnt {
+	text-align: center;
 }

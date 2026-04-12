@@ -76,5 +76,20 @@ public class WoService {
 		WoDAO dao = new WoDAO();
 		return dao.addOrder(dto);
 	}
+	
+	public int modifyOrder(WoAddDTO dto) {
+		WoDAO dao = new WoDAO();
+		return dao.modifyOrder(dto);
+	}
+	
+	public int deleteOrder(String woId) {
+		WoDAO dao = new WoDAO();
+		return dao.deleteOrder(woId);
+	}
+	
+	public int updateContent(String woId, int status, int prevQty) {
+		WoDAO dao = new WoDAO();
+		return dao.updateContent(woId, status, prevQty);
+	}
 
 }

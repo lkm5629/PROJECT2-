@@ -1,8 +1,7 @@
-package P07_work.cotroller;
+package P08_quality.controller;
 
 import java.io.IOException;
 import java.sql.Date;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -12,18 +11,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import P07_work.SearchDTO;
-import P07_work.WoDTO;
-import P07_work.WoService;
+import P08_quality.QcCardDTO;
+import P08_quality.QcDTO;
+import P08_quality.QcService;
 
-@WebServlet("/worklist")
-public class WoMainController extends HttpServlet {
-
+@WebServlet("/qclist")
+public class QcMainController extends HttpServlet {
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/worklist doGet 실행");
-		
+		System.out.println("/qclist doGet 실행");
 
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8;");
+		
+		getCard(request, response);
 
 		String cmd = request.getParameter("cmd");
 		System.out.println("cmd : " + cmd);
@@ -38,18 +39,20 @@ public class WoMainController extends HttpServlet {
 		}
 		
 		
-		request.getRequestDispatcher("/WEB-INF/views/P07_work/main.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/P08_quality/main.jsp").forward(request, response);
 	}
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/qclist doPost 실행");
+		
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8;");
-		System.out.println("/worklist doPost 실행");
+		
 	}
 	
-	protected void getList (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/worklist getList 실행");
+	protected void getList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/qclist getList 실행");
+		
 		
 		int size = 10;
 		int page = 1;
@@ -62,21 +65,30 @@ public class WoMainController extends HttpServlet {
 
 		}
 		
-		WoDTO dto = new WoDTO();
+		QcDTO dto = new QcDTO();
 		dto.setSize(size);
 		dto.setPage(page);
 		
-		WoService service = new WoService();
-		Map woMap = service.getList(dto);
+		QcService service = new QcService();
+		Map qcMap = service.getList(dto);
 		
-		// forward
-		request.setAttribute("woMap", woMap);
+		System.out.println(qcMap);
 		
+		request.setAttribute("qcMap", qcMap);
 	}
 	
-	protected void search (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/worklist search 실행");
+	protected void getCard(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/qclist getCard 실행");
 		
+		QcService service = new QcService();
+		QcCardDTO cardDTO = service.getCard();
+		
+		request.setAttribute("cardDTO", cardDTO);
+	}
+	
+	protected void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/qclist search 실행");
+
 
 		int size = 10;
 		int page = 1;
@@ -89,7 +101,7 @@ public class WoMainController extends HttpServlet {
 
 		}
 		
-		WoDTO dto = new WoDTO();
+		QcDTO dto = new QcDTO();
 		dto.setSize(size);
 		dto.setPage(page);
 		
@@ -121,22 +133,21 @@ public class WoMainController extends HttpServlet {
 		search.seteDate(eDateStr);
 		search.setKeyword(keyword);
 		
-		WoService service = new WoService();
+		QcService service = new QcService();
 		Map map = service.search(dto, search);
 		
 		// forward
-		request.setAttribute("woMap", map);
+		request.setAttribute("qcMap", map);
 		
 	}
 	
-	protected void detail (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/worklist detail 실행");
-		
-		String woId = request.getParameter("woId");
+	protected void detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/qclist detail 실행");
+
+		String qcId = request.getParameter("qcId");
 		
 		String cp = request.getContextPath();
-		response.sendRedirect(cp + "/workorder?woId=" + woId);
-		
+		response.sendRedirect(cp + "/qcdetail?qcId=" + qcId);
 	}
 
 }

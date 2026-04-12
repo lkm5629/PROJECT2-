@@ -1,4 +1,4 @@
-package P08_quality.dto;
+package P08_quality;
 
 public class Test_08 {
 

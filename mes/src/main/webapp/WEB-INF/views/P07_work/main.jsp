@@ -45,13 +45,6 @@
 		if (endSection > totalPage) {
 			endSection = totalPage;
 		}
-		
-		System.out.println(size);
-		System.out.println(totalPage);
-		System.out.println(pageNum);
-		System.out.println(endSection);
-		System.out.println(startSection);
-		
 	%>
 	
 	<div class="layout_snb">
@@ -65,10 +58,10 @@
 			        <p>작업 지시서 관리 및 작업 상태 변경</p>
 			    </div>
     			<button class="addBtn buttonMain">
-    				<svg width="12" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M7.5 1V15.1299" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-						<path d="M1 8.02148H14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
+<!--     				<svg width="12" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg"> -->
+<!-- 						<path d="M7.5 1V15.1299" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> -->
+<!-- 						<path d="M1 8.02148H14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> -->
+<!-- 					</svg> -->
     				작업지시 등록
     			</button>
 			</div>
@@ -92,7 +85,7 @@
 								</select>
 								
 								<input type="date" name="startDate" value="${param.startDate}" class="date"> ~
-								<input type="date" name="endDate" value="${param.endDate}" class="date">
+								<input type="date" name="endDate" value="${param.endDate}" class="date" min="${param.startDate}">
 							</div>
 							
 					        <div class="search-area">
@@ -128,19 +121,19 @@
 				                <td>${ i.workDate }</td>
 				                <td>${ i.woQty }</td>
 				                <td>
-			                		<c:if test="${ i.wostatus == 10 }">
+			                		<c:if test="${ i.woStatus == 10 }">
 			                			<span class="status before">작업 전</span>
 			                		</c:if>
-			                		<c:if test="${ i.wostatus == 20 }">
+			                		<c:if test="${ i.woStatus == 20 }">
 			                			<span class="status ongoing">작업 중</span>
 			                		</c:if>
-			                		<c:if test="${ i.wostatus == 30 }">
+			                		<c:if test="${ i.woStatus == 30 }">
 			                			<span class="status finish">작업 완료</span>
 			                		</c:if>
-			                		<c:if test="${ i.wostatus == 40 }">
+			                		<c:if test="${ i.woStatus == 40 }">
 			                			<span class="status qcFin">검사 완료</span>
 			                		</c:if>
-			                		<c:if test="${ i.wostatus == 50 }">
+			                		<c:if test="${ i.woStatus == 50 }">
 			                			<span class="status hold">보류</span>
 			                		</c:if>
 				                </td>

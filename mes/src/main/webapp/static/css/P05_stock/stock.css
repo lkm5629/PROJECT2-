@@ -304,27 +304,44 @@ html, body {
 
 /* ── 페이지 헤더 ── */
 .page-header {
-    position: relative;
-    padding-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
 }
 
-.btn-register {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
+
+
+/* ── 입고/출고 등록 버튼 ── */
+.btn-register-in {
     padding: 8px 18px;
-    background: #4a4a6a;
+    background: #3a6fd9;
     color: #fff;
     border: none;
     border-radius: 6px;
     font-size: 13px;
     cursor: pointer;
     white-space: nowrap;
+    margin-left: auto; /* 오른쪽 정렬 */
 }
 
-.btn-register:hover {
-    background: #363659;
+.btn-register-in:hover {
+    background: #2a5abf;
+}
+
+.btn-register-out {
+    padding: 8px 18px;
+    background: #fff;
+    color: #333;
+    border: 1px solid #d0d5dd;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-register-out:hover {
+    background: #f4f6f9;
 }
 
 /* ── dialog 기본 배경 오버레이 ── */
@@ -457,6 +474,23 @@ dialog::backdrop {
     margin-top: 8px;
 }
 
+/* 기존 .modal-box 아래에 추가 */
+#lotSearchModal {
+    width: 800px;
+}
+
+#lotSearchModal table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#lotSearchModal th,
+#lotSearchModal td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .btn-cancel {
     padding: 8px 20px;
     background: #fff;
@@ -490,4 +524,18 @@ dialog::backdrop {
     background: #f0f2f7;
     color: #999;
     cursor: not-allowed;
+}
+
+.btn-lot-select {
+    padding: 4px 12px;
+    background: #c9b8e8;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn-lot-select:hover {
+    background: #b39fd4;
 }
