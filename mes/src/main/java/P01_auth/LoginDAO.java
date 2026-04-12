@@ -154,7 +154,7 @@ public class LoginDAO {
 			}
 
 		}
-		System.out.println("회원가입 결과 : " + count + " 0이상이면 성공. -1이면 실패 ");
+		System.out.println("회원가입 결과 : " + count + " (0이상이면 성공. -1이면 실패) ");
 		return count;
 
 	}
@@ -367,9 +367,71 @@ public class LoginDAO {
 			}
 
 		}
-		System.out.println("정보 수정 결과 : " + count + " 0이상이면 성공. -1이면 실패 ");
+		System.out.println("정보 수정 결과 : " + count + " (0이상이면 성공. -1이면 실패) ");
 		return count;
 
+	}
+	
+	
+	public int changepw(LoginDTO d) {
+		System.out.println("/login DAO.changepw 실행");
+		
+		int count = -1;
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		
+		try {
+			// JNDI 방식
+			// connection.xml 맨 아래에 있는 DB정보로 커넥션 풀을 가져온다. Server 폴더에 있다. 기억!
+			Context ctx = new InitialContext();
+			
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB접속(그런데 이제 커넥션 풀로.)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = " update user_info ";
+			query += " set password = ? ";
+			query += " where emp_id = ? ";
+			query += " and phone = ? ";
+			
+			ps = conn.prepareStatement(query);
+			ps.setString(1, d.getPassword());
+			ps.setString(2, d.getEmpid());
+			ps.setLong(3, d.getPhone());
+			
+			// SQL 실행 및 결과 확보
+			count = ps.executeUpdate();
+			
+			// 결과 활용
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		System.out.println("비밀번호 변경 결과 : " + count + " (0이상이면 성공. -1이면 실패) ");
+		return count;
+		
 	}
 
 }
