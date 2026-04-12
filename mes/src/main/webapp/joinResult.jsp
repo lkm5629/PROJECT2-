@@ -78,6 +78,12 @@
 		<div>http://localhost:8080/mes/joinResult.jsp</div>
 		<div>http://localhost:8080/mes/join.jsp</div>
 	</div>
+	<script>
+	  const close_btn = document.querySelector(".close-btn");
+	  close_btn.addEventListener('click', function (evt) {
+		  window.location.href = "/mes/join.jsp"
+	  })
+	</script>
 
 
 </body>
