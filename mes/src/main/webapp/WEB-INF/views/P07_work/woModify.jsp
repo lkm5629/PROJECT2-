@@ -46,7 +46,9 @@
 					</div>
 
 					<div class="button-group">
-						<button type="button" class="buttonWhite" id="backBtn">취소</button>
+						<a href="/mes/workorder?woId=${woInfo.woId}">
+							<button type="button" class="buttonWhite" id="backBtn">취소</button>
+						</a>
 						<button type="button" class="buttonMain" onclick="submitForm('update')">수정 완료</button>
     					<button type="button" class="buttonRed" onclick="submitForm('delete')">삭제</button>
 					</div>

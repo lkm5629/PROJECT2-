@@ -51,7 +51,6 @@ public class WoAddController extends HttpServlet {
 		addOrder(request, response);
 		
 		response.sendRedirect("/mes/worklist");
-//		request.getRequestDispatcher("/WEB-INF/views/P07_work/add.jsp").forward(request, response);
 		
 	}
 	

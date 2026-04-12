@@ -780,7 +780,7 @@ public class WoDAO {
 			
 			String sql = "SELECT emp_id, eName " +
 	    				"FROM user_info " +
-	    				"WHERE emp_id LIKE ? OR eName LIKE ?";
+	    				"WHERE dept_no = 10 and retire is null and (upper(emp_id) LIKE upper(?) OR upper(eName) LIKE upper(?))";
 			
 			ps = conn.prepareStatement(sql);
 			

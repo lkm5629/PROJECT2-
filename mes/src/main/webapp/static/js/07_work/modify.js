@@ -9,8 +9,6 @@ function init() {
 }
 
 function bind() {
-	document.querySelector("#backBtn").addEventListener("click", back);
-
     document.querySelector("#workerBtn").addEventListener("click", openWorkerModal);
 
     document.querySelector("#modalCancel").addEventListener("click", closeModal);
@@ -135,10 +133,6 @@ function renderWorkerTable(list) {
 
         tbody.appendChild(tr);
     });
-}
-
-function back() {
-	window.location.href = "/mes/worklist";
 }
 
 function validateAndSubmit(e) {
