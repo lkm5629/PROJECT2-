@@ -1,4 +1,4 @@
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
     setLayoutHeight_snb();
     window.addEventListener("resize", setLayoutHeight_snb);
     init_snb();
@@ -15,18 +15,25 @@ function bind_snb() {
 function setLayoutHeight_snb() {
     const header = document.querySelector(".headerContainer");
     const layout = document.querySelector(".layout_snb");
+    const content = document.querySelector(".content");
 
-    if (!header || !layout) return;
+    if (!header || !layout || !content) return;
 
     const headerHeight = header.offsetHeight;
     
     const viewportHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
+    const contentHeight = content.scrollHeight;
+    
+    const finalHeight = Math.max(
+        viewportHeight - headerHeight,
+        contentHeight
+    );
+    // const documentHeight = document.documentElement.scrollHeight;
 
-    const vhHeight = viewportHeight - headerHeight;
-    const docHeight = documentHeight - headerHeight;
+    // const vhHeight = viewportHeight - headerHeight;
+    // const docHeight = documentHeight - headerHeight;
 
-    const finalHeight = Math.max(vhHeight, docHeight);
+    // const finalHeight = Math.max(vhHeight, docHeight);
 
     layout.style.height = finalHeight + "px";
 }
@@ -54,7 +61,7 @@ function moveMenu_snb() {
                     break;
 
                 case "qc_snb":
-                    location.href = "/mes/quality";
+                    location.href = "/mes/qclist";
                     break;
 
                 case "stock_snb":
