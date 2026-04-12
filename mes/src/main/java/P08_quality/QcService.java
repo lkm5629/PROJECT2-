@@ -1,11 +1,12 @@
 package P08_quality;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import P07_work.SearchDTO;
-import P07_work.WoDAO;
-import P07_work.WoDTO;
+import P08_quality.QcDAO;
+import P08_quality.QcDTO;
 
 public class QcService {
 	
@@ -56,6 +57,16 @@ public class QcService {
 		map.put("page", page);
 		
 		return map;
+	}
+	
+	public QcDTO detail(QcDTO dto) {
+		QcDAO dao = new QcDAO();
+		return dao.detail(dto);
+	}
+	
+	public List defContent(String qcId) {
+		QcDAO dao = new QcDAO();
+		return dao.defContent(qcId);
 	}
 
 }

@@ -573,4 +573,205 @@ public class QcDAO {
 		return cnt;
 
 	} // count
+	
+	
+	public QcDTO detail (QcDTO dto) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT q.*, d.eName dName, w.eName wName, wo.WO_QTY qty, wo.itemID, wo.iNAME, NVL(def_sum.def_cnt, 0) def_sum FROM QUALITY_CHECK q "
+					+ "LEFT OUTER JOIN user_info w "
+					+ "	ON q.worker = w.emp_id "
+					+ "LEFT OUTER JOIN user_info d "
+					+ "	ON q.director = d.EMP_ID  "
+					+ "LEFT OUTER JOIN ( "
+					+ "	SELECT * "
+					+ "	FROM WORK_ORDER wo "
+					+ "	LEFT OUTER JOIN ( "
+					+ "		SELECT p.plan_id, p.ITEM_ID  itemId, i.ITEM_NAME iName "
+					+ "		FROM production_plan p "
+					+ "		LEFT OUTER JOIN item i "
+					+ "			ON p.ITEM_ID = i.item_id "
+					+ "		) p "
+					+ "		ON wo.PLAN_ID = p.plan_Id "
+					+ ") wo "
+					+ "	ON q.WO_ID = wo.WO_ID "
+					+ "LEFT OUTER JOIN ( "
+					+ "	SELECT qc_id, sum(defect_cnt) def_cnt "
+					+ "	FROM defect "
+					+ "	GROUP BY qc_id "
+					+ ") def_sum "
+					+ "	ON q.qc_id = def_sum.qc_id "
+					+ "WHERE q.deleted IS null "
+					+ "and q.qc_id = ?";
+
+			ps = conn.prepareStatement(query);
+			ps.setString(1, dto.getQcId());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				// wo
+				String woId = rs.getString("wo_id");
+				int qty = rs.getInt("qty");
+				String itemId = rs.getString("itemId");
+				String iName = rs.getString("iName");
+				
+				// qc
+				String qcId = rs.getString("qc_id");
+				Date sDate = rs.getDate("qc_sdate");
+				Date eDate = rs.getDate("qc_edate");;
+				int qcStatus = rs.getInt("qcstatus_no");;
+				String content = rs.getString("content");
+				
+				// user
+				String dId = rs.getString("director");
+				String dName = rs.getString("dName");
+				String wId = rs.getString("worker");
+				String wName = rs.getString("wName");
+				
+				// defect
+				int defSum = rs.getInt("def_sum");
+				
+
+				dto = new QcDTO();
+				
+				dto.setWoId(woId);
+				dto.setQty(qty);
+				dto.setItemId(itemId);
+				dto.setiName(iName);
+				
+				dto.setQcId(qcId);
+				dto.setsDate(sDate);
+				dto.seteDate(eDate);
+				dto.setQcStatus(qcStatus);
+				dto.setContent(content);
+				
+				dto.setdId(dId);
+				dto.setdName(dName);
+				dto.setwId(wId);
+				dto.setwName(wName);
+				
+				dto.setDefSum(defSum);
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return dto;
+	}
+	
+	
+	
+	public List<QcDefDTO> defContent (String qcId) {
+		List<QcDefDTO> defList = new ArrayList<>();
+		
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT d.*, dt.DTYPE_NAME  "
+					+ "FROM DEFECT d "
+					+ "	LEFT OUTER JOIN DEFECT_TYPE dt "
+					+ "		ON d.DTYPE_NO = dt.DTYPE_No "
+					+ "WHERE d.qc_id=? AND d.deleted IS null ";
+
+			ps = conn.prepareStatement(query);
+			ps.setString(1, qcId);
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				String defId = rs.getString("defect_id");
+				int dType = rs.getInt("dtype_no");
+				String dtName = rs.getString("dtype_name");
+				int defCnt = rs.getInt("defect_cnt");
+				String solution = rs.getString("solution");
+				
+				QcDefDTO defDTO = new QcDefDTO();
+				
+				defDTO.setDefId(defId);
+				defDTO.setdType(dType);
+				defDTO.setDtName(dtName);
+				defDTO.setDefCnt(defCnt);
+				defDTO.setSolution(solution);
+				
+				defList.add(defDTO);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return defList;
+	}
 }

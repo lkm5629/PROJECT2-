@@ -30,13 +30,13 @@ function resetPartial() {
     
     const keyword = form.querySelector("input[name='keyword']").value;
 
-    location.href = `/mes/quality`;
+    location.href = `/mes/qclist`;
 }
 
 function addQo() {
 	const addBtn = document.querySelector(".addBtn");
 	
 	addBtn.addEventListener ("click", () => {
-		window.location.href = "/mes/qualityadd";
+		window.location.href = "/mes/qcadd";
 	})
 }

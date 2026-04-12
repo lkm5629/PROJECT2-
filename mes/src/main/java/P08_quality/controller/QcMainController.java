@@ -11,17 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import P07_work.SearchDTO;
-import P07_work.WoDTO;
-import P07_work.WoService;
 import P08_quality.QcCardDTO;
 import P08_quality.QcDTO;
 import P08_quality.QcService;
 
-@WebServlet("/quality")
+@WebServlet("/qclist")
 public class QcMainController extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/quality doGet 실행");
+		System.out.println("/qclist doGet 실행");
 
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8;");
@@ -45,7 +43,7 @@ public class QcMainController extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/quality doPost 실행");
+		System.out.println("/qclist doPost 실행");
 		
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8;");
@@ -53,7 +51,7 @@ public class QcMainController extends HttpServlet {
 	}
 	
 	protected void getList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/quality getList 실행");
+		System.out.println("/qclist getList 실행");
 		
 		
 		int size = 10;
@@ -80,7 +78,7 @@ public class QcMainController extends HttpServlet {
 	}
 	
 	protected void getCard(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/quality getCard 실행");
+		System.out.println("/qclist getCard 실행");
 		
 		QcService service = new QcService();
 		QcCardDTO cardDTO = service.getCard();
@@ -89,7 +87,7 @@ public class QcMainController extends HttpServlet {
 	}
 	
 	protected void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/quality search 실행");
+		System.out.println("/qclist search 실행");
 
 
 		int size = 10;
@@ -144,8 +142,12 @@ public class QcMainController extends HttpServlet {
 	}
 	
 	protected void detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/quality detail 실행");
+		System.out.println("/qclist detail 실행");
+
+		String qcId = request.getParameter("qcId");
 		
+		String cp = request.getContextPath();
+		response.sendRedirect(cp + "/qcdetail?qcId=" + qcId);
 	}
 
 }

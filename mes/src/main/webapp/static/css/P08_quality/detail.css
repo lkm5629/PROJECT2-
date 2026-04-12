@@ -1,0 +1,275 @@
+@charset "UTF-8";
+
+.content {
+	width: 100%;
+}
+
+/* 상단 */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title-group h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.sub-text {
+    color: #888;
+    font-size: 14px;
+}
+
+.button-group {
+	display: flex;
+	gap: 10px;
+}
+
+
+/* 카드 공통 */
+.card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.card-header .sub {
+    margin-left: 10px;
+    color: #888;
+    font-size: 14px;
+}
+
+.status {
+    background: #ddd;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    
+    font-size: 12px;
+    color: white;
+}
+
+.before {
+	background-color : var(--color-sub-hover);
+}
+
+.ongoing {
+	background-color : var(--color-main-blue);
+}
+
+.finish {
+	background-color : var(--color-success);
+}
+
+.qcFin {
+	background-color : white;
+	color : var(--color-text-sub);
+	border : 1px solid var(--color-text-sub);
+	
+	color : var(--color-text-sub);
+	border : 1px solid var(--color-text-sub);
+}
+
+.hold {
+	background-color : gray;
+}
+
+
+/* 정보 영역 */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.info-box {
+    background: #f1f1f1;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.label {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.value {
+    font-weight: bold;
+}
+
+
+/* 진행률 */
+hr {
+	margin: 35px 5px;
+}
+.progress-title {
+	font-weight: 700;
+}
+.progress-area {
+    margin-top: 20px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: var(--color-sub-red);
+    border-radius: 5px;
+    
+    margin: 30px 0 20px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-main-red);
+    border-radius: 5px;
+}
+
+
+/* 테이블 */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.table th {
+    background: #f5f5f5;
+}
+
+
+/* 검사지시 */
+.qcContent {
+	font-size: 13px;
+	padding: 20px !important;
+}
+
+
+/* 상세내역 */
+.qcDetail {
+	display: flex;
+	align-content: flex-start;
+	gap: 30px;
+}
+
+.defRate {
+	width: 40%;
+}
+
+.defDetail {
+	width: 60%;
+}
+
+
+/* 차트 영역 */
+.graphCard {
+	padding: 50px;	
+}
+
+.graph-wrap {
+    position: relative;
+    margin: 0 auto;
+}
+
+/* 중앙 텍스트 */
+.center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.center-text .label {
+    font-size: 14px;
+}
+
+.center-text .value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* 하단 요약 */
+.summary {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.summary .label {
+    font-size: 14px;
+}
+
+.summary .value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* 색상 박스 */
+.color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 6px;
+}
+
+.color.pass {
+    background: var(--color-main-blue);
+}
+
+.color.defect {
+    background: var(--color-main-red);
+}
+
+
+/* 불량 상세 */
+.table-contain {
+	padding: 15px;
+}
+
+.defList, .defList th, .defList td {
+	border: none;
+}
+table.defList thead th {
+	background-color: var(--color-main-blue);
+	color: white;
+	text-align: center;
+}
+
+table.defList th, table.defList td {
+	padding: 10px;
+	font-size: 13px;
+}
+
+.defList tbody tr {
+	border-bottom: 1px solid var(--color-border);
+}
+
+.defList .defCnt {
+	text-align: center;
+}

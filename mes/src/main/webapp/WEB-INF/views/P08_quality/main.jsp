@@ -87,7 +87,7 @@
 		        </div>
 		        <div class="card">
 		            <p>평균 불량률</p>
-		            <strong>${cardDTO.avgDefect}</strong>
+		            <strong>${cardDTO.avgDefect}%</strong>
 		        </div>
 		    </div>
 		
@@ -97,7 +97,7 @@
 		        <div class="listTop">
 		            <h3>검사 기록 보기</h3>
 		
-		            <form method="get" action="/mes/quality">
+		            <form method="get" action="/mes/qclist">
 		                <input type="hidden" name="cmd" value="search">
 		
 		                <div class="search-tools">
@@ -140,7 +140,7 @@
 		
 		            <tbody>
 		                <c:forEach var="i" items="${ qcMap.list }">
-		                    <tr onclick="">
+		                    <tr onclick="location.href='/mes/qclist?cmd=detail&qcId=${i.qcId}'">
 		                        <td>${ i.qcId }</td>
 		                        <td>${ i.woId }</td>
 		                        <td>${ i.iName }(${ i.itemId })</td>
@@ -181,18 +181,18 @@
 						&lt;
 					</c:if>
 					<c:if test="<%= startSection != 1 %>">
-						<a href="./worklist?page=<%= startSection-1 %>&size=10">
+						<a href="./qclist?page=<%= startSection-1 %>&size=10">
 							&lt;
 						</a>
 					</c:if>
 					<c:forEach var="i" begin="<%= startSection %>" end="<%= endSection %>">
-						<a href="./worklist?page=${ i }&size=10">
-							<c:if test="${woMap.page eq i}">
+						<a href="./qclist?page=${ i }&size=10">
+							<c:if test="${qcMap.page eq i}">
 								<strong>
 									${ i }
 								</strong>
 							</c:if>
-							<c:if test="${!(woMap.page eq i)}">
+							<c:if test="${!(qcMap.page eq i)}">
 									${ i }
 							</c:if>
 						</a>
@@ -202,7 +202,7 @@
 						&gt;
 					</c:if>
 					<c:if test="<%= !(endSection <= totalPage) %>">
-						<a href="./worklist?page=<%= endSection+1 %>&size=10">
+						<a href="./qclist?page=<%= endSection+1 %>&size=10">
 							&gt;
 						</a>
 					</c:if>
