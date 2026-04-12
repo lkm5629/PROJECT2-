@@ -94,12 +94,12 @@
 		
 		            <div class="info-box">
 		                <span class="label">작업자</span>
-		                <span class="value">${woInfo != null ? woInfo.wName : ' - '}(${woInfo != null ? woInfo.worker : ' - '})</span>
+		                <span class="value">${woInfo != null ? woInfo.wName : ' - '} (${woInfo != null ? woInfo.worker : ' - '})</span>
 		            </div>
 		
 		            <div class="info-box">
 		                <span class="label">제품</span>
-		                <span class="value">${woInfo != null ? woInfo.itemId : ' - '}(${woInfo != null ? woInfo.itemName : ' - '})</span>
+		                <span class="value">${woInfo != null ? woInfo.itemName : ' - '} (${woInfo != null ? woInfo.itemId : ' - '})</span>
 		            </div>
 		
 		            <div class="info-box">
@@ -107,6 +107,8 @@
 		                <span class="value"> - </span>
 		            </div>
 		        </div>
+		        
+		        <hr>
 		
 		        <!-- 진행률 -->
 		        <div class="progress-area">
