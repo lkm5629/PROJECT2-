@@ -9,6 +9,7 @@ public class QcDTO {
 	int qty;
 	String itemId;
 	String iName;
+	Date workDate;
 	
 	// qc
 	String qcId;
@@ -128,13 +129,19 @@ public class QcDTO {
 		this.page = page;
 	}
 	
+	public Date getWorkDate() {
+		return workDate;
+	}
+	public void setWorkDate(Date workDate) {
+		this.workDate = workDate;
+	}
 	
 	@Override
 	public String toString() {
-		return "QcDTO [woId=" + woId + ", qty=" + qty + ", itemId=" + itemId + ", iName=" + iName + ", qcId=" + qcId
-				+ ", sDate=" + sDate + ", eDate=" + eDate + ", qcStatus=" + qcStatus + ", content=" + content + ", dId="
-				+ dId + ", dName=" + dName + ", wId=" + wId + ", wName=" + wName + ", defSum=" + defSum + ", size="
-				+ size + ", page=" + page + "]";
+		return "QcDTO [woId=" + woId + ", qty=" + qty + ", itemId=" + itemId + ", iName=" + iName + ", workDate="
+				+ workDate + ", qcId=" + qcId + ", sDate=" + sDate + ", eDate=" + eDate + ", qcStatus=" + qcStatus
+				+ ", content=" + content + ", dId=" + dId + ", dName=" + dName + ", wId=" + wId + ", wName=" + wName
+				+ ", defSum=" + defSum + ", size=" + size + ", page=" + page + "]";
 	}
 
 }

@@ -13,7 +13,9 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import P00_layout.LoggableStatement;
+import P01_auth.DTO.UserWoDTO;
 import P07_work.SearchDTO;
+import P07_work.WoAddDTO;
 import P07_work.WoDTO;
 
 public class QcDAO {
@@ -55,7 +57,8 @@ public class QcDAO {
 					+ "	GROUP BY qc_id "
 					+ ") def_sum "
 					+ "	ON q.qc_id = def_sum.qc_id "
-					+ "WHERE q.deleted IS null";
+					+ "WHERE q.deleted IS null "
+					+ "order by q.qc_id desc";
 			ps = conn.prepareStatement(query);
 
 			rs = ps.executeQuery();
@@ -774,4 +777,538 @@ public class QcDAO {
 		
 		return defList;
 	}
+	
+	
+	
+	public List getWoList () {
+		List list = new ArrayList<>();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT wo_id from work_order where wostatus_no=30 and deleted is null ";
+			ps = conn.prepareStatement(query);
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				// wo
+				String woId = rs.getString("wo_id");
+//				int woStatus = rs.getInt("wostatus_no");
+//				int qty = rs.getInt("wo_qty");
+//				Date woDate = rs.getDate("workdate");
+//				String itemId = rs.getString("item_id");
+//				String iName = rs.getString("iName");
+//
+//				WoDTO dto = new WoDTO();
+//				
+//				dto.setWoId(woId);
+//				dto.setWoStatus(woStatus);
+//				dto.setWoQty(qty);
+//				dto.setWorkDate(woDate);
+//				dto.setItemId(itemId);
+//				dto.setItemName(iName);
+				
+				list.add(woId);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return list;
+	} // getWoList
+	
+	
+	
+	public WoDTO setWo (WoDTO dto) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT wo.wo_id, wo.wostatus_no, wo.wo_qty, wo.WORKDATE, i.ITEM_ID, i.ITEM_NAME "
+					+ "FROM WORK_ORDER wo "
+					+ "	LEFT OUTER JOIN production_plan p "
+					+ "		ON wo.plan_id = p.PLAN_ID "
+					+ "	LEFT OUTER JOIN item i "
+					+ "		ON p.ITEM_ID = i.ITEM_ID "
+					+ "WHERE wo.wo_id = ?";
+			ps = conn.prepareStatement(query);
+			ps.setString(1, dto.getWoId());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				String woId = rs.getString("wo_id");
+				int woStatus = rs.getInt("wostatus_no");
+				int qty = rs.getInt("wo_qty");
+				Date woDate = rs.getDate("workdate");
+				String itemId = rs.getString("item_id");
+				String iName = rs.getString("item_Name");
+
+				dto.setWoId(woId);
+				dto.setWoStatus(woStatus);
+				dto.setWoQty(qty);
+				dto.setWorkDate(woDate);
+				dto.setItemId(itemId);
+				dto.setItemName(iName);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return dto;
+	} // getWo
+	
+	
+	public List<UserWoDTO> searchWorker(String keyword) {
+	    List<UserWoDTO> list = new ArrayList<>();
+	    
+	    Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+	    try {
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+			
+			String sql = "SELECT emp_id, eName " +
+    				"FROM user_info " +
+    				"WHERE dept_no = 20 and retire is null and (upper(emp_id) LIKE upper(?) OR upper(eName) LIKE upper(?))";
+			
+			ps = conn.prepareStatement(sql);
+			
+			String param = "%" + (keyword == null ? "" : keyword) + "%";
+	        ps.setString(1, param);
+	        ps.setString(2, param);
+
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            UserWoDTO dto = new UserWoDTO();
+	            dto.setEmpId(rs.getString("emp_id"));
+	            dto.seteName(rs.getString("eName"));
+	            list.add(dto);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+	    return list;
+	} // searchWorker
+	
+	
+	public int addQc(QcAddDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "INSERT INTO quality_check (qc_id, qc_sdate, qcstatus_no, content, director, worker, wo_id) "
+					+ "VALUES ('qc_'||qc_seq.nextval, ?, 10, ?, ?, ?, ?) ";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setDate(1, dto.getsDate());
+			ps.setString(2, dto.getContent());
+			ps.setString(3, dto.getDirector());
+			ps.setString(4, dto.getWorker());
+			ps.setString(5, dto.getWoId());
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // addQc
+	
+	
+	
+	public QcDTO getQc (String qcId) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		QcDTO dto = new QcDTO();
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT q.*, d.eName dName, w.eName wName, wo.WO_QTY qty, wo.itemID, wo.iNAME, wo.workdate, NVL(def_sum.def_cnt, 0) def_sum FROM QUALITY_CHECK q "
+					+ "LEFT OUTER JOIN user_info w "
+					+ "	ON q.worker = w.emp_id "
+					+ "LEFT OUTER JOIN user_info d "
+					+ "	ON q.director = d.EMP_ID  "
+					+ "LEFT OUTER JOIN ( "
+					+ "	SELECT * "
+					+ "	FROM WORK_ORDER wo "
+					+ "	LEFT OUTER JOIN ( "
+					+ "		SELECT p.plan_id, p.ITEM_ID  itemId, i.ITEM_NAME iName "
+					+ "		FROM production_plan p "
+					+ "		LEFT OUTER JOIN item i "
+					+ "			ON p.ITEM_ID = i.item_id "
+					+ "		) p "
+					+ "		ON wo.PLAN_ID = p.plan_Id "
+					+ ") wo "
+					+ "	ON q.WO_ID = wo.WO_ID "
+					+ "LEFT OUTER JOIN ( "
+					+ "	SELECT qc_id, sum(defect_cnt) def_cnt "
+					+ "	FROM defect "
+					+ "	GROUP BY qc_id "
+					+ ") def_sum "
+					+ "	ON q.qc_id = def_sum.qc_id "
+					+ "WHERE q.deleted IS null and q.qc_id = ?";
+			
+			ps = conn.prepareStatement(query);
+			ps.setString(1, qcId);
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				// wo
+				String woId = rs.getString("wo_id");
+				int qty = rs.getInt("qty");
+				String itemId = rs.getString("itemId");
+				String iName = rs.getString("iName");
+				Date workDate = rs.getDate("workdate");
+				
+				// qc
+				Date sDate = rs.getDate("qc_sdate");
+				Date eDate = rs.getDate("qc_edate");;
+				int qcStatus = rs.getInt("qcstatus_no");;
+				String content = rs.getString("content");
+				
+				// user
+				String dId = rs.getString("director");
+				String dName = rs.getString("dName");
+				String wId = rs.getString("worker");
+				String wName = rs.getString("wName");
+				
+				// defect
+				int defSum = rs.getInt("def_sum");
+			
+				dto.setWoId(woId);
+				dto.setQty(qty);
+				dto.setItemId(itemId);
+				dto.setiName(iName);
+				dto.setWorkDate(workDate);
+				
+				dto.setQcId(qcId);
+				dto.setsDate(sDate);
+				dto.seteDate(eDate);
+				dto.setQcStatus(qcStatus);
+				dto.setContent(content);
+				
+				dto.setdId(dId);
+				dto.setdName(dName);
+				dto.setwId(wId);
+				dto.setwName(wName);
+				
+				dto.setDefSum(defSum);
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return dto;
+	} // getQc
+	
+	
+	public int modifyOrder(String qcId, QcAddDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE QUALITY_CHECK "
+					+ "SET qc_sdate = ?, content = ?, worker = ? "
+					+ "WHERE qc_id=?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setDate(1, dto.getsDate());
+			ps.setString(2, dto.getContent());
+			ps.setString(3, dto.getWorker());
+			ps.setString(4, qcId);
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // modifyOrder
+	
+	
+	public int deleteQc(String qcId) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE QUALITY_CHECK "
+					+ "set deleted='Y' "
+					+ "WHERE qc_id=?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, qcId);
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // deleteQc
+	
+	
 }
