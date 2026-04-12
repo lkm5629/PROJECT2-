@@ -19,7 +19,6 @@ function reset() {
 }
 
 function resetPartial() {
-	console.log("실행");
     const form = document.querySelector("form");
     
     // status 초기화 (전체보기)

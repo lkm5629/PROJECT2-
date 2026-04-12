@@ -32,7 +32,6 @@ public class WoMainController extends HttpServlet {
 			search(request, response);
 		} else if ("detail".equals(cmd)) {
 			detail(request, response);
-			
 			return;
 		} else {
 			getList(request, response);			
