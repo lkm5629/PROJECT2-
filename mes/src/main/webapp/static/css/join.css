@@ -1,11 +1,11 @@
-body {
-    width : 96vw;
-    height : 96vh;
+.content{
+	width: 1160px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content : center;
     align-items: center;
+  
 }
+
 .input-1 {
     width : 350px;
     height : 40px;
@@ -87,7 +87,7 @@ a {
 	margin-right : 150px;
 	text-decoration : none;
 }
-button {
+[name='join_btn'] {
 	width : 320px;
     height : 40px;
     display : flex;
