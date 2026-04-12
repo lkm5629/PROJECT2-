@@ -57,6 +57,10 @@ h7 {
 .close-btn {
 	width : 25px;
 	height : 25px;
+	font-size : 24px;
+}
+.close-btn:hover {
+	cursor : pointer;
 }
 .model-high {
 	width : 370px;
