@@ -539,3 +539,22 @@ dialog::backdrop {
 .btn-lot-select:hover {
     background: #b39fd4;
 }
+
+.tag-in {
+    background-color: #4a90d9;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    white-space: nowrap;
+    display: inline-block;
+}
+.tag-out {
+    background-color: #e07b54;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    white-space: nowrap;
+    display: inline-block;
+}
