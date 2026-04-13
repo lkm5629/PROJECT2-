@@ -188,7 +188,7 @@ public class Item_masterDAO {
 			ps.setString(5, item_masterDTO.getItem_id());
 
 			update_result = ps.executeUpdate();
-			System.out.println("update 결과: " + update_result);
+			System.out.println("update결과: " + update_result);
 
 		} catch (NamingException e) {
 			e.printStackTrace();

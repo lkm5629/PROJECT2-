@@ -1,7 +1,7 @@
 package P11_masterdata.DTO;
 
 public class Item_masterDTO {
-
+//주석
 	String item_id;
 	String item_name;
 	int g_id;
