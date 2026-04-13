@@ -31,7 +31,8 @@ public class PermissionController extends HttpServlet {
 		
 		
 		//Paging 페이징
-		String page = request.getParameter("page");
+		String page = request.getParameter("per_btn");
+		System.out.println("page : " + page);
 		
 		//처음은 1로 스타트되게
 		if(page == null) {
@@ -42,7 +43,11 @@ public class PermissionController extends HttpServlet {
 		
 		//시작 번호 1이면 0. 2면 5. 3이면 10.
 		int start_no = (Integer.parseInt(page) - 1) * countPage;
+	    
+		System.out.println("start_no : " +start_no);
 		
+		int countPageNo = start_no + countPage;
+		System.out.println(" countPageNo : " + countPageNo );
 		
 		
 		
@@ -53,7 +58,7 @@ public class PermissionController extends HttpServlet {
 		int page_no = (int)Math.ceil(count/countPage);
 		
 		// 함수 소환 후 결과를 리스트에 저장.
-		List<LoginDTO> list = s.paging(start_no, countPage);
+		List<LoginDTO> list = s.paging(start_no, countPageNo);
 		
 
 		// 세션 소환
