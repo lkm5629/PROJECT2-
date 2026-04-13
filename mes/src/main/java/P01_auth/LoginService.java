@@ -93,14 +93,14 @@ public class LoginService {
 		return a.readEmp();				
 	}
 	
-	public List<LoginDTO> paging(int start_no, int countPage ) {
+	public List<LoginDTO> paging(int start_no, int countPageNo ) {
 		System.out.println("/login service.paging() 실행 ");
 		
 		//실무 함수 소환
 		LoginDAO a = new LoginDAO();
 		
 		//로그인 함수 실행결과 리턴
-		return a.paging(start_no, countPage);				
+		return a.paging(start_no, countPageNo);				
 	}
 
 }
