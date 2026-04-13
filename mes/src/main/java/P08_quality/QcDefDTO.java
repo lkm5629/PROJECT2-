@@ -7,6 +7,7 @@ public class QcDefDTO {
 	String dtName;
 	int defCnt;
 	String solution;
+	String dispose;
 	
 	
 	public String getDefId() {
@@ -41,10 +42,18 @@ public class QcDefDTO {
 		this.solution = solution;
 	}
 	
+	public String getDispose() {
+		return dispose;
+	}
+	public void setDispose(String dispose) {
+		this.dispose = dispose;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "QcDefDTO [defId=" + defId + ", dType=" + dType + ", dtName=" + dtName + ", defCnt=" + defCnt
-				+ ", solution=" + solution + "]";
+				+ ", solution=" + solution + ", dispose=" + dispose + "]";
 	}
 
 }
