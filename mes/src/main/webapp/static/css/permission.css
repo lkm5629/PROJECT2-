@@ -1,5 +1,5 @@
 .box-type4 {
-	width: 540px;
+	width: 850px;
 	height: 800px;
 	padding: 0px 10px;
 	margin: 0px 15px;
@@ -8,7 +8,7 @@
 }
 
 .board-box {
-	width: 550px;
+	width: 850px;
 	height: 800px;
 	display: flex;
 	flex-wrap: wrap;
@@ -16,7 +16,7 @@
 }
 
 .mp-title {
-	width: 400px;
+	width: 700px;
 	height: 100px;
 	display: flex;
 	flex-direction: column;
@@ -31,22 +31,22 @@
 }
 
 
-.mp-chain {
-	width: 400px;
-	height: 70px;
+.per-chain {
+	width: 700px;
+	height: 40px;
 	display: flex;
 	justify-content : space-between;
-	padding : 0px 20px;
-	padding-top : 15px; 
+	padding : 5px 20px;
+	 
 	
 }
 .model-close {
-	width : 400px;
+	width : 700px;
 	height : 30px;
 	display: flex;
 }
 h2 {
-    width : 400px;
+    width : 630px;
     height : 50px;
     margin : 0px;
     margin-left : 10px;
@@ -56,18 +56,20 @@ h2 {
 	width: 150px;
 	height: 30px;
 }
+.per-tool {
+	margin : 10px 0px;
+}
 span {
 	margin-left : 10px;
 }
-button{
-	width: 380px;
-	height: 30px;
+.per-btn{
+	width : 20px;
 	display: flex;
 	justify-content : center;
-	align-items : center;
+	margin : 0px 10px;
 }
 form {
-	width: 400px;
+	width: 700px;
 	height: 540px;
 	display: flex;
 	flex-direction: column;
@@ -80,4 +82,9 @@ form {
 	display : flex;
 	justify-content : center;
 	align-items : center;
+}
+.next {
+    height : 20px;
+    display : flex;
+    justify-content : center;
 }
