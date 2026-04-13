@@ -509,7 +509,7 @@ public class LoginDAO {
 
 	}
 
-	public List<LoginDTO> paging(int start_no, int countPage) {
+	public List<LoginDTO> paging(int start_no, int countPageNo) {
 		System.out.println("/login DAO.paging 실행");
 		
 		List<LoginDTO> list = new ArrayList<LoginDTO>();
@@ -540,7 +540,7 @@ public class LoginDAO {
 				   query += " ) WHERE rn > ? "; 
 			
 			ps = conn.prepareStatement(query);
-			ps.setInt(1, countPage);
+			ps.setInt(1, countPageNo);
 			ps.setInt(2, start_no);
 			
 			
