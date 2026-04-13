@@ -43,8 +43,8 @@
 		<c:if test=" ${not empty error} ">
 		<div style="color: red; ">${error}</div>
 		</c:if>
-		<a>비밀번호를 잊으셨나요? (비밀번호 변경)</a>
-		<div>http://localhost:8080/mes/login.jsp</div>
+		<a href="http://localhost:8080/mes/changepw.jsp">비밀번호를 잊으셨나요? (비밀번호 변경)</a>
+		<div></div>
 	</div>
 
 

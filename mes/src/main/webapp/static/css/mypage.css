@@ -79,7 +79,7 @@ header {
 	margin-bottom: 40px;
 }
 
-button {
+[name=mp_btn] {
 	height: 40px;
 	display: flex;
 	justify-content: center; /* 가로 가운데 */
