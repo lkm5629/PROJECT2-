@@ -62,9 +62,14 @@
 					<select id="filterGId">
 						<option value="">자재 대분류</option>
 						<c:forEach var="g" items="${map.groupList}">
-							<option value="${g.g_id}"
-								${map.filterGId == g.g_id ? 'selected' : ''}>${g.g_id}
-							</option>
+							<option value="${g.g_id}" ${map.filterGId == g.g_id ? 'selected' : ''}>
+    <c:choose>
+        <c:when test="${g.g_id == '10'}">원자재</c:when>
+        <c:when test="${g.g_id == '20'}">반자재</c:when>
+        <c:when test="${g.g_id == '30'}">완제품</c:when>
+        <c:otherwise>${g.g_id}</c:otherwise>
+    </c:choose>
+</option>
 						</c:forEach>
 					</select>
 
@@ -272,7 +277,14 @@
                     <select name="g_id" id="g_id">
                         <option value="">대분류 선택</option>
                         <c:forEach var="g" items="${map.groupList}">
-                            <option value="${g.g_id}">${g.g_id}</option>
+                            <option value="${g.g_id}">
+    <c:choose>
+        <c:when test="${g.g_id == '10'}">원자재</c:when>
+        <c:when test="${g.g_id == '20'}">반자재</c:when>
+        <c:when test="${g.g_id == '30'}">완제품</c:when>
+        <c:otherwise>${g.g_id}</c:otherwise>
+    </c:choose>
+</option>
                         </c:forEach>
                     </select>
                 </div>

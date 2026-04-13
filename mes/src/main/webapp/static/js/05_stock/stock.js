@@ -13,7 +13,7 @@ const lotKeywordInput = document.getElementById('lotKeyword');
 const empSearchModal  = document.getElementById('empSearchModal');
 const empSearchBody   = document.getElementById('empSearchBody');
 const empKeywordInput = document.getElementById('empKeyword');
-	세션
+	
 
 
 
