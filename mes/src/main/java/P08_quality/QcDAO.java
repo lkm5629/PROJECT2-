@@ -182,7 +182,6 @@ public class QcDAO {
 					+ "    ON qc.qc_id = def_sum.qc_id "
 					+ "WHERE qc.qcstatus_no = 30 "
 					+ "  AND qc.deleted IS NULL "
-					+ "  AND wo.wostatus_no = 30 "
 					+ "  AND wo.deleted IS NULL "
 					+ "  AND qc.qc_edate >= TRUNC(SYSDATE) "
 					+ "  AND qc.qc_edate < TRUNC(SYSDATE) + 1";
