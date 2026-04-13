@@ -126,6 +126,12 @@
 .ongoing {
 	background-color : var(--color-main-blue);
 }
+
+
+.finish {
+	background-color : var(--color-success);
+}
+
 .qcFin {
 	background-color : white;
 	color : var(--color-text-sub);
