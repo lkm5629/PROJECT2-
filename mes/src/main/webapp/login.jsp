@@ -40,9 +40,9 @@
 				<button type="submit" class="buttonMain"  name="login_btn">로그인</button><br>
 			</div>
 		</form>
-		<c:if test=" ${not empty error} ">
-		<div style="color: red; ">${error}</div>
-		</c:if>
+		<c:if test="${ not empty error }">
+								<span style="color: red;"> ${ error } </span>
+							</c:if>
 		<a href="http://localhost:8080/mes/changepw.jsp">비밀번호를 잊으셨나요? (비밀번호 변경)</a>
 		<div></div>
 	</div>
