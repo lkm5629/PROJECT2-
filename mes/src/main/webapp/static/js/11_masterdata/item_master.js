@@ -11,7 +11,7 @@ const edit_g_id = document.getElementById("edit_g_id");
 const edit_spec = document.getElementById("edit_spec");
 const edit_unit = document.getElementById("edit_unit");
 
-// 수정 아이콘(여러 개) 클릭 시 수정 모달 띄움
+//   수정 아이콘(여러 개) 클릭 시 수정 모달 띄움
 edit.forEach(function(btn){
     btn.addEventListener('click', function(){
         edit_item_id.value = btn.dataset.itemId;

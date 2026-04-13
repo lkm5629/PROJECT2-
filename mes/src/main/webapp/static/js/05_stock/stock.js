@@ -13,7 +13,7 @@ const lotKeywordInput = document.getElementById('lotKeyword');
 const empSearchModal  = document.getElementById('empSearchModal');
 const empSearchBody   = document.getElementById('empSearchBody');
 const empKeywordInput = document.getElementById('empKeyword');
-	세션
+	
 
 
 
@@ -128,7 +128,7 @@ document.querySelector('.btn-register-out').addEventListener('click', function (
         document.getElementById('lot_id_hidden').value           = '';
         document.getElementById('spec').value                    = '';
         document.getElementById('unit').value                    = '';
-        document.getElementById('item_name_display').textContent = '';
+        document.getElementById('item_name_display').value = '';
         
     }
 
@@ -182,12 +182,14 @@ function fetchLotList(keyword) {
     document.getElementById('lot_id_display').value          = lot.lot_id;
     document.getElementById('lot_id_hidden').value           = lot.lot_id;
     document.getElementById('item_id_hidden').value          = lot.item_id;
-    document.getElementById('item_name_display').textContent = lot.item_name;
+    document.getElementById('item_name_display').value = lot.item_name;
     document.getElementById('spec').value                    = lot.spec;
     document.getElementById('unit').value                    = lot.unit;
-    document.getElementById('lot_qty').value                 = lot.lot_qty;
-    document.getElementById('expiry_date').value             = lot.expiry_date || ''; // ← 추가
-    lotSearchModal.close();
+    document.getElementById('lot_qty').value     = lot.lot_qty;
+document.getElementById('expiry_date').value = lot.expiry_date || '';
+document.getElementById('empName').value      = lot.ename;
+document.getElementById('emp_id_hidden').value = lot.emp_id;
+lotSearchModal.close();
 });
                 lotSearchBody.appendChild(tr);
             });

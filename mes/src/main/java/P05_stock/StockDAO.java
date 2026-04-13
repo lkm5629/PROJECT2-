@@ -365,19 +365,16 @@ public class StockDAO {
         try (
             Connection conn = getConn();
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT l.lot_id, l.lot_qty, l.expiry_date, " +
-                "       it.item_id, it.item_name, it.spec, it.unit " +
-                "FROM lot l " +
-                "JOIN item it ON l.item_id = it.item_id " +
-                "WHERE l.deleted = 'N' " +
-                "AND EXISTS ( " +
-                "    SELECT 1 FROM io " +
-                "    WHERE io.lot_id  = l.lot_id " +
-                "    AND   io.io_type = 0 " +   // °Á ¿‘∞Ì(0)
-                "    AND   io.deleted = 'N' " +
-                ") " +
-                "AND (it.item_name LIKE ? OR l.lot_id LIKE ?) " +
-                "ORDER BY l.lot_id DESC"
+            		"SELECT l.lot_id, l.lot_qty, l.expiry_date, " +
+            			    "       it.item_id, it.item_name, it.spec, it.unit, " +
+            			    "       u.emp_id, u.ename " +
+            			    "FROM lot l " +
+            			    "JOIN item it ON l.item_id = it.item_id " +
+            			    "JOIN io i    ON i.lot_id  = l.lot_id AND i.io_type = 0 AND i.deleted = 'N' " +
+            			    "JOIN user_info u ON i.emp_id = u.emp_id " +
+            			    "WHERE l.deleted = 'N' " +
+            			    "AND (it.item_name LIKE ? OR l.lot_id LIKE ?) " +
+            			    "ORDER BY l.lot_id DESC"
             );
         ) {
             String kw = "%" + (keyword == null ? "" : keyword) + "%";
@@ -393,6 +390,8 @@ public class StockDAO {
                     dto.setItem_name(rs.getString("item_name"));
                     dto.setSpec(rs.getInt("spec"));
                     dto.setUnit(rs.getString("unit"));
+                    dto.setEmp_id(rs.getString("emp_id"));
+                    dto.setEname(rs.getString("ename"));
                     list.add(dto);
                 }
             }

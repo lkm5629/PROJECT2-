@@ -59,7 +59,9 @@ public class Controller extends HttpServlet {
                   .append("\"item_id\":"    ).append("\"").append(d.getItem_id()).append("\",")
                   .append("\"item_name\":"  ).append("\"").append(d.getItem_name()).append("\",")
                   .append("\"spec\":"       ).append(d.getSpec()).append(",")
-                  .append("\"unit\":"       ).append("\"").append(d.getUnit()).append("\"")
+                  .append("\"unit\":"       ).append("\"").append(d.getUnit()).append("\",")
+                  .append("\"emp_id\":"     ).append("\"").append(d.getEmp_id()).append("\",")
+                  .append("\"ename\":"      ).append("\"").append(d.getEname()).append("\"")
                   .append("}");
             }
             sb.append("]");
