@@ -611,6 +611,7 @@ public class QcDAO {
 					+ "LEFT OUTER JOIN ( "
 					+ "	SELECT qc_id, sum(defect_cnt) def_cnt "
 					+ "	FROM defect "
+					+ "	where deleted is null "
 					+ "	GROUP BY qc_id "
 					+ ") def_sum "
 					+ "	ON q.qc_id = def_sum.qc_id "
@@ -735,6 +736,7 @@ public class QcDAO {
 				String dtName = rs.getString("dtype_name");
 				int defCnt = rs.getInt("defect_cnt");
 				String solution = rs.getString("solution");
+				String dispose = rs.getString("dispose");
 				
 				QcDefDTO defDTO = new QcDefDTO();
 				
@@ -743,6 +745,7 @@ public class QcDAO {
 				defDTO.setDtName(dtName);
 				defDTO.setDefCnt(defCnt);
 				defDTO.setSolution(solution);
+				defDTO.setDispose(dispose);
 				
 				defList.add(defDTO);
 			}
@@ -1310,5 +1313,345 @@ public class QcDAO {
 		return result;
 	} // deleteQc
 	
+	
+	public int addDef(String qcId, QcDefDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String seqSql = "SELECT 'def_id'||defect_seq.NEXTVAL FROM dual";
+			ps = conn.prepareStatement(seqSql);
+			rs = ps.executeQuery();
+
+			String defectId = null;
+			if (rs.next()) {
+			    defectId = rs.getString(1);
+			}
+			
+			String query = "INSERT INTO DEFECT (defect_id, dtype_no, defect_cnt, solution, qc_id, dispose) "
+					+ "VALUES (?, ?, ?, ?, ?, ?) ";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, defectId);
+			ps.setInt(2, dto.getdType());
+			ps.setInt(3, dto.getDefCnt());
+			ps.setString(4, dto.getSolution());
+			ps.setString(5, qcId);
+			ps.setString(6, dto.getDispose());
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // addDef
+	
+	
+	public QcDisposeDTO disposeSum(QcDisposeDTO disDTO) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT  "
+					+ "    qc_id, "
+					+ "    SUM(CASE WHEN dispose = 'Y' THEN defect_cnt ELSE 0 END) AS dispose_qty, "
+					+ "    SUM(CASE WHEN dispose IS NULL THEN defect_cnt ELSE 0 END) AS rework_qty "
+					+ "FROM defect "
+					+ "WHERE qc_id = ? and deleted is null "
+					+ "GROUP BY qc_id";
+			
+			ps = conn.prepareStatement(query);
+			ps.setString(1, disDTO.getQcId());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				int dispose = rs.getInt("dispose_qty");
+				int rework = rs.getInt("rework_qty");
+
+				disDTO.setDispose(dispose);
+				disDTO.setRework(rework);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return disDTO;
+	} // disposeSum
+	
+	
+	public int updateDef(QcDefDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE defect "
+					+ "SET dtype_no = ?, defect_cnt = ?, solution = ?, dispose = ? "
+					+ "WHERE defect_id=?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setInt(1, dto.getdType());
+			ps.setInt(2, dto.getDefCnt());
+			ps.setString(3, dto.getSolution());
+			ps.setString(4, dto.getDispose());
+			ps.setString(5, dto.getDefId());
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // updateDef
+	
+	
+	
+	public int deleteDef(String defId) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE defect "
+					+ "SET deleted = 'Y' "
+					+ "WHERE defect_id=?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, defId);
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // deleteDef
+	
+	
+	
+	public int modifyResult(QcDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE quality_check "
+					+ "SET qc_edate = ?, qcstatus_no = ? "
+					+ "WHERE qc_id = ?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setDate(1, dto.geteDate());
+			ps.setInt(2, dto.getQcStatus());
+			ps.setString(3, dto.getQcId());
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // modifyResult
 	
 }
