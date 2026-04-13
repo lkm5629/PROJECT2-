@@ -17,8 +17,11 @@
 <script src="/mes/static/js/05_stock/stock.js"></script>
 </head>
 <body>
+<c:if test="${not empty errorMsg}">
+    <script>alert('${errorMsg}');</script>
+</c:if>
 	<%@ include file="/WEB-INF/views/P00_layout/header.jsp"%>
-
+ 필요한 사항은 io 입고 롯번호 다시 써야하는거(홍세정씨 한테 물어봐야함), 안전재고 컬럼을 품목마스터로 빼야함. 입출고일 내일 안되게 막아야한다. 입고사유,자재대분류,자재소분류,거래처 안 고르면 못고르게 막는다.
 	<div class="layout_snb">
 		<div class="snbContent">
 			<%@ include file="/WEB-INF/views/P00_layout/snb.jsp"%>
@@ -62,14 +65,15 @@
 					<select id="filterGId">
 						<option value="">자재 대분류</option>
 						<c:forEach var="g" items="${map.groupList}">
-							<option value="${g.g_id}" ${map.filterGId == g.g_id ? 'selected' : ''}>
-    <c:choose>
-        <c:when test="${g.g_id == '10'}">원자재</c:when>
-        <c:when test="${g.g_id == '20'}">반자재</c:when>
-        <c:when test="${g.g_id == '30'}">완제품</c:when>
-        <c:otherwise>${g.g_id}</c:otherwise>
-    </c:choose>
-</option>
+							<option value="${g.g_id}"
+								${map.filterGId == g.g_id ? 'selected' : ''}>
+								<c:choose>
+									<c:when test="${g.g_id == '10'}">원자재</c:when>
+									<c:when test="${g.g_id == '20'}">반자재</c:when>
+									<c:when test="${g.g_id == '30'}">완제품</c:when>
+									<c:otherwise>${g.g_id}</c:otherwise>
+								</c:choose>
+							</option>
 						</c:forEach>
 					</select>
 
@@ -133,7 +137,7 @@
 								<th>입출고사유</th>
 								<th>거래처</th>
 								<th>작업자</th>
-								<th>관리</th>
+								<th>입/출고</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -144,26 +148,30 @@
 									<td>${dto.item_name}</td>
 									<td><c:choose>
 											<c:when test="${dto.g_id == '10'}">원자재</c:when>
-											<c:when test="${dto.g_id == '20'}">반자재</c:when>
+											<c:when test="${dto.g_id == '20'}">반제품</c:when>
 											<c:when test="${dto.g_id == '30'}">완제품</c:when>
 											<c:otherwise>${dto.g_id}</c:otherwise>
-										</c:choose>
-									</td>
+										</c:choose></td>
 									<td>${dto.lot_id}</td>
 									<td>${dto.spec}</td>
 									<td>${dto.unit}</td>
 									<td>${dto.lot_qty}</td>
 									<td>${dto.io_time}</td>
-									<td>${dto.expiry_date}</td>
+									<td><c:choose>
+											<c:when test="${empty dto.expiry_date}">-</c:when>
+											<c:otherwise>${dto.expiry_date}</c:otherwise>
+										</c:choose></td>
 									<td>${dto.io_reason}</td>
 									<td>${dto.vender_name}</td>
 									<td>${dto.ename}</td>
-									<td>
-										<div class="action-btns">
-											<button class="btn-edit">수정</button>
-											<button class="btn-delete">삭제</button>
-										</div>
-									</td>
+									<td><c:choose>
+											<c:when test="${dto.io_type == 0}">
+												<span class="tag-in">입고</span>
+											</c:when>
+											<c:otherwise>
+												<span class="tag-out">출고</span>
+											</c:otherwise>
+										</c:choose></td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -234,130 +242,129 @@
 					</div>
 					<%-- 입출고 등록 모달 --%>
 					<dialog id="myModal" class="modal-box">
-    <h2 class="modal-title" id="modalTitle">입출고 등록</h2>
-    <form method="post" action="/mes/iocontroller">
+					<h2 class="modal-title" id="modalTitle">입출고 등록</h2>
+					<form method="post" action="/mes/iocontroller">
 
-        <%-- io_type hidden --%>
-        <select name="io_type" id="io_type" style="display:none;">
-            <option value="0">입고</option>
-            <option value="1">출고</option>
-        </select>
+						<%-- io_type hidden --%>
+						<select name="io_type" id="io_type" style="display: none;">
+							<option value="0">입고</option>
+							<option value="1">출고</option>
+						</select>
 
-        <%-- 출고 전용: LOT 검색 (grid 밖) --%>
-        <div id="in_select_wrap" style="display:none; margin-bottom:14px;">
-            <div class="modal-field">
-                <label>LOT 번호</label>
-                <div style="display:flex; gap:8px;">
-                    <input type="text" id="lot_id_display" placeholder="LOT 선택" readonly>
-                    <button type="button" id="btnLotSearch">🔍 검색</button>
-                </div>
-                <div class="modal-field">
-    <label>자재명</label>
-    <input type="text" id="item_name_display" placeholder="자동입력" readonly>
-</div>
-                <input type="hidden" name="item_id" id="item_id_hidden">
-                <input type="hidden" name="lot_id" id="lot_id_hidden">
-            </div>
-        </div>
+						<%-- 출고 전용: LOT 검색 (grid 밖) --%>
+						<div id="in_select_wrap"
+							style="display: none; margin-bottom: 14px;">
+							<div class="modal-field">
+								<label>LOT 번호</label>
+								<div style="display: flex; gap: 8px;">
+									<input type="text" id="lot_id_display" placeholder="LOT 선택"
+										readonly>
+									<button type="button" id="btnLotSearch">🔍 검색</button>
+								</div>
+								<div class="modal-field">
+									<label>자재명</label> <input type="text" id="item_name_display"
+										placeholder="자동입력" readonly>
+								</div>
+								<input type="hidden" name="item_id" id="item_id_hidden">
+								<input type="hidden" name="lot_id" id="lot_id_hidden">
+							</div>
+						</div>
 
-        <div class="modal-grid">
+						<div class="modal-grid">
 
-            <%-- 거래처 --%>
-            <div class="modal-field">
-                <label>거래처</label>
-                <select name="vender_id">
-                    <option value="">거래처 선택</option>
-                    <c:forEach var="v" items="${map.vendorList}">
-                        <option value="${v.vender_id}">${v.vender_name}</option>
-                    </c:forEach>
-                </select>
-            </div>
+							<%-- 거래처 --%>
+							<div class="modal-field">
+								<label>거래처</label> <select name="vender_id">
+									<option value="">거래처 선택</option>
+									<c:forEach var="v" items="${map.vendorList}">
+										<option value="${v.vender_id}">${v.vender_name}</option>
+									</c:forEach>
+								</select>
+							</div>
 
-            <%-- 입고 전용: 자재 대분류/소분류 (grid 안, 출고 시 hidden) --%>
-            <div id="item_wrap">
-                <div class="modal-field">
-                    <label>자재 대분류</label>
-                    <select name="g_id" id="g_id">
-                        <option value="">대분류 선택</option>
-                        <c:forEach var="g" items="${map.groupList}">
-                            <option value="${g.g_id}">
-    <c:choose>
-        <c:when test="${g.g_id == '10'}">원자재</c:when>
-        <c:when test="${g.g_id == '20'}">반자재</c:when>
-        <c:when test="${g.g_id == '30'}">완제품</c:when>
-        <c:otherwise>${g.g_id}</c:otherwise>
-    </c:choose>
-</option>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="modal-field">
-                    <label>자재 소분류</label>
-                    <select name="item_id" id="item_id">
-                        <option value="">소분류 선택</option>
-                        <c:forEach var="item" items="${map.itemList}">
-                            <option value="${item.item_id}" data-gid="${item.g_id}"
-                                data-spec="${item.spec}" data-unit="${item.unit}">
-                                ${item.item_name}
-                            </option>
-                        </c:forEach>
-                    </select>
-                </div>
-            </div>
+							<%-- 입고 전용: 자재 대분류/소분류 (grid 안, 출고 시 hidden) --%>
+							<div id="item_wrap">
+								<div class="modal-field">
+									<label>자재 대분류</label> <select name="g_id" id="g_id">
+										<option value="">대분류 선택</option>
+										<c:forEach var="g" items="${map.groupList}">
+											<option value="${g.g_id}">
+												<c:choose>
+													<c:when test="${g.g_id == '10'}">원자재</c:when>
+													<c:when test="${g.g_id == '20'}">반자재</c:when>
+													<c:when test="${g.g_id == '30'}">완제품</c:when>
+													<c:otherwise>${g.g_id}</c:otherwise>
+												</c:choose>
+											</option>
+										</c:forEach>
+									</select>
+								</div>
+								<div class="modal-field">
+									<label>자재 소분류</label> <select name="item_id" id="item_id">
+										<option value="">소분류 선택</option>
+										<c:forEach var="item" items="${map.itemList}">
+											<option value="${item.item_id}" data-gid="${item.g_id}"
+												data-spec="${item.spec}" data-unit="${item.unit}">
+												${item.item_name}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
 
-            <%-- 규격 --%>
-            <div class="modal-field">
-                <label>규격</label>
-                <input type="number" name="spec" id="spec" placeholder="자동입력" readonly>
-            </div>
+							<%-- 규격 --%>
+							<div class="modal-field">
+								<label>규격</label> <input type="text" name="spec" id="spec"
+									placeholder="자동입력" readonly>
+							</div>
 
-            <%-- 단위 --%>
-            <div class="modal-field">
-                <label>단위</label>
-                <input type="text" name="unit" id="unit" placeholder="자동입력" readonly>
-            </div>
+							<%-- 단위 --%>
+							<div class="modal-field">
+								<label>단위</label> <input type="text" name="unit" id="unit"
+									placeholder="자동입력" readonly>
+							</div>
 
-            <%-- 수량 --%>
-            <div class="modal-field">
-                <label>수량</label>
-                <input type="number" name="lot_qty" id="lot_qty" min="1" placeholder="수량 입력">
-            </div>
+							<%-- 수량 --%>
+							<div class="modal-field">
+								<label>수량</label> <input type="number" name="lot_qty"
+									id="lot_qty" min="1" placeholder="수량 입력">
+							</div>
 
-            <%-- 입출고일 --%>
-            <div class="modal-field">
-                <label>입출고일</label>
-                <input type="date" name="io_time" id="io_time">
-            </div>
+							<%-- 입출고일 --%>
+							<div class="modal-field">
+								<label>입출고일</label> <input type="date" name="io_time"
+									id="io_time">
+							</div>
 
-            <%-- 유통기한 --%>
-            <div class="modal-field">
-                <label>유통기한</label>
-                <input type="date" name="expiry_date" id="expiry_date">
-            </div>
+							<%-- 유통기한 --%>
+							<div class="modal-field">
+								<label>유통기한</label> <input type="date" name="expiry_date"
+									id="expiry_date">
+							</div>
 
-            <%-- 입출고사유 --%>
-            <div class="modal-field">
-                <label id="io_reason_label">입출고사유</label>
-                <select name="io_reason" id="io_reason">
-                    <option value="">사유 선택</option>
-                </select>
-            </div>
+							<%-- 입출고사유 --%>
+							<div class="modal-field">
+								<label id="io_reason_label">입출고사유</label> <select
+									name="io_reason" id="io_reason">
+									<option value="">사유 선택</option>
+								</select>
+							</div>
 
-            <%-- 작업자 --%>
-            <div class="modal-field">
-                <label>작업자</label>
-                <input type="text" id="empName" placeholder="자동입력" readonly>
-                <input type="hidden" name="emp_id" id="emp_id_hidden" value="user_1001">
-            </div>
+							<%-- 작업자 --%>
+							<div class="modal-field">
+								<label>작업자</label> <input type="text" id="empName"
+									placeholder="자동입력" readonly> <input type="hidden"
+									name="emp_id" id="emp_id_hidden" value="user_1001">
+							</div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" id="btnCancel">← 취소</button>
-                <button type="submit" class="btn-submit">등록</button>
-            </div>
+							<div class="modal-footer">
+								<button type="button" class="btn-cancel" id="btnCancel">←
+									취소</button>
+								<button type="submit" class="btn-submit">등록</button>
+							</div>
 
-        </div>
-    </form>
-</dialog>
+						</div>
+					</form>
+					</dialog>
 
 				</div>
 			</div>
