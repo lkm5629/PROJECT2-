@@ -252,13 +252,14 @@ hr {
 	padding: 15px;
 }
 
+
 .defList, .defList th, .defList td {
 	border: none;
+	text-align: center;
 }
 table.defList thead th {
 	background-color: var(--color-main-blue);
 	color: white;
-	text-align: center;
 }
 
 table.defList th, table.defList td {
@@ -268,8 +269,4 @@ table.defList th, table.defList td {
 
 .defList tbody tr {
 	border-bottom: 1px solid var(--color-border);
-}
-
-.defList .defCnt {
-	text-align: center;
 }
