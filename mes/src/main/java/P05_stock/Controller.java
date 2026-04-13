@@ -175,6 +175,17 @@ public class Controller extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (dto.getIo_type() == 1) {  // 출고일 때만
+            int currentStock = service.getStockNo(dto.getItem_id());
+            if (currentStock - dto.getLot_qty() < 0) {
+                request.setAttribute("errorMsg", 
+                    "재고 부족입니다. (현재 재고: " + currentStock + ")");
+                // 목록 다시 포워드
+                request.getRequestDispatcher("WEB-INF/views/P05_stock/io.jsp")
+                       .forward(request, response);
+                return;
+            }
+        }
 
         service.insert(dto);
         response.sendRedirect("/mes/iocontroller");
