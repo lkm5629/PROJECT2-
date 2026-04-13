@@ -53,4 +53,7 @@ public class StockService {
     public List<StockDTO> getUserList(String keyword) {
         return stockDAO.selectUserList(keyword);
     }
+    public int getStockNo(String itemId) {
+        return stockDAO.selectStockNo(itemId);
+    }
 }
