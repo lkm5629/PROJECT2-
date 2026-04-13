@@ -13,6 +13,7 @@ const lotKeywordInput = document.getElementById('lotKeyword');
 const empSearchModal  = document.getElementById('empSearchModal');
 const empSearchBody   = document.getElementById('empSearchBody');
 const empKeywordInput = document.getElementById('empKeyword');
+	세션
 
 
 
@@ -44,51 +45,78 @@ const empKeywordInput = document.getElementById('empKeyword');
 
     // 입고 등록 버튼
 document.querySelector('.btn-register-in').addEventListener('click', function () {
-
-const inReasonOptions = `
-    <option value="">사유 선택</option>
-    <option value="구매입">구매입</option>
-    <option value="생산입">생산입</option>
-    <option value="QC통과">QC통과</option>
-`;
-document.getElementById('modalTitle').textContent = '입고 등록';
- document.getElementById('item_id_hidden').disabled = true;  // 입고 시 비활성화
+    const inReasonOptions = `
+        <option value="">사유 선택</option>
+        <option value="구매입">구매입</option>
+        <option value="생산입">생산입</option>
+        <option value="QC통과">QC통과</option>
+    `;
+    document.getElementById('modalTitle').textContent = '입고 등록';
+    document.getElementById('item_id_hidden').disabled = true;
     document.getElementById('lot_id_hidden').disabled  = true;
-     document.getElementById('io_reason_label').textContent = '입고사유';
+    document.getElementById('io_reason_label').textContent = '입고사유';
     document.getElementById('io_reason').innerHTML = inReasonOptions;
+
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('io_time').value = today;
-    document.querySelector('select[name="io_type"]').value = '0';
+    document.getElementById('io_type').value = '0';
+
     inSelectWrap.style.display = 'none';
     itemWrap.style.display     = 'block';
+
+    // 수량: 입고는 직접 입력
+    const lotQtyInput = document.getElementById('lot_qty');
+    lotQtyInput.readOnly    = false;
+    lotQtyInput.placeholder = '수량 입력';
+    lotQtyInput.removeAttribute('style');
+    lotQtyInput.value = '';
+
+    // 작업자: 입고는 로그인 유저 자동입력 (건드리지 않음)
+    document.getElementById('empName').value        = 'Super';   // 세션에서 오는 값으로 교체
+    document.getElementById('emp_id_hidden').value  = 'user_1001'; // 세션값으로 교체
+
     clearItemFields();
     document.getElementById('myModal').showModal();
 });
 
 // 출고 등록 버튼
 document.querySelector('.btn-register-out').addEventListener('click', function () {
-
-	const outReasonOptions = `
-    <option value="">사유 선택</option>
-    <option value="폐기">폐기</option>
-    <option value="자재출">자재출</option>
-    <option value="매출출">매출출</option>
-    <option value="QC검사">QC검사</option>
-`;
-document.getElementById('modalTitle').textContent = '출고 등록';
-	 document.getElementById('item_id_hidden').disabled = false; // 출고 시 활성화
+    const outReasonOptions = `
+        <option value="">사유 선택</option>
+        <option value="폐기">폐기</option>
+        <option value="자재출">자재출</option>
+        <option value="매출출">매출출</option>
+        <option value="QC검사">QC검사</option>
+    `;
+    document.getElementById('modalTitle').textContent = '출고 등록';
+    document.getElementById('item_id_hidden').disabled = false;
     document.getElementById('lot_id_hidden').disabled  = false;
-     document.getElementById('io_reason_label').textContent = '출고사유';
+    document.getElementById('io_reason_label').textContent = '출고사유';
     document.getElementById('io_reason').innerHTML = outReasonOptions;
+
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('io_time').value = today;
-    document.querySelector('select[name="io_type"]').value = '1';
+    document.getElementById('io_type').value = '1';
+
     inSelectWrap.style.display = 'block';
     itemWrap.style.display     = 'none';
+
+    // 수량: 출고는 LOT 선택 시 자동입력
+    const lotQtyInput = document.getElementById('lot_qty');
+    lotQtyInput.readOnly             = true;
+    lotQtyInput.style.background     = '#f0f2f7';
+    lotQtyInput.style.color          = '#999';
+    lotQtyInput.style.cursor         = 'not-allowed';
+    lotQtyInput.placeholder          = '자동 입력';
+    lotQtyInput.value = '';
+
+    // 작업자: 출고는 검색으로 선택
+    document.getElementById('empName').value       = '';
+    document.getElementById('emp_id_hidden').value = '';
+
     clearItemFields();
     document.getElementById('myModal').showModal();
 });
-
     // ── 모달 닫기 ────────────────────────────────────────────
     document.getElementById('btnCancel').addEventListener('click', function () {
         document.getElementById('myModal').close();
@@ -150,7 +178,7 @@ function fetchLotList(keyword) {
                     '<td><button type="button" class="btn-lot-select">선택</button></td>';
 
                 // 행의 선택 버튼 클릭 시 자동입력
-          tr.querySelector('.btn-lot-select').addEventListener('click', function () {
+         tr.querySelector('.btn-lot-select').addEventListener('click', function () {
     document.getElementById('lot_id_display').value          = lot.lot_id;
     document.getElementById('lot_id_hidden').value           = lot.lot_id;
     document.getElementById('item_id_hidden').value          = lot.item_id;
@@ -158,6 +186,7 @@ function fetchLotList(keyword) {
     document.getElementById('spec').value                    = lot.spec;
     document.getElementById('unit').value                    = lot.unit;
     document.getElementById('lot_qty').value                 = lot.lot_qty;
+    document.getElementById('expiry_date').value             = lot.expiry_date || ''; // ← 추가
     lotSearchModal.close();
 });
                 lotSearchBody.appendChild(tr);

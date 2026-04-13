@@ -107,4 +107,110 @@ public class Item_masterDAO {
 		return list;
 
 	}
+
+	public int insertItem(Item_masterDTO item_masterDTO) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져옴
+			Context ctx;
+			ctx = new InitialContext();
+			// DataSource: 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "INSERT INTO item (item_id, item_name, unit, spec, g_id)";
+			query += " VALUES (?, ?, ?, ?, ?)";
+			ps = conn.prepareStatement(query);
+			// 가져오기
+			ps.setString(1, item_masterDTO.getItem_id());
+			ps.setString(2, item_masterDTO.getItem_name());
+			ps.setString(3, item_masterDTO.getUnit());
+			ps.setInt(4, item_masterDTO.getSpec());
+			ps.setInt(5, item_masterDTO.getG_id());
+
+			result = ps.executeUpdate();
+			System.out.println("insert 결과: " + result);
+
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+
+	}
+
+	public int updateItem(Item_masterDTO item_masterDTO) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		int update_result = -1;
+
+		try {
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			conn = dataFactory.getConnection();
+
+			String query = "";
+			query += "UPDATE item ";
+			query += "SET g_id = ?, unit = ?, spec = ?, item_name = ? ";
+			query += "WHERE item_id = ?";
+
+			ps = conn.prepareStatement(query);
+
+			ps.setInt(1, item_masterDTO.getG_id());
+			ps.setString(2, item_masterDTO.getUnit());
+			ps.setInt(3, item_masterDTO.getSpec());
+			ps.setString(4, item_masterDTO.getItem_name());
+			ps.setString(5, item_masterDTO.getItem_id());
+
+			update_result = ps.executeUpdate();
+			System.out.println("update 결과: " + update_result);
+
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return update_result;
+	}
 }

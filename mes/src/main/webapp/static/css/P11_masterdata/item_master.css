@@ -336,7 +336,7 @@ tbody td:nth-child(3) {
 	width: 680px;
 	max-width: calc(100% - 40px);
 	background: #fff;
-	border-radius: 8px;
+	border-radius: 20px;
 	padding: 36px 28px 28px;
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
 	display: flex;
@@ -686,4 +686,7 @@ tbody td:nth-child(3) {
 		.add_item_form_group.small {
 		flex: 1;
 	}
+}
+#add_item_id {
+	background-color: #f1f3f5;
 }

@@ -45,8 +45,8 @@
 		<c:if test=" ${not empty error} ">
 		<div style="color: red; ">${error}</div>
 		</c:if>
-		<a>비밀번호가 기억나셨나요? (로그인)</a>
-		<div>http://localhost:8080/mes/changepw.jsp</div>
+		<a href="http://localhost:8080/mes/login.jsp">비밀번호가 기억나셨나요? (로그인)</a>
+		<div></div>
 	</div>
 
 
