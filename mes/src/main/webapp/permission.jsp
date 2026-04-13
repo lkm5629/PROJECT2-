@@ -45,7 +45,7 @@
 	                    </div>
 						<span>권한 부여 및 수정</span>
 					</div>
-					<form method="get" action="login">
+					<form method="get" action="permission">
 					
 					<c:forEach var="l" items="${ list }">
 						<div class="per-tool">
@@ -53,7 +53,7 @@
 							<li>사번 : ${ l.empid }</li> 
 							<li>이름 : ${ l.ename }</li> 
 							<li>부서 : ${ l.deptname }</li> 
-							<select class="grant" name="${ l.empid }">
+							<select class="grant" name="">
 							<option>작업자</option>
 							<option>관리자</option>
 							<option>슈퍼바이저</option>
