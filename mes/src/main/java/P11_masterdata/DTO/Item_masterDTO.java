@@ -9,6 +9,10 @@ public class Item_masterDTO {
 	String unit;
 	String itemgroup_name;
 	
+	int page;
+	int size;
+	int start;
+	int end;
 	
 	@Override
 	public String toString() {
@@ -74,6 +78,41 @@ public class Item_masterDTO {
 	public int getSpec() {
 	    return spec;
 	}
+
+
+	public void setSize(int size) {
+	    this.size = size;
+	}
+
+	public void setPage(int page) {
+	    this.page = page;
+	}
+
+	public void setStart(int start) {
+	    this.start = start;
+	}
+
+	public void setEnd(int end) {
+	    this.end = end;
+	}
+
+	public int getPage() {
+	    return page;
+	}
+
+	public int getSize() {
+	    return size;
+	}
+
+	public int getStart() {
+	    return start;
+	}
+
+	public int getEnd() {
+	    return end;
+	}
+
+
 }
 
 	

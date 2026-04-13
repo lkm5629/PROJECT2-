@@ -110,57 +110,128 @@ public class Item_masterDAO {
 
 	public int insertItem(Item_masterDTO item_masterDTO) {
 		Connection conn = null;
-		PreparedStatement ps = null;
+		PreparedStatement psItem = null;
+		PreparedStatement psStock = null;
+		PreparedStatement psMax = null;
 		ResultSet rs = null;
 
 		int result = -1;
 
 		try {
-			// JNDI 방식
-			// context.xml에 있는 DB 정보로 커넥션 풀을 가져옴
-			Context ctx;
-			ctx = new InitialContext();
-			// DataSource: 커넥션 풀 관리자
+			Context ctx = new InitialContext();
 			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
-			// DB 접속(그런데 이제 커넥션 풀로)
 			conn = dataFactory.getConnection();
 
-			// SQL 준비
-			String query = "INSERT INTO item (item_id, item_name, unit, spec, g_id)";
-			query += " VALUES (?, ?, ?, ?, ?)";
-			ps = conn.prepareStatement(query);
-			// 가져오기
-			ps.setString(1, item_masterDTO.getItem_id());
-			ps.setString(2, item_masterDTO.getItem_name());
-			ps.setString(3, item_masterDTO.getUnit());
-			ps.setInt(4, item_masterDTO.getSpec());
-			ps.setInt(5, item_masterDTO.getG_id());
+			conn.setAutoCommit(false);
 
-			result = ps.executeUpdate();
-			System.out.println("insert 결과: " + result);
+			// 1. item 테이블 insert
+			String itemQuery = "";
+			itemQuery += "INSERT INTO item (item_id, item_name, unit, spec, g_id) ";
+			itemQuery += "VALUES (?, ?, ?, ?, ?)";
 
-		} catch (NamingException e) {
-			e.printStackTrace();
+			psItem = conn.prepareStatement(itemQuery);
+			psItem.setString(1, item_masterDTO.getItem_id());
+			psItem.setString(2, item_masterDTO.getItem_name());
+			psItem.setString(3, item_masterDTO.getUnit());
+			psItem.setInt(4, item_masterDTO.getSpec());
+			psItem.setInt(5, item_masterDTO.getG_id());
+
+			int itemResult = psItem.executeUpdate();
+
+			// 2. stock_id 최대값 조회
+			String maxQuery = "";
+			maxQuery += "SELECT MAX(TO_NUMBER(SUBSTR(stock_id, 5))) AS max_num ";
+			maxQuery += "FROM stock";
+
+			psMax = conn.prepareStatement(maxQuery);
+			rs = psMax.executeQuery();
+
+			int nextStockNum = 1001;
+			if (rs.next()) {
+				int maxNum = rs.getInt("max_num");
+				if (!rs.wasNull()) {
+					nextStockNum = maxNum + 1;
+				}
+			}
+
+			String stockId = "sto_" + nextStockNum;
+
+			// 3. stock 테이블 insert
+			String stockQuery = "";
+			stockQuery += "INSERT INTO stock (stock_id, item_id, stock_no, safe_no, deleted) ";
+			stockQuery += "VALUES (?, ?, ?, ?, ?)";
+
+			psStock = conn.prepareStatement(stockQuery);
+			psStock.setString(1, stockId);
+			psStock.setString(2, item_masterDTO.getItem_id());
+			psStock.setInt(3, 0);
+			psStock.setInt(4, 0);
+			psStock.setString(5, "N");
+
+			int stockResult = psStock.executeUpdate();
+
+			// 4. 둘 다 성공하면 commit
+			if (itemResult > 0 && stockResult > 0) {
+				conn.commit();
+				result = 1;
+			} else {
+				conn.rollback();
+				result = 0;
+			}
+
+			System.out.println("item insert 결과: " + itemResult);
+			System.out.println("stock insert 결과: " + stockResult);
+			System.out.println("생성된 stock_id: " + stockId);
+
 		} catch (Exception e) {
+			try {
+				if (conn != null) {
+					conn.rollback();
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 		} finally {
-			if (ps != null) {
+			if (rs != null) {
 				try {
-					ps.close();
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (psMax != null) {
+				try {
+					psMax.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (psStock != null) {
+				try {
+					psStock.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (psItem != null) {
+				try {
+					psItem.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}
 			if (conn != null) {
 				try {
+					conn.setAutoCommit(true);
 					conn.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		return result;
 
+		return result;
 	}
 
 	public int updateItem(Item_masterDTO item_masterDTO) {
@@ -213,4 +284,141 @@ public class Item_masterDAO {
 
 		return update_result;
 	}
+
+	//페이지네이션
+	public int selectItemTotalCount() {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int totalCount = 0;
+
+		try {
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			conn = dataFactory.getConnection();
+
+			String query = "";
+			query += "SELECT COUNT(*) cnt ";
+			query += "FROM item";
+
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				totalCount = rs.getInt("cnt");
+			}
+
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return totalCount;
+	}
+	public List<Item_masterDTO> selectItemPageList(Item_masterDTO item_masterDTO) {
+		List<Item_masterDTO> list = new ArrayList<Item_masterDTO>();
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			conn = dataFactory.getConnection();
+
+			String query = "";
+			query += "SELECT * ";
+			query += "FROM ( ";
+			query += "    SELECT ROWNUM rnum, t.* ";
+			query += "    FROM ( ";
+			query += "        SELECT i.item_id, ";
+			query += "               i.item_name, ";
+			query += "               i.unit, ";
+			query += "               i.spec, ";
+			query += "               i.g_id, ";
+			query += "               g.itemgroup_name ";
+			query += "        FROM item i ";
+			query += "        LEFT OUTER JOIN group_info g ";
+			query += "          ON i.g_id = g.g_id ";
+			query += "        ORDER BY i.item_id ";
+			query += "    ) t ";
+			query += "    WHERE ROWNUM <= ? ";
+			query += ") ";
+			query += "WHERE rnum >= ?";
+
+			ps = conn.prepareStatement(query);
+			ps.setInt(1, item_masterDTO.getEnd());
+			ps.setInt(2, item_masterDTO.getStart());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				Item_masterDTO dto = new Item_masterDTO();
+
+				dto.setItem_id(rs.getString("item_id"));
+				dto.setItem_name(rs.getString("item_name"));
+				dto.setUnit(rs.getString("unit"));
+				dto.setSpec(rs.getInt("spec"));
+				dto.setG_id(rs.getInt("g_id"));
+				dto.setItemgroup_name(rs.getString("itemgroup_name"));
+
+				list.add(dto);
+			}
+
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return list;
+	}
+
 }

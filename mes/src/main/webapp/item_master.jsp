@@ -48,23 +48,45 @@
 					</div>
 					<button type="button" class="btn-add">+ 품목 등록</button>
 				</div>
+				<!-- 				카운트 세기 -->
+				<!-- 				전체 길이 구해서 변수에 담기 -->
+				<c:set var="totalCount" value="${totalCount}" />
 
+				<!-- 				초기값 0부터 시작 -->
+				<c:set var="finCount" value="0" />
+				<c:set var="semiCount" value="0" />
+				<c:set var="rawCount" value="0" />
+				<!-- itemList를 하나씩 반복 -->
+				<c:forEach var="item" items="${list}">
+
+					<c:if test="${item.g_id == 30}">
+						<c:set var="finCount" value="${finCount + 1}" />
+					</c:if>
+
+					<c:if test="${item.g_id == 20}">
+						<c:set var="semiCount" value="${semiCount + 1}" />
+					</c:if>
+
+					<c:if test="${item.g_id == 10}">
+						<c:set var="rawCount" value="${rawCount + 1}" />
+					</c:if>
+				</c:forEach>
 				<div class="summary-cards">
 					<div class="summary-box">
 						<div class="summary-title">전체 품목</div>
-						<div class="summary-value">12</div>
+						<div class="summary-value">${totalCount}</div>
 					</div>
 					<div class="summary-box">
 						<div class="summary-title">완제품</div>
-						<div class="summary-value">4</div>
+						<div class="summary-value">${finCount}</div>
 					</div>
 					<div class="summary-box">
-						<div class="summary-title">반자재</div>
-						<div class="summary-value">1</div>
+						<div class="summary-title">반제품</div>
+						<div class="summary-value">${semiCount}</div>
 					</div>
 					<div class="summary-box">
 						<div class="summary-title">원자재</div>
-						<div class="summary-value">7</div>
+						<div class="summary-value">${rawCount}</div>
 					</div>
 				</div>
 
@@ -72,16 +94,18 @@
 					<h2>품목 목록</h2>
 
 					<div class="filter-row">
-						<select name="itemGroup">
+						<!-- 					//선택~원자재 카테고리 -->
+						<select id="itemGroup" name="itemGroup">
 							<option value="">선택</option>
 							<option value="완제품">완제품</option>
-							<option value="반자재">반자재</option>
+							<option value="반자재">반제품</option>
 							<option value="원자재">원자재</option>
 						</select>
 
 						<div class="search-wrap">
-							<input type="text" name="keyword" placeholder="품목코드/품목명 검색..." />
-							<button type="button" class="btn-search">검색</button>
+							<input id="searchKeyword" type="text" name="keyword"
+								placeholder="품목명 검색..." />
+							<button id="searchBtn" type="button" class="btn-search">검색</button>
 						</div>
 					</div>
 
@@ -98,8 +122,9 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="item" items="${itemList}">
-									<tr>
+								<c:forEach var="item" items="${list}">
+
+									<tr data-g-id="${item.g_id}">
 										<td>${item.item_id}</td>
 										<td><c:if test="${item.g_id == 30}">
 												완제품
@@ -118,18 +143,23 @@
 													data-item-name="${fn:escapeXml(item.item_name)}"
 													data-g-id="${item.g_id}" data-spec="${item.spec}"
 													data-unit="${item.unit}">수정</button>
-												<button type="button" class="icon-btn delete">삭제</button>
+												<!-- 												<button type="button" class="icon-btn delete">삭제</button> -->
 											</div>
 										</td>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
-
+						<!-- 						페이지네이션 -->
 						<div class="pagination">
-							<a href="#">&lt;</a> <a href="#" class="active">1</a> <a href="#">2</a>
-							<a href="#">3</a> <a href="#">4</a> <a href="#">5</a> <a href="#">&gt;</a>
+							<c:forEach var="i" begin="1" end="${totalPage}">
+								<a
+									href="${pageContext.request.contextPath}/Item_masterPageController?page=${i}&size=${size}"
+									class="${page == i ? 'active' : ''}"> ${i} </a>
+							</c:forEach>
+
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -147,7 +177,8 @@
 							</div>
 
 							<div class="edit_item_form_group group">
-								<label>품목 그룹</label> <select id="edit_g_id" name="g_id" class="edit_item_info">
+								<label>품목 그룹</label> <select id="edit_g_id" name="g_id"
+									class="edit_item_info">
 
 									<option value="30">완제품</option>
 									<option value="20">반제품</option>
@@ -156,7 +187,8 @@
 							</div>
 
 							<div class="edit_item_form_group small">
-								<label>규격</label> <select id="edit_spec" name="spec" class="edit_item_info">
+								<label>규격</label> <select id="edit_spec" name="spec"
+									class="edit_item_info">
 
 									<option value="3">3</option>
 									<option value="4">4</option>
@@ -180,7 +212,8 @@
 							</div>
 
 							<div class="edit_item_form_group small">
-								<label>단위</label> <select id="edit_unit" name="unit" class="edit_item_info">
+								<label>단위</label> <select id="edit_unit" name="unit"
+									class="edit_item_info">
 
 									<option value="L">L</option>
 									<option value="m">m</option>
@@ -197,7 +230,7 @@
 									<input id="edit_item_name" name="item_name" type="text">
 
 									<ul id="ul_li"></ul>
-<!-- 									<button type="button" id="edit_item_search_btn">검색</button> -->
+									<!-- 									<button type="button" id="edit_item_search_btn">검색</button> -->
 								</div>
 							</div>
 						</div>
@@ -230,7 +263,7 @@
 						<label>품목 그룹</label> <select id="add_g_id" class="add_item_info"
 							name="g_id">
 							<option value="30">완제품</option>
-							<option value="20">반자재</option>
+							<option value="20">반제품</option>
 							<option value="10">원자재</option>
 						</select>
 					</div>
@@ -283,7 +316,8 @@
 
 	<script>
 		window.itemListForCode = [
-			<c:forEach var="item" items="${itemList}" varStatus="status">
+			<c:forEach var="item" items="${list}" varStatus="status">
+
 				{
 					itemId: "${fn:escapeXml(item.item_id)}",
 					gId: ${item.g_id}

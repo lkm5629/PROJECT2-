@@ -139,3 +139,47 @@ add_item_close_btn.addEventListener('click', function(){
 add_item_save_btn.addEventListener('click', function(){
 	add_item_modal.style.display = 'none';
 });
+
+//선택, 완제품, 반제품, 원자재 카테고리
+const itemGroup = document.getElementById('itemGroup');
+const itemRows = document.querySelectorAll('tbody tr[data-g-id]');//품목 목록의 품목 그룹
+
+//품목 그룹 필터 함수 및 품목명 검색
+function filterItems() {
+    const selectedGroup = itemGroup.value;
+    const keyword = searchKeyword.value.trim();//품목명 검색까지 함께
+    let targetGId = "";
+
+    if (selectedGroup === "완제품") {
+        targetGId = "30";
+    } else if (selectedGroup === "반자재") {
+        targetGId = "20";
+    } else if (selectedGroup === "원자재") {
+        targetGId = "10";
+    }
+	//반복하기
+    itemRows.forEach(function(row) {
+    const rowGId = row.dataset.gId;
+    const itemNameCell = row.querySelector('td:nth-child(3)');//품목명의 td
+    const itemNameText = itemNameCell.textContent.trim();//인풋 창에 쓴 품목명
+
+    const groupMatch = (targetGId === "" || rowGId === targetGId);
+    const nameMatch = (keyword === "" || itemNameText.includes(keyword));
+
+    if (groupMatch && nameMatch) {
+        row.style.display = "";
+    } else {
+        row.style.display = "none";
+    }
+});
+
+}
+//선택~원자재 선택 시 변경
+itemGroup.addEventListener('change', filterItems);
+
+const searchKeyword = document.getElementById('searchKeyword');//검색창 인풋
+const searchBtn = document.getElementById('searchBtn');//검색 버튼
+
+//품목명 검색 기능
+searchBtn.addEventListener('click', filterItems);
+
