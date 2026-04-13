@@ -78,7 +78,7 @@ public class WoDAO {
 				String dName = rs.getString("directorName");
 				String itemName = rs.getString("item_name");
 				String unit = rs.getString("unit");
-				int spec = rs.getInt("spec");
+				String spec = rs.getString("spec");
 				String group = rs.getString("g_id");
 				
 
@@ -232,7 +232,7 @@ public class WoDAO {
 				String dName = rs.getString("directorname");
 				String itemName = rs.getString("item_name");
 				String unit = rs.getString("unit");
-				int spec = rs.getInt("spec");
+				String spec = rs.getString("spec");
 				String group = rs.getString("g_id");
 				
 
@@ -364,7 +364,7 @@ public class WoDAO {
 				String itemId = rs.getString("item_id");
 				String itemName = rs.getString("item_name");
 				String unit = rs.getString("unit");
-				int spec = rs.getInt("spec");
+				String spec = rs.getString("spec");
 				String group = rs.getString("g_id");
 				
 				
