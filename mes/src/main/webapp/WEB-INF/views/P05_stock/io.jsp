@@ -251,7 +251,10 @@
                     <input type="text" id="lot_id_display" placeholder="LOT 선택" readonly>
                     <button type="button" id="btnLotSearch">🔍 검색</button>
                 </div>
-                <p>자재: <span id="item_name_display"></span></p>
+                <div class="modal-field">
+    <label>자재명</label>
+    <input type="text" id="item_name_display" placeholder="자동입력" readonly>
+</div>
                 <input type="hidden" name="item_id" id="item_id_hidden">
                 <input type="hidden" name="lot_id" id="lot_id_hidden">
             </div>
