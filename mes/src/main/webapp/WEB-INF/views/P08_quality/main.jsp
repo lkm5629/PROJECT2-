@@ -140,7 +140,7 @@
 		
 		            <tbody>
 		                <c:forEach var="i" items="${ qcMap.list }">
-		                    <tr onclick="location.href='/mes/qclist?cmd=detail&qcId=${i.qcId}'">
+		                    <tr class="qcDetail" onclick="location.href='/mes/qclist?cmd=detail&qcId=${i.qcId}'">
 		                        <td>${ i.qcId }</td>
 		                        <td>${ i.woId }</td>
 		                        <td>${ i.iName } (${ i.itemId })</td>

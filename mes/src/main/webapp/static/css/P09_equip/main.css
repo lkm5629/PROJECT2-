@@ -128,6 +128,8 @@
 	padding : 5px;
 	
 	width: 50%;
+	
+	font-size: 14px;
 }
 
 /* 리스트 */
@@ -171,6 +173,7 @@
 }
 
 
+
 /* 테이블 */
 .eq-table {
     width: 100%;
@@ -193,6 +196,12 @@
 .eq-table tbody tr {
     cursor: pointer;
 }
+
+
+.eqDetail:hover {
+	background-color: var(--color-white-hover);
+}
+
 
 /* 상태 */
 

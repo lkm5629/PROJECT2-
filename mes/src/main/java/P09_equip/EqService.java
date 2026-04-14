@@ -8,6 +8,7 @@ import P07_work.SearchDTO;
 import P07_work.WoDAO;
 import P07_work.WoDTO;
 import P09_equip.DTO.EqDTO;
+import P09_equip.DTO.EqLogDTO;
 import P09_equip.DTO.EqSearchDTO;
 
 public class EqService {
@@ -57,6 +58,14 @@ public class EqService {
 		map.put("page", page);
 		
 		return map;
+	}
+	
+	public EqDTO detail(EqDTO dto) {
+		return dao.setting(dto);
+	}
+	
+	public List getLog(EqLogDTO dto) {
+		return dao.getLog(dto);
 	}
 
 }

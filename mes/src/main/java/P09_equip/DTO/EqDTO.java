@@ -6,6 +6,9 @@ public class EqDTO {
 	// eq
 	String eqId;
 	String eqName;
+	Date buyDate;
+	Date startDate;
+	String procId;
 	
 	// runTime
 	int totalMin;
@@ -74,12 +77,31 @@ public class EqDTO {
 		this.page = page;
 	}
 	
+	public Date getBuyDate() {
+		return buyDate;
+	}
+	public void setBuyDate(Date buyDate) {
+		this.buyDate = buyDate;
+	}
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public String getProcId() {
+		return procId;
+	}
+	public void setProcId(String procId) {
+		this.procId = procId;
+	}
+	
 	
 	@Override
 	public String toString() {
-		return "EqDTO [eqId=" + eqId + ", eqName=" + eqName + ", totalMin=" + totalMin + ", runMin=" + runMin
-				+ ", stopMin=" + stopMin + ", runRate=" + runRate + ", status=" + status + ", size=" + size + ", page="
-				+ page + "]";
+		return "EqDTO [eqId=" + eqId + ", eqName=" + eqName + ", buyDate=" + buyDate + ", startDate=" + startDate
+				+ ", procId=" + procId + ", totalMin=" + totalMin + ", runMin=" + runMin + ", stopMin=" + stopMin
+				+ ", runRate=" + runRate + ", status=" + status + ", size=" + size + ", page=" + page + "]";
 	}
 	
 }

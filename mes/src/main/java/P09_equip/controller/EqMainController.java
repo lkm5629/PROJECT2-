@@ -36,8 +36,8 @@ public class EqMainController extends HttpServlet {
 		if ("search".equals(cmd)) {
 			search(request, response);
 		} else if ("detail".equals(cmd)) {
-//			detail(request, response);
-//			return;
+			detail(request, response);
+			return;
 		} else {
 			getList(request, response);			
 		}
@@ -131,6 +131,15 @@ public class EqMainController extends HttpServlet {
 		
 		System.out.println(eqMap);
 		System.out.println(eqMap.get("list"));
+	}
+	
+	protected void detail (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/equipment detail 실행");
+		
+		String eqId = request.getParameter("eqId");
+		
+		String cp = request.getContextPath();
+		response.sendRedirect(cp + "/eqdetail?eqId=" + eqId);
 	}
 
 }

@@ -16,6 +16,7 @@ import P00_layout.LoggableStatement;
 import P07_work.SearchDTO;
 import P07_work.WoDTO;
 import P09_equip.DTO.EqDTO;
+import P09_equip.DTO.EqLogDTO;
 import P09_equip.DTO.EqSearchDTO;
 
 public class EqDAO {
@@ -528,5 +529,201 @@ public class EqDAO {
 
 	} // countSearch
 	
+	
+	public EqDTO setting(EqDTO dto) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT  "
+					+ "    e.eq_id, "
+					+ "    e.eq_name, "
+					+ "    e.eq_buydate, "
+					+ "    e.eq_startdate, "
+					+ "    e.process_id, "
+					+ "    e.eq_status, "
+					+ "    ROUND((SYSDATE - e.eq_startdate) * 24 * 60) total_min, "
+					+ "    ROUND(NVL(SUM((NVL(r.etime, SYSDATE) - r.stime) * 24 * 60), 0)) run_min, "
+					+ "    ROUND( "
+					+ "        (SYSDATE - e.eq_startdate) * 24 * 60 "
+					+ "        - NVL(SUM((NVL(r.etime, SYSDATE) - r.stime) * 24 * 60), 0) "
+					+ "    , 2) stop_min, "
+					+ "    ROUND( "
+					+ "        CASE  "
+					+ "            WHEN (SYSDATE - e.eq_startdate) = 0 THEN 0 "
+					+ "            ELSE  "
+					+ "                NVL(SUM((NVL(r.etime, SYSDATE) - r.stime)), 0)  "
+					+ "                / (SYSDATE - e.eq_startdate) * 100 "
+					+ "        END "
+					+ "    , 2) run_rate "
+					+ "FROM equipment e "
+					+ "LEFT JOIN eqrun_log r "
+					+ "    ON e.eq_id = r.eq_id "
+					+ "WHERE e.eq_id = ? "
+					+ "GROUP BY e.eq_id, e.eq_name, e.eq_startdate, e.eq_buydate, e.process_id, e.eq_status "
+					+ "ORDER BY e.eq_id";
+			
+			ps = conn.prepareStatement(query);
+			ps.setString(1, dto.getEqId());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				// eq
+				String eqId = rs.getString("eq_id");
+				String eqName = rs.getString("eq_name");
+				Date bDate = rs.getDate("eq_buydate");
+				Date sDate = rs.getDate("eq_startDate");
+				String procId = rs.getString("process_id");
+				
+				// runTime
+				int totalMin = rs.getInt("total_min");
+				int runMin = rs.getInt("run_min");
+				int stopMin = rs.getInt("stop_min");
+				double runRate = rs.getDouble("run_rate");
+				String status = rs.getString("eq_status");
+				
+				dto.setEqId(eqId);
+				dto.setEqName(eqName);
+				dto.setBuyDate(bDate);
+				dto.setStartDate(sDate);
+				dto.setProcId(procId);
+				
+				dto.setTotalMin(totalMin);
+				dto.setRunMin(runMin);
+				dto.setStopMin(stopMin);
+				dto.setRunRate(runRate);
+				dto.setStatus(status);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+	
+		return dto;
+		
+	} // setting
+	
+	
+	public List<EqLogDTO> getLog(EqLogDTO eqDTO) {
+		
+		List<EqLogDTO> list = new ArrayList();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT l.*, u.eName "
+					+ "FROM equipment_log l "
+					+ "	LEFT OUTER JOIN user_info u "
+					+ "		ON l.EMP_ID = u.EMP_ID "
+					+ "WHERE l.eq_id = ?";
+			
+			ps = conn.prepareStatement(query);
+			ps.setString(1, eqDTO.getEqId());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				// eq
+				String logId = rs.getString("eq_log_id");
+				String eqId = rs.getString("eq_id");
+				String wId = rs.getString("emp_id");
+				String wName = rs.getString("ename");
+				
+				Date sTime = rs.getDate("start_time");
+				Date eTime = rs.getDate("end_time");
+				
+				String inspType = rs.getString("insp_type");
+				String inspContent = rs.getString("insp_content");
+				
+				EqLogDTO dto = new EqLogDTO();
+				
+				dto.setLogId(logId);
+				dto.setEqId(eqId);
+				dto.setwId(wId);
+				dto.setwName(wName);
+				dto.setsTime(sTime);
+				dto.seteTime(eTime);
+				dto.setInspType(inspType);
+				dto.setInspContent(inspContent);
+				
+				list.add(dto);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+	
+		return list;
+		
+	} // setting
 
 }
