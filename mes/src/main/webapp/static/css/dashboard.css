@@ -35,7 +35,7 @@ header {
 }
 .box-type1 {
 	width : 1160px;
-	height : 430px;
+	height : 350px;
 	padding : 0px 10px;
 	margin : 0px 15px; 
 	flex-shirink : 0;
@@ -54,7 +54,40 @@ header {
 	margin : 0px 12px; 
 	flex-shirink : 0;
 } 
+.box-type4 {
+	width : 360px;
+	height : 280px;
+	padding : 0px 10px;
+	margin : 0px 12px; 
+	flex-shirink : 0;
+} 
 .radius {
 	border : 1px solid black;
 	border-radius : 10px;
+}
+.weather {
+	display : flex;
+	flex-direction : column;
+	justify-content : center;
+	align-items : center;
+}
+h4 {
+	margin : 15px 0px;
+}
+
+.chart-2 {
+    width : 1100px;
+    height : 300px;	
+}
+element.style {
+	height : 270px ! importants;
+}
+.semi {
+	width : 300px;
+}
+.short-box {
+	width : 340px;
+	height : 280px;
+	padding : 0px 5px;
+	font-size : 1.3em;
 }
