@@ -68,11 +68,11 @@ function moveMenu_snb() {
                     location.href = "/mes/iocontroller";
                     break;
 
-                case "ioIn_snb":
+                case "io_snb":
                     location.href = "/mes/stock/in";
                     break;
 
-                case "ioOut_snb":
+                case "stockAdd_snb":
                     location.href = "/mes/stock/out";
                     break;
 
