@@ -45,66 +45,50 @@
 						<p>생산 공정 정보를 관리합니다.</p>
 					</div>
 
-					<button type="button" class="process-primary-btn">+ 공정 흐름도 등록</button>
+					<button type="button" class="process-primary-btn"
+						id="openProcessStepModal">+ 공정 단계 등록</button>
+
 				</div>
 
 				<div class="process-filter-row">
-					<select class="process-select">
-						<option>원단재단</option>
-						<option>용액 합침</option>
-						<option>개별 포장</option>
-						<option>박스 포장</option>
-						<option>품질 검사</option>
-					</select>
+					<form method="get"
+						action="${pageContext.request.contextPath}/process">
+						<select name="processId" class="process-select"
+							onchange="this.form.submit()">
+							<c:forEach var="p" items="${processList}">
+								<option value="${p.process_id}"
+									<c:if test="${selectedProcessId eq p.process_id}">selected</c:if>>
+									${p.process_name}</option>
+							</c:forEach>
+						</select>
+					</form>
 				</div>
 
 				<section class="process-card flow-card">
 					<div class="process-card-header">
-						<h2>공정 흐름도</h2>
+						<h2>공정 단계</h2>
 					</div>
 
 					<div class="flow-board">
-						<div class="flow-top-line">
-							<div class="flow-step">
-								<span class="flow-badge">1단계</span>
-								<strong>원단 재단</strong>
-								<p>설비 2/2</p>
-							</div>
+						<c:choose>
+							<c:when test="${empty stepList}">
+								<div class="flow-empty">등록된 공정 단계가 없습니다.</div>
+							</c:when>
 
-							<div class="flow-arrow">→</div>
+							<c:otherwise>
+								<div class="flow-top-line">
+									<c:forEach var="step" items="${stepList}" varStatus="status">
+										<div class="flow-step">
+											<span class="flow-badge">${step.seq}단계</span> <strong>${step.step_name}</strong>
+										</div>
 
-							<div class="flow-step">
-								<span class="flow-badge">2단계</span>
-								<strong>용액 합침</strong>
-								<p>설비 1/2</p>
-							</div>
-
-							<div class="flow-arrow">→</div>
-
-							<div class="flow-step">
-								<span class="flow-badge">3단계</span>
-								<strong>개별 포장</strong>
-								<p>설비 2/2</p>
-							</div>
-
-							<div class="flow-arrow">→</div>
-
-							<div class="flow-step">
-								<span class="flow-badge">4단계</span>
-								<strong>박스 포장</strong>
-								<p>설비 1/1</p>
-							</div>
-
-							<div class="flow-arrow">→</div>
-						</div>
-
-						<div class="flow-bottom-line">
-							<div class="flow-step flow-step-bottom">
-								<span class="flow-badge">5단계</span>
-								<strong>품질 검사</strong>
-								<p>설비 1/1</p>
-							</div>
-						</div>
+										<c:if test="${not status.last}">
+											<div class="flow-arrow">→</div>
+										</c:if>
+									</c:forEach>
+								</div>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</section>
 
@@ -114,10 +98,11 @@
 
 						<div class="process-toolbar">
 							<div class="process-search">
-								<input type="text" placeholder="공정명 검색..." />
+								<input class="process-search-text" type="text"
+									placeholder="공정명 검색..." />
 							</div>
 
-							<button type="button" class="process-primary-btn small">+ 공정 등록</button>
+							<button type="button" class="process-primary-btn small">검색</button>
 						</div>
 					</div>
 
@@ -128,82 +113,164 @@
 									<th>공정코드</th>
 									<th>공정명</th>
 									<th>설명</th>
-									<th>설비 수</th>
-									<th>가동현황</th>
+									<th>품목코드</th>
 									<th>관리</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td><span class="process-code-badge">PROC001</span></td>
-									<td>3×3 원단 재단</td>
-									<td>부직포를 규격에 맞게 재단</td>
-									<td>2대</td>
-									<td>2/2</td>
-									<td>
-										<div class="process-action-group">
-											<button type="button" class="process-icon-btn edit">&#9998;</button>
-											<button type="button" class="process-icon-btn delete">&#128465;</button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td><span class="process-code-badge">PROC002</span></td>
-									<td>에탄올 용액 70ml</td>
-									<td>알콜 용액을 부직포에 합침</td>
-									<td>2대</td>
-									<td>1/2</td>
-									<td>
-										<div class="process-action-group">
-											<button type="button" class="process-icon-btn edit">&#9998;</button>
-											<button type="button" class="process-icon-btn delete">&#128465;</button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td><span class="process-code-badge">PROC003</span></td>
-									<td>이소프로판올 용액 70ml</td>
-									<td>알루미늄 포장지로 개별 포장</td>
-									<td>2대</td>
-									<td>2/2</td>
-									<td>
-										<div class="process-action-group">
-											<button type="button" class="process-icon-btn edit">&#9998;</button>
-											<button type="button" class="process-icon-btn delete">&#128465;</button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td><span class="process-code-badge">PROC004</span></td>
-									<td>5×5 원단 재단</td>
-									<td>외부 박스에 포장</td>
-									<td>1대</td>
-									<td>1/1</td>
-									<td>
-										<div class="process-action-group">
-											<button type="button" class="process-icon-btn edit">&#9998;</button>
-											<button type="button" class="process-icon-btn delete">&#128465;</button>
-										</div>
-									</td>
-								</tr>
+								<c:choose>
+									<c:when test="${empty processList}">
+										<tr class="process-empty-row">
+											<td colspan="5">등록된 공정이 없습니다.</td>
+										</tr>
+									</c:when>
+
+									<c:otherwise>
+										<c:forEach var="p" items="${processList}">
+											<tr>
+												<td><span class="process-code-badge">${p.process_id}</span>
+												</td>
+												<td><a
+													href="${pageContext.request.contextPath}/processDetail?processId=${p.process_id}">
+														${p.process_name} </a></td>
+
+												<td>${p.process_info}</td>
+												<td>${p.item_id}</td>
+												<td>
+													<div class="process-action-group">
+														<button type="button" class="process-icon-btn edit">수정</button>
+														<!-- 														<button type="button" class="process-icon-btn delete">삭제</button> -->
+													</div>
+												</td>
+											</tr>
+										</c:forEach>
+									</c:otherwise>
+								</c:choose>
 							</tbody>
 						</table>
 					</div>
 
 					<div class="process-pagination">
-						<a href="#">&lt;</a>
-						<a href="#" class="active">1</a>
-						<a href="#">2</a>
-						<a href="#">3</a>
-						<a href="#">4</a>
-						<a href="#">5</a>
-						<a href="#">&gt;</a>
+						<a href="#">&lt;</a> <a href="#" class="active">1</a> <a href="#">&gt;</a>
 					</div>
 				</section>
 			</div>
 		</div>
 	</div>
+	<div class="process-step-modal" id="processStepModal">
+		<div class="process-step-modal-popup">
+			<form
+				action="${pageContext.request.contextPath}/ProcessAddController"
+				method="post">
+
+				<div class="process-step-modal-header">
+					<h3 class="process-step-modal-title">공정 단계 등록</h3>
+				</div>
+
+				<div class="process-step-form-row">
+					<div class="process-step-form-group code">
+						<label for="processCodeInput">공정코드</label> <input type="text"
+							id="processCodeInput" name="process_id"
+							class="process-step-input" value="${selectedProcessId}" readonly>
+					</div>
+
+					<div class="process-step-form-group code">
+						<label for="processSeqView">단계순서</label> <input type="text"
+							id="processSeqView" class="process-step-input"
+							value="${fn:length(stepList) + 1}단계" readonly> <input
+							type="hidden" name="seq" value="${fn:length(stepList) + 1}">
+					</div>
+
+					<div class="process-step-form-group name">
+						<label for="processNameInput">공정 단계명</label> <input type="text"
+							id="processNameInput" name="step_name" class="process-step-input"
+							placeholder="">
+					</div>
+				</div>
+
+				<div class="process-step-preview-box">
+					<h4 class="process-step-preview-title">공정 단계(예상)</h4>
+
+					<c:choose>
+						<c:when test="${empty stepList}">
+							<div class="process-step-preview-empty">등록된 공정 단계가 없습니다.</div>
+						</c:when>
+
+						<c:otherwise>
+							<div class="process-step-preview-line">
+								<c:forEach var="step" items="${stepList}" varStatus="status">
+									<div class="process-step-preview-card">
+										<span class="process-step-preview-badge">${step.seq}단계</span>
+										<strong>${step.step_name}</strong>
+									</div>
+
+									<c:if test="${not status.last}">
+										<div class="process-step-preview-arrow">→</div>
+									</c:if>
+								</c:forEach>
+							</div>
+						</c:otherwise>
+					</c:choose>
+				</div>
+
+				<div class="process-step-modal-actions">
+					<button type="button" class="process-step-cancel-btn"
+						id="closeProcessStepModal">취소</button>
+					<button type="submit" class="process-step-save-btn">등록</button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+	</div>
+	<div class="process-edit-modal" id="processEditModal">
+		<div class="process-edit-modal-popup">
+			<form action="${pageContext.request.contextPath}/processUpdate"
+				method="post">
+
+				<div class="process-edit-modal-header">
+					<h3 class="process-edit-modal-title">
+						<span id="editProcessModalTitleText">공정</span> 수정
+					</h3>
+				</div>
+
+				<div class="process-edit-form-row">
+					<div class="process-edit-form-group code">
+						<label for="editProcessId">공정 코드</label> <input type="text"
+							id="editProcessId" name="process_id"
+							class="process-edit-input readonly" readonly>
+					</div>
+				</div>
+
+				<div class="process-edit-form-row">
+					<div class="process-edit-form-group name">
+						<label for="editProcessName">공정명</label> <input type="text"
+							id="editProcessName" name="process_name"
+							class="process-edit-input">
+					</div>
+				</div>
+
+				<div class="process-edit-form-row">
+					<div class="process-edit-form-group info">
+						<label for="editProcessInfo">공정 설명</label>
+						<textarea id="editProcessInfo" name="process_info"
+							class="process-edit-textarea"></textarea>
+					</div>
+				</div>
+
+				<div class="process-edit-modal-actions">
+					<button type="button" class="process-edit-cancel-btn"
+						id="closeProcessEditModal">취소</button>
+					<button type="submit" class="process-edit-save-btn">수정</button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+	<script
+		src="${pageContext.request.contextPath}/static/js/11_masterdata/process.js"></script>
 
 </body>
 </html>
-

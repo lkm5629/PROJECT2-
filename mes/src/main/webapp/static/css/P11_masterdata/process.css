@@ -4,6 +4,35 @@
 	box-sizing: border-box;
 }
 
+html {
+	overflow-y: scroll;
+}
+
+body {
+	min-width: 0;
+}
+
+.layout_snb {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: stretch;
+	min-width: 0;
+}
+
+.layout_snb>.snbContent {
+	width: 220px;
+	min-width: 220px;
+	max-width: 220px;
+	flex: 0 0 220px;
+	flex-shrink: 0;
+}
+
+.content {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow-x: hidden;
+}
+
 .process-page {
 	width: 100%;
 	max-width: 1100px;
@@ -61,8 +90,17 @@
 	margin-bottom: 14px;
 }
 
+.process-filter-row form {
+	display: inline-block;
+	width: 180px;
+	margin: 0;
+}
+
 .process-select {
-	min-width: 76px;
+	display: block;
+	width: 180px;
+	min-width: 180px;
+	max-width: 180px;
 	height: 38px;
 	padding: 0 34px 0 12px;
 	border: 1px solid #d0d5dd;
@@ -95,50 +133,42 @@
 	margin-bottom: 8px;
 }
 
-.process-card-header h2,
-.process-list-top h2 {
+.process-card-header h2, .process-list-top h2 {
 	margin: 0;
 	font-size: 22px;
 	font-weight: 800;
 	color: #111;
 }
 
-/* 흐름도 */
+/* 공정 흐름도 */
 .flow-board {
 	border: 1px solid #dddfe4;
 	border-radius: 18px;
-	padding: 28px 24px 24px;
+	padding: 24px 24px 20px;
 	background: #fff;
-	min-height: 280px;
+	min-height: 150px;
+	overflow-x: auto;
 }
 
 .flow-top-line {
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 	gap: 10px;
 	flex-wrap: nowrap;
-}
-
-.flow-bottom-line {
-	display: flex;
-	justify-content: center;
-	margin-top: 28px;
+	min-width: max-content;
 }
 
 .flow-step {
 	width: 148px;
-	min-height: 86px;
+	min-height: 64px;
 	background: #fff;
 	border: 1px solid #dddfe4;
 	border-radius: 10px;
-	padding: 12px 10px 10px;
+	padding: 10px 10px 8px;
 	text-align: center;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-}
-
-.flow-step-bottom {
-	width: 148px;
+	flex-shrink: 0;
 }
 
 .flow-badge {
@@ -163,17 +193,21 @@
 	word-break: keep-all;
 }
 
-.flow-step p {
-	margin: 7px 0 0;
-	font-size: 12px;
-	color: #666;
-}
-
 .flow-arrow {
 	color: #b7b7b7;
 	font-size: 30px;
 	line-height: 1;
 	font-weight: 400;
+	flex-shrink: 0;
+}
+
+.flow-empty {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100px;
+	font-size: 15px;
+	color: #888;
 }
 
 /* 목록 */
@@ -222,7 +256,7 @@
 	border-collapse: collapse;
 	table-layout: fixed;
 	background: #fff;
-	min-width: 820px;
+	min-width: 760px;
 }
 
 .process-table thead tr {
@@ -256,9 +290,14 @@
 	background: #f8f9fc;
 }
 
-.process-table tbody td:nth-child(2),
 .process-table tbody td:nth-child(3) {
 	text-align: left;
+}
+
+.process-empty-row td {
+	padding: 30px 10px;
+	color: #888;
+	text-align: center;
 }
 
 /* 코드 뱃지 */
@@ -286,7 +325,7 @@
 	background: none;
 	border: none;
 	cursor: pointer;
-	font-size: 16px;
+	font-size: 14px;
 	padding: 2px;
 	line-height: 1;
 }
@@ -337,43 +376,428 @@
 	background: #eef3fb;
 }
 
+/* 공정 등록 모달 */
+.process-step-modal {
+	position: fixed;
+	inset: 0;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	padding: 24px;
+	background: rgba(0, 0, 0, 0.35);
+	z-index: 9999;
+}
+
+.process-step-modal.is-open {
+	display: flex;
+}
+
+.process-step-modal-popup {
+	width: 720px;
+	max-width: 90%;
+	background: #fff;
+	border: 1px solid #dfe3e8;
+	border-radius: 14px;
+	padding: 32px 28px;
+	box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.process-step-modal-header {
+	margin-bottom: 24px;
+}
+
+.process-step-modal-title {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 700;
+	color: #222;
+}
+
+.process-step-form-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-bottom: 18px;
+}
+
+.process-step-form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	flex: 1;
+	min-width: 140px;
+}
+
+.process-step-form-group.code {
+	flex: 1.1;
+}
+
+.process-step-form-group.name {
+	flex: 1.4;
+}
+
+.process-step-form-group label {
+	font-size: 14px;
+	font-weight: 600;
+	color: #333;
+}
+
+.process-step-input {
+	width: 100%;
+	height: 42px;
+	padding: 0 12px;
+	border: 1px solid #d7dce3;
+	border-radius: 8px;
+	background: #fff;
+	font-size: 14px;
+	color: #222;
+	outline: none;
+}
+
+.process-step-form-group.code .process-step-input {
+	background: #f1f3f5;
+	color: #666;
+}
+
+.process-step-preview-box {
+	border: 1px solid #dfe3e8;
+	border-radius: 12px;
+	padding: 16px;
+	background: #fff;
+}
+
+.process-step-preview-title {
+	margin: 0 0 14px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #222;
+}
+
+.process-step-preview-line {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	padding-bottom: 4px;
+}
+
+.process-step-preview-card {
+	width: 110px;
+	min-width: 110px;
+	min-height: 88px;
+	padding: 10px 8px;
+	border: 1px solid #d7dce3;
+	border-radius: 8px;
+	background: #fff;
+	text-align: center;
+}
+
+.process-step-preview-badge {
+	display: inline-block;
+	min-width: 46px;
+	padding: 4px 8px;
+	border: 1px solid #d7dce3;
+	border-radius: 8px;
+	background: #fff;
+	font-size: 11px;
+	font-weight: 700;
+	color: #666;
+	line-height: 1.2;
+}
+
+.process-step-preview-card strong {
+	display: block;
+	margin-top: 14px;
+	font-size: 15px;
+	font-weight: 700;
+	color: #111;
+	word-break: keep-all;
+}
+
+.process-step-preview-arrow {
+	font-size: 24px;
+	color: #b4b4b4;
+	flex-shrink: 0;
+}
+
+.process-step-preview-empty {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 88px;
+	font-size: 14px;
+	color: #888;
+}
+
+.process-step-modal-actions {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 14px;
+	margin-top: 24px;
+}
+
+.process-step-cancel-btn, .process-step-save-btn {
+	min-width: 92px;
+	height: 40px;
+	padding: 0 18px;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.process-step-cancel-btn {
+	border: 1px solid #cfd6df;
+	background: #e9edf3;
+	color: #333;
+}
+
+.process-step-save-btn {
+	border: none;
+	background: #2f6fed;
+	color: #fff;
+}
+
 /* 반응형 */
-@media (max-width: 1024px) {
+@media ( max-width : 1024px) {
 	.process-list-top {
 		flex-direction: column;
 		align-items: stretch;
 	}
-
 	.process-toolbar {
 		justify-content: space-between;
 	}
-
-	.flow-top-line {
-		flex-wrap: wrap;
+	.flow-arrow {
+		display: none;
 	}
 }
 
-@media (max-width: 768px) {
+@media ( max-width : 768px) {
 	.process-top {
 		flex-direction: column;
 		align-items: stretch;
 	}
-
 	.process-toolbar {
 		flex-direction: column;
 		align-items: stretch;
 	}
-
 	.process-search input {
 		width: 100%;
 	}
-
-	.process-primary-btn,
-	.process-primary-btn.small {
+	.process-primary-btn, .process-primary-btn.small {
 		width: 100%;
 	}
+	.process-filter-row form, .process-select {
+		width: 100%;
+		min-width: 100%;
+		max-width: 100%;
+	}
+	.process-step-modal-popup {
+		width: 92%;
+		padding: 24px 18px;
+	}
+	.process-step-form-row {
+		flex-direction: column;
+		gap: 14px;
+	}
+	.process-step-form-group.code, .process-step-form-group.name {
+		flex: 1;
+		width: 100%;
+	}
+}
 
-	.flow-arrow {
-		display: none;
+.process-edit-modal {
+	position: fixed;
+	inset: 0;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	padding: 24px;
+	background: rgba(0, 0, 0, 0.35);
+	z-index: 10000;
+}
+
+.process-edit-modal-popup {
+	width: 720px;
+	max-width: calc(100% - 32px);
+	background: #fff;
+	border: 1px solid #dfe3e8;
+	border-radius: 18px;
+	padding: 34px 34px 28px;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.14);
+}
+
+.process-edit-modal-popup form {
+	margin: 0;
+}
+
+.process-edit-modal-header {
+	margin-bottom: 28px;
+}
+
+.process-edit-modal-title {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 800;
+	color: #111;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	letter-spacing: -0.02em;
+}
+
+.process-edit-modal-title::before {
+	content: "◉";
+	font-size: 18px;
+	line-height: 1;
+	color: #111;
+}
+
+.process-edit-form-row {
+	margin-bottom: 16px;
+}
+
+.process-edit-form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.process-edit-form-group label {
+	font-size: 14px;
+	font-weight: 700;
+	color: #222;
+	line-height: 1.4;
+}
+
+.process-edit-form-group.code {
+	width: 180px;
+}
+
+.process-edit-form-group.name {
+	width: 100%;
+	max-width: 360px;
+}
+
+.process-edit-form-group.info {
+	width: 100%;
+	max-width: 360px;
+}
+
+.process-edit-input {
+	width: 100%;
+	height: 42px;
+	padding: 0 14px;
+	border: 1px solid #cfd6df;
+	border-radius: 10px;
+	background: #fff;
+	font-size: 14px;
+	color: #333;
+	outline: none;
+	box-sizing: border-box;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.process-edit-input:focus {
+	border-color: #7ea7ff;
+	box-shadow: 0 0 0 3px rgba(106, 141, 246, 0.12);
+}
+
+.process-edit-input.readonly {
+	background: #eceff3;
+	color: #666;
+	cursor: not-allowed;
+}
+
+.process-edit-textarea {
+	width: 100%;
+	min-height: 76px;
+	padding: 10px 14px;
+	border: 1px solid #cfd6df;
+	border-radius: 10px;
+	background: #fff;
+	font-size: 14px;
+	color: #333;
+	outline: none;
+	box-sizing: border-box;
+	resize: none;
+	font-family: inherit;
+	line-height: 1.5;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.process-edit-textarea:focus {
+	border-color: #7ea7ff;
+	box-shadow: 0 0 0 3px rgba(106, 141, 246, 0.12);
+}
+
+.process-edit-modal-actions {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 18px;
+	margin-top: 34px;
+}
+
+.process-edit-cancel-btn,
+.process-edit-save-btn {
+	min-width: 108px;
+	height: 44px;
+	padding: 0 20px;
+	border-radius: 10px;
+	font-size: 15px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.process-edit-cancel-btn {
+	border: 1px solid #d2d7de;
+	background: #eef1f5;
+	color: #333;
+}
+
+.process-edit-cancel-btn:hover {
+	background: #e3e8ee;
+}
+
+.process-edit-save-btn {
+	border: none;
+	background: #3f73ea;
+	color: #fff;
+}
+
+.process-edit-save-btn:hover {
+	background: #2f63dc;
+}
+
+@media (max-width: 768px) {
+	.process-edit-modal {
+		padding: 12px;
+	}
+
+	.process-edit-modal-popup {
+		width: 100%;
+		max-width: calc(100% - 12px);
+		padding: 24px 18px 20px;
+	}
+
+	.process-edit-form-group.code,
+	.process-edit-form-group.name,
+	.process-edit-form-group.info {
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.process-edit-modal-actions {
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.process-edit-cancel-btn,
+	.process-edit-save-btn {
+		width: 100%;
 	}
 }
