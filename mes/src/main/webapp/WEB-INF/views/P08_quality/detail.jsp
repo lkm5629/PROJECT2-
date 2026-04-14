@@ -100,7 +100,7 @@
 		            </div>
 		
 		            <div class="info-box">
-		                <span class="label">작업코드</span>
+		                <span class="label">작업코드 (작업일)</span>
 		                <span class="value">${qcInfo != null ? qcInfo.woId : ' - '}</span>
 		            </div>
 		
@@ -199,6 +199,7 @@
 				    				<th>불량 원인</th>
 				    				<th>수량</th>
 				    				<th>조치 내용</th>
+				    				<th>폐기 여부</th>
 				    			</tr>
 				    		</thead>
 				    		
@@ -208,6 +209,7 @@
 				                        <td>${i.dtName}</td>
 				                        <td class="defCnt">${i.defCnt}</td>
 				                        <td>${i.solution}</td>
+				                        <td>${i.dispose}</td>
 				                    </tr>
 				                </c:forEach>
 				

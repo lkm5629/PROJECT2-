@@ -45,22 +45,29 @@
 	                    </div>
 						<span>권한 부여 및 수정</span>
 					</div>
-					<form method="get" action="">
-					<% for(int i=0;i<5;i++) { %>
-						<div class="mp-tool">
-						<div class="mp-chain radius">
-							<li>사번</li> 
-							<li>이름</li> 
-							<li>직책</li> 
-							<select class="grant" name="grant">
+					<form method="get" action="permission">
+					
+					<c:forEach var="l" items="${ list }">
+						<div class="per-tool">
+						<div class="per-chain radius">
+							<li>사번 : ${ l.empid }</li> 
+							<li>이름 : ${ l.ename }</li> 
+							<li>부서 : ${ l.deptname }</li> 
+							<select class="grant" name="">
 							<option>작업자</option>
 							<option>관리자</option>
 							<option>슈퍼바이저</option>
 							</select> 
 						</div>						
 						</div>
-						<% } %>
-						<button class="buttonMain">권한 변경</button>
+					</c:forEach>
+					
+					<div class="next">
+					<c:forEach var="m" begin="1" end="${ page_no }">
+						<button class="per-btn" name="per_btn" value="${ m }" class="buttonMain">${ m }</button>
+					</c:forEach>
+					</div>
+					
 					</form>
 				</div>
 			</div>

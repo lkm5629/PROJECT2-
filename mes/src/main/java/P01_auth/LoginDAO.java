@@ -433,5 +433,167 @@ public class LoginDAO {
 		return count;
 		
 	}
+	
+	public int readEmp() {
+		System.out.println("/login DAO.readEmp 실행");
 
+		int count = 0;
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			// JNDI 방식
+			// connection.xml 맨 아래에 있는 DB정보로 커넥션 풀을 가져온다. Server 폴더에 있다. 기억!
+			Context ctx = new InitialContext();
+
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB접속(그런데 이제 커넥션 풀로.)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = " select u.emp_id, u.ename, d.dept_name from USER_INFO u  ";
+				   query += " left outer join DEPT d on u.dept_no = d.dept_no ";
+				   
+
+			ps = conn.prepareStatement(query);
+			
+
+			// SQL 실행 및 결과 확보
+			rs = ps.executeQuery();
+
+			// 결과 활용
+			
+			
+			while (rs.next()) {
+				
+				//숫자세기
+				count++;
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+		System.out.println(" readEmp 함수 실행 : " + count);
+		return count;
+
+	}
+
+	public List<LoginDTO> paging(int start_no, int countPageNo) {
+		System.out.println("/login DAO.paging 실행");
+		
+		List<LoginDTO> list = new ArrayList<LoginDTO>();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			// JNDI 방식
+			// connection.xml 맨 아래에 있는 DB정보로 커넥션 풀을 가져온다. Server 폴더에 있다. 기억!
+			Context ctx = new InitialContext();
+			
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB접속(그런데 이제 커넥션 풀로.)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = " SELECT * FROM ( ";
+				   query += " SELECT rownum AS rn, a.* FROM ( ";
+				   query += " SELECT u.emp_id, u.ename, d.dept_name ";
+				   query += " FROM USER_INFO u ";
+				   query += " LEFT OUTER JOIN DEPT d ON u.dept_no = d.dept_no ";
+				   query += " ORDER BY u.emp_id DESC ";
+				   query += " ) a WHERE rownum <= ? ";
+				   query += " ) WHERE rn > ? "; 
+			
+			ps = conn.prepareStatement(query);
+			ps.setInt(1, countPageNo);
+			ps.setInt(2, start_no);
+			
+			
+			// SQL 실행 및 결과 확보
+			rs = ps.executeQuery();
+			
+			// 결과 활용
+			
+			while (rs.next()) {
+				LoginDTO dto = new LoginDTO();
+				
+				//바구니에 담기
+				dto.setEmpid(rs.getString("emp_id"));
+				
+				dto.setEname(rs.getString("ename"));
+				
+				dto.setDeptname(rs.getString("DEPT_NAME"));
+				
+				//바구니를 리스트에 싣기
+				list.add(dto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		System.out.println("paging 함수 실행 : " + list.size());
+		return list;
+		
+	}
 }

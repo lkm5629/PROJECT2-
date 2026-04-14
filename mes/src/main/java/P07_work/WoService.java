@@ -91,5 +91,10 @@ public class WoService {
 		WoDAO dao = new WoDAO();
 		return dao.updateContent(woId, status, prevQty);
 	}
+	
+	public int updatePlan() {
+		WoDAO dao = new WoDAO();
+		return dao.updatePlan();
+	}
 
 }

@@ -12,7 +12,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>작업지시</title>
+<title>작업관리</title>
 
 <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
 
@@ -58,10 +58,6 @@
 			        <p>작업 지시서 관리 및 작업 상태 변경</p>
 			    </div>
     			<button class="addBtn buttonMain">
-<!--     				<svg width="12" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg"> -->
-<!-- 						<path d="M7.5 1V15.1299" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> -->
-<!-- 						<path d="M1 8.02148H14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> -->
-<!-- 					</svg> -->
     				작업지시 등록
     			</button>
 			</div>
@@ -101,9 +97,8 @@
 			    <table class="work-table">
 			        <thead>
 			            <tr>
-			                <th></th>
 			                <th>작업코드</th>
-			                <th>제품</th>
+			                <th>제품명 (제품코드)</th>
 			                <th>작업자</th>
 			                <th>작업일</th>
 			                <th>작업 수량</th>
@@ -113,11 +108,10 @@
 			        <tbody>
 			        
 			        	<c:forEach var="i" items="${ woMap.list }">
-			        		<tr onclick="location.href='/mes/worklist?cmd=detail&woId=${i.woId}'">
-				                <td><input type="checkbox"></td>
+			        		<tr class="woDetail" onclick="location.href='/mes/worklist?cmd=detail&woId=${i.woId}'">
 				                <td>${ i.woId }</td>
-				                <td>${ i.itemName }(${ i.itemId })</td>
-				                <td>${ i.wName }(${ i.worker })</td>
+				                <td>${ i.itemName } (${ i.itemId })</td>
+				                <td>${ i.wName } (${ i.worker })</td>
 				                <td>${ i.workDate }</td>
 				                <td>${ i.woQty }</td>
 				                <td>

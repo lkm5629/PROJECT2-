@@ -28,7 +28,7 @@ public class WoDTO {
 	String itemId;
 	String itemName;
 	String uni;
-	int spec;
+	String spec;
 	String group;
 	
 	// page
@@ -155,10 +155,10 @@ public class WoDTO {
 	public void setUni(String uni) {
 		this.uni = uni;
 	}
-	public int getSpec() {
+	public String getSpec() {
 		return spec;
 	}
-	public void setSpec(int spec) {
+	public void setSpec(String spec) {
 		this.spec = spec;
 	}
 	public String getGroup() {

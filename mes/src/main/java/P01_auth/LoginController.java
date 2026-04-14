@@ -31,6 +31,28 @@ public class LoginController extends HttpServlet {
 
 		// 전화번호. 숫자 21억 넘어서 long으로 저장.
 		long phone = 0;
+		
+		
+		
+		
+//
+//		// 만약, 절대주소 - 프로젝트 주소가 permission.jsp라면
+//		// 절대주소
+//		String uri = request.getRequestURI();
+//		System.out.println("uri : "+uri);
+//		// 프로젝트 주소
+//		String contextPath = request.getContextPath();
+//		System.out.println("contextPath : "+contextPath);
+//		// 절대주소에서 프로젝트 주소 길이만큼 앞으로 간 후 끝까지
+//		String command = uri.substring(contextPath.length());
+//		System.out.println("command : "+command);
+		
+		
+
+		
+		
+		
+		
 
 		// 이 값이 있다면 로그인
 		String id = request.getParameter("login_id");

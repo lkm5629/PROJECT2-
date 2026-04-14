@@ -21,6 +21,8 @@ public class StockDAO {
         }
         return conn;
     }
+    
+    
 
     public int selectTotal(StockDTO stockDTO) {
         int totalCount = 0;
@@ -152,7 +154,8 @@ public class StockDAO {
                     dto.setG_id(rs.getString("g_id"));
                     dto.setItem_name(rs.getString("item_name"));
                     dto.setUnit(rs.getString("unit"));
-                    dto.setSpec(rs.getInt("spec"));
+                    String specStr = rs.getString("spec");
+                    dto.setSpec(rs.getString("spec"));
                     dto.setLot_id(rs.getString("lot_id"));
                     dto.setLot_qty(rs.getInt("lot_qty"));
                     dto.setExpiry_date(rs.getDate("expiry_date"));
@@ -212,6 +215,14 @@ public class StockDAO {
                 if (rs.next()) ioId = rs.getString("io_id");
                 rs.close();
                 ps.close();
+                
+                ps = conn.prepareStatement(
+                	    "UPDATE stock SET stock_no = stock_no + ? WHERE item_id = ? AND deleted = 'N'"
+                	);
+                	ps.setInt(1, dto.getLot_qty());
+                	ps.setString(2, dto.getItem_id());
+                	ps.executeUpdate();
+                	ps.close();
 
             } else {
                 // ── 출고: 기존 LOT 참조 ──────────────────────────
@@ -225,6 +236,21 @@ public class StockDAO {
                 if (rs.next()) ioId = rs.getString("io_id");
                 rs.close();
                 ps.close();
+                
+                rs = ps.executeQuery();
+                if (rs.next()) ioId = rs.getString("io_id");
+                rs.close();
+                ps.close();
+
+                // ★ 여기 추가
+                ps = conn.prepareStatement(
+                    "UPDATE stock SET stock_no = stock_no - ? WHERE item_id = ? AND deleted = 'N'"
+                );
+                ps.setInt(1, dto.getLot_qty());
+                ps.setString(2, dto.getItem_id());
+                ps.executeUpdate();
+                ps.close();
+                
             }
 
             // ── io INSERT (입고/출고 공통) ────────────────────────
@@ -289,7 +315,8 @@ public class StockDAO {
                 dto.setItem_id(rs.getString("item_id"));
                 dto.setItem_name(rs.getString("item_name"));
                 dto.setG_id(rs.getString("g_id"));
-                dto.setSpec(rs.getInt("spec"));
+                String specStr = rs.getString("spec");
+                dto.setSpec(rs.getString("spec"));
                 dto.setUnit(rs.getString("unit"));
                 list.add(dto);
             }
@@ -347,7 +374,7 @@ public class StockDAO {
                 dto.setIo_id(rs.getString("io_id"));
                 dto.setItem_id(rs.getString("item_id"));
                 dto.setItem_name(rs.getString("item_name"));
-                dto.setSpec(rs.getInt("spec"));
+                dto.setSpec(rs.getString("spec"));
                 dto.setUnit(rs.getString("unit"));
                 dto.setLot_id(rs.getString("lot_id"));
                 dto.setLot_qty(rs.getInt("lot_qty"));
@@ -365,19 +392,16 @@ public class StockDAO {
         try (
             Connection conn = getConn();
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT l.lot_id, l.lot_qty, l.expiry_date, " +
-                "       it.item_id, it.item_name, it.spec, it.unit " +
-                "FROM lot l " +
-                "JOIN item it ON l.item_id = it.item_id " +
-                "WHERE l.deleted = 'N' " +
-                "AND EXISTS ( " +
-                "    SELECT 1 FROM io " +
-                "    WHERE io.lot_id  = l.lot_id " +
-                "    AND   io.io_type = 0 " +   // ← 입고(0)
-                "    AND   io.deleted = 'N' " +
-                ") " +
-                "AND (it.item_name LIKE ? OR l.lot_id LIKE ?) " +
-                "ORDER BY l.lot_id DESC"
+            		"SELECT l.lot_id, l.lot_qty, l.expiry_date, " +
+            			    "       it.item_id, it.item_name, it.spec, it.unit, " +
+            			    "       u.emp_id, u.ename " +
+            			    "FROM lot l " +
+            			    "JOIN item it ON l.item_id = it.item_id " +
+            			    "JOIN io i    ON i.lot_id  = l.lot_id AND i.io_type = 0 AND i.deleted = 'N' " +
+            			    "JOIN user_info u ON i.emp_id = u.emp_id " +
+            			    "WHERE l.deleted = 'N' " +
+            			    "AND (it.item_name LIKE ? OR l.lot_id LIKE ?) " +
+            			    "ORDER BY l.lot_id DESC"
             );
         ) {
             String kw = "%" + (keyword == null ? "" : keyword) + "%";
@@ -391,8 +415,10 @@ public class StockDAO {
                     dto.setExpiry_date(rs.getDate("expiry_date"));
                     dto.setItem_id(rs.getString("item_id"));
                     dto.setItem_name(rs.getString("item_name"));
-                    dto.setSpec(rs.getInt("spec"));
+                    dto.setSpec(rs.getString("spec"));
                     dto.setUnit(rs.getString("unit"));
+                    dto.setEmp_id(rs.getString("emp_id"));
+                    dto.setEname(rs.getString("ename"));
                     list.add(dto);
                 }
             }
@@ -430,6 +456,26 @@ public class StockDAO {
             e.printStackTrace();
         }
         return list;
+    }
+    
+    public int selectStockNo(String itemId) {
+        int result = 0;
+        try (
+            Connection conn = getConn();
+            PreparedStatement ps = conn.prepareStatement(
+                "SELECT stock_no FROM stock WHERE item_id = ? AND deleted = 'N'"
+            );
+        ) {
+            ps.setString(1, itemId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    result = rs.getInt("stock_no");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
     
     

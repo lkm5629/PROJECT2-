@@ -105,5 +105,30 @@ public class QcService {
 		QcDAO dao = new QcDAO();
 		return dao.deleteQc(qcId);
 	}
+	
+	public int addDef(String qcId, QcDefDTO defDTO) {
+		QcDAO dao = new QcDAO();
+		return dao.addDef(qcId, defDTO);
+	}
+	
+	public QcDisposeDTO disposeSum (QcDisposeDTO disDTO) {
+		QcDAO dao = new QcDAO();
+		return dao.disposeSum(disDTO);
+	}
+	
+	public int updateDef(QcDefDTO dto) {
+		QcDAO dao = new QcDAO();
+		return dao.updateDef(dto);
+	}
+	
+	public int deleteDef(String defId) {
+		QcDAO dao = new QcDAO();
+		return dao.deleteDef(defId);
+	}
+	
+	public int modifyResult(QcDTO dto) {
+		QcDAO dao = new QcDAO();
+		return dao.modifyResult(dto);
+	}
 
 }

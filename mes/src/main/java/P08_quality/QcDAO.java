@@ -34,33 +34,58 @@ public class QcDAO {
 
 			conn = dataFactory.getConnection();
 
-			String query = "SELECT q.*, d.eName dName, w.eName wName, wo.WO_QTY qty, wo.itemID, wo.iNAME, NVL(def_sum.def_cnt, 0) def_sum FROM QUALITY_CHECK q "
-					+ "LEFT OUTER JOIN user_info w "
-					+ "	ON q.worker = w.emp_id "
-					+ "LEFT OUTER JOIN user_info d "
-					+ "	ON q.director = d.EMP_ID  "
-					+ "LEFT OUTER JOIN ( "
-					+ "	SELECT * "
-					+ "	FROM WORK_ORDER wo "
-					+ "	LEFT OUTER JOIN ( "
-					+ "		SELECT p.plan_id, p.ITEM_ID  itemId, i.ITEM_NAME iName "
-					+ "		FROM production_plan p "
-					+ "		LEFT OUTER JOIN item i "
-					+ "			ON p.ITEM_ID = i.item_id "
-					+ "		) p "
-					+ "		ON wo.PLAN_ID = p.plan_Id "
-					+ ") wo "
-					+ "	ON q.WO_ID = wo.WO_ID "
-					+ "LEFT OUTER JOIN ( "
-					+ "	SELECT qc_id, sum(defect_cnt) def_cnt "
-					+ "	FROM defect "
-					+ "	GROUP BY qc_id "
-					+ ") def_sum "
-					+ "	ON q.qc_id = def_sum.qc_id "
-					+ "WHERE q.deleted IS null "
-					+ "order by q.qc_id desc";
+			String query = "SELECT * "
+					+ "FROM ( "
+					+ "    SELECT ROWNUM rnum, inner_query.* "
+					+ "    FROM ( "
+					+ "        SELECT  "
+					+ "            q.*,  "
+					+ "            d.ename AS dName,  "
+					+ "            w.ename AS wName,  "
+					+ "            wo.WO_QTY AS qty,  "
+					+ "            wo.itemID,  "
+					+ "            wo.iNAME,  "
+					+ "            NVL(def_sum.def_cnt, 0) AS def_sum "
+					+ "        FROM QUALITY_CHECK q "
+					+ "        LEFT JOIN user_info w "
+					+ "            ON q.worker = w.emp_id "
+					+ "        LEFT JOIN user_info d "
+					+ "            ON q.director = d.emp_id "
+					+ "        LEFT JOIN ( "
+					+ "            SELECT  "
+					+ "                wo.*,  "
+					+ "                p.itemId,  "
+					+ "                p.iName "
+					+ "            FROM WORK_ORDER wo "
+					+ "            LEFT JOIN ( "
+					+ "                SELECT  "
+					+ "                    p.plan_id,  "
+					+ "                    p.item_id AS itemId,  "
+					+ "                    i.item_name AS iName "
+					+ "                FROM production_plan p "
+					+ "                LEFT JOIN item i "
+					+ "                    ON p.item_id = i.item_id "
+					+ "            ) p "
+					+ "            ON wo.plan_id = p.plan_id "
+					+ "        ) wo "
+					+ "        ON q.wo_id = wo.wo_id "
+					+ "        LEFT JOIN ( "
+					+ "            SELECT qc_id, SUM(defect_cnt) AS def_cnt "
+					+ "            FROM defect "
+					+ "            GROUP BY qc_id "
+					+ "        ) def_sum "
+					+ "        ON q.qc_id = def_sum.qc_id "
+					+ "        WHERE q.deleted IS NULL "
+					+ "        ORDER BY q.qc_id DESC "
+					+ "    ) inner_query "
+					+ ") "
+					+ "WHERE rnum BETWEEN ? AND ?";
+			
 			ps = conn.prepareStatement(query);
-
+			
+			ps.setInt(1, start);
+			ps.setInt(2, end);
+			
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
@@ -182,7 +207,6 @@ public class QcDAO {
 					+ "    ON qc.qc_id = def_sum.qc_id "
 					+ "WHERE qc.qcstatus_no = 30 "
 					+ "  AND qc.deleted IS NULL "
-					+ "  AND wo.wostatus_no = 30 "
 					+ "  AND wo.deleted IS NULL "
 					+ "  AND qc.qc_edate >= TRUNC(SYSDATE) "
 					+ "  AND qc.qc_edate < TRUNC(SYSDATE) + 1";
@@ -250,50 +274,81 @@ public class QcDAO {
 
 			conn = dataFactory.getConnection();
 
-			String query = "SELECT q.*, d.eName dName, w.eName wName, wo.WO_QTY qty, wo.itemID, wo.iNAME, NVL(def_sum.def_cnt, 0) def_sum FROM QUALITY_CHECK q "
-					+ "LEFT OUTER JOIN user_info w "
-					+ "	ON q.worker = w.emp_id "
-					+ "LEFT OUTER JOIN user_info d "
-					+ "	ON q.director = d.EMP_ID  "
-					+ "LEFT OUTER JOIN ( "
-					+ "	SELECT * "
-					+ "	FROM WORK_ORDER wo "
-					+ "	LEFT OUTER JOIN ( "
-					+ "		SELECT p.plan_id, p.ITEM_ID  itemId, i.ITEM_NAME iName "
-					+ "		FROM production_plan p "
-					+ "		LEFT OUTER JOIN item i "
-					+ "			ON p.ITEM_ID = i.item_id "
-					+ "		) p "
-					+ "		ON wo.PLAN_ID = p.plan_Id "
-					+ ") wo "
-					+ "	ON q.WO_ID = wo.WO_ID "
-					+ "LEFT OUTER JOIN ( "
-					+ "	SELECT qc_id, sum(defect_cnt) def_cnt "
-					+ "	FROM defect "
-					+ "	GROUP BY qc_id "
-					+ ") def_sum "
-					+ "	ON q.qc_id = def_sum.qc_id "
-					+ "WHERE q.deleted IS null ";
+			String query =
+				    "SELECT * "
+					+ "FROM ( "
+					+ "    SELECT ROWNUM rnum, inner_query.* "
+					+ "    FROM ( "
+					+ "        SELECT "
+					+ "            q.qc_id, "
+					+ "            q.qc_sdate, "
+					+ "            q.qc_edate, "
+					+ "            q.qcstatus_no, "
+					+ "            q.content, "
+					+ "            q.worker, "
+					+ "            q.director, "
+					+ "            d.ename AS dName, "
+					+ "            w.ename AS wName, "
+					+ "            wo.wo_id, "
+					+ "            wo.wo_qty AS qty, "
+					+ "            wo.itemID AS itemId, "
+					+ "            wo.iNAME AS iName, "
+					+ "            NVL(def_sum.def_cnt, 0) AS def_sum "
+					+ "        FROM QUALITY_CHECK q "
+					+ "        LEFT JOIN user_info w ON q.worker = w.emp_id "
+					+ "        LEFT JOIN user_info d ON q.director = d.emp_id "
+					+ "        LEFT JOIN ( "
+					+ "            SELECT "
+					+ "                wo.wo_id, "
+					+ "                wo.wo_qty, "
+					+ "                p.itemId, "
+					+ "                p.iName "
+					+ "            FROM WORK_ORDER wo "
+					+ "            LEFT JOIN ( "
+					+ "                SELECT "
+					+ "                    p.plan_id, "
+					+ "                    p.item_id AS itemId, "
+					+ "                    i.item_name AS iName "
+					+ "                FROM production_plan p "
+					+ "                LEFT JOIN item i ON p.item_id = i.item_id "
+					+ "            ) p ON wo.plan_id = p.plan_id "
+					+ "        ) wo ON q.wo_id = wo.wo_id "
+					+ "        LEFT JOIN ( "
+					+ "            SELECT qc_id, SUM(defect_cnt) AS def_cnt "
+					+ "            FROM defect "
+					+ "            GROUP BY qc_id "
+					+ "        ) def_sum ON q.qc_id = def_sum.qc_id "
+					+ "        WHERE q.deleted IS NULL ";
 			
 			if (search.getStatus() != 0) {
-				query += " and q.qcstatus_no = " + search.getStatus();
+			    query += " AND q.qcstatus_no = ? ";
 			}
-			
-			int idx = 1;
 
 			if (search.getsDate() != null && !search.getsDate().isEmpty()) {
-			    query += " and qc_edate >= TO_DATE(?, 'YYYY-MM-DD') ";
+			    query += " AND q.qc_edate >= TO_DATE(?, 'YYYY-MM-DD') ";
 			}
 
 			if (search.geteDate() != null && !search.geteDate().isEmpty()) {
-			    query += " and qc_edate <= TO_DATE(?, 'YYYY-MM-DD') ";
+			    query += " AND q.qc_edate <= TO_DATE(?, 'YYYY-MM-DD') ";
+			}
+
+			if (search.getKeyword() != null && !search.getKeyword().isEmpty()) {
+			    query += " AND (UPPER(wo.iName) LIKE UPPER(?) OR UPPER(w.ename) LIKE UPPER(?)) ";
 			}
 			
-			if (!( "".equals(search.getKeyword()) )) {
-				query += " and (upper(wo.iName) like upper(?) or upper(w.ename) like upper(?)) ";
-			}
+			query += " ORDER BY q.qc_id DESC "
+					+ "    ) inner_query "
+					+ ") "
+					+ "WHERE rnum BETWEEN ? AND ?";
 			
 			ps = conn.prepareStatement(query);
+
+			
+			int idx = 1;
+
+			if (search.getStatus() != 0) {
+			    ps.setInt(idx++, search.getStatus());
+			}
 
 			if (search.getsDate() != null && !search.getsDate().isEmpty()) {
 			    ps.setString(idx++, search.getsDate());
@@ -302,13 +357,15 @@ public class QcDAO {
 			if (search.geteDate() != null && !search.geteDate().isEmpty()) {
 			    ps.setString(idx++, search.geteDate());
 			}
-			
+
 			if (search.getKeyword() != null && !search.getKeyword().isEmpty()) {
 			    String keyword = "%" + search.getKeyword() + "%";
-
 			    ps.setString(idx++, keyword);
 			    ps.setString(idx++, keyword);
 			}
+
+			ps.setInt(idx++, start);
+			ps.setInt(idx++, end);
 
 			rs = ps.executeQuery();
 
@@ -611,6 +668,7 @@ public class QcDAO {
 					+ "LEFT OUTER JOIN ( "
 					+ "	SELECT qc_id, sum(defect_cnt) def_cnt "
 					+ "	FROM defect "
+					+ "	where deleted is null "
 					+ "	GROUP BY qc_id "
 					+ ") def_sum "
 					+ "	ON q.qc_id = def_sum.qc_id "
@@ -735,6 +793,7 @@ public class QcDAO {
 				String dtName = rs.getString("dtype_name");
 				int defCnt = rs.getInt("defect_cnt");
 				String solution = rs.getString("solution");
+				String dispose = rs.getString("dispose");
 				
 				QcDefDTO defDTO = new QcDefDTO();
 				
@@ -743,6 +802,7 @@ public class QcDAO {
 				defDTO.setDtName(dtName);
 				defDTO.setDefCnt(defCnt);
 				defDTO.setSolution(solution);
+				defDTO.setDispose(dispose);
 				
 				defList.add(defDTO);
 			}
@@ -1310,5 +1370,345 @@ public class QcDAO {
 		return result;
 	} // deleteQc
 	
+	
+	public int addDef(String qcId, QcDefDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String seqSql = "SELECT 'def_id'||defect_seq.NEXTVAL FROM dual";
+			ps = conn.prepareStatement(seqSql);
+			rs = ps.executeQuery();
+
+			String defectId = null;
+			if (rs.next()) {
+			    defectId = rs.getString(1);
+			}
+			
+			String query = "INSERT INTO DEFECT (defect_id, dtype_no, defect_cnt, solution, qc_id, dispose) "
+					+ "VALUES (?, ?, ?, ?, ?, ?) ";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, defectId);
+			ps.setInt(2, dto.getdType());
+			ps.setInt(3, dto.getDefCnt());
+			ps.setString(4, dto.getSolution());
+			ps.setString(5, qcId);
+			ps.setString(6, dto.getDispose());
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // addDef
+	
+	
+	public QcDisposeDTO disposeSum(QcDisposeDTO disDTO) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT  "
+					+ "    qc_id, "
+					+ "    SUM(CASE WHEN dispose = 'Y' THEN defect_cnt ELSE 0 END) AS dispose_qty, "
+					+ "    SUM(CASE WHEN dispose IS NULL THEN defect_cnt ELSE 0 END) AS rework_qty "
+					+ "FROM defect "
+					+ "WHERE qc_id = ? and deleted is null "
+					+ "GROUP BY qc_id";
+			
+			ps = conn.prepareStatement(query);
+			ps.setString(1, disDTO.getQcId());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				int dispose = rs.getInt("dispose_qty");
+				int rework = rs.getInt("rework_qty");
+
+				disDTO.setDispose(dispose);
+				disDTO.setRework(rework);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return disDTO;
+	} // disposeSum
+	
+	
+	public int updateDef(QcDefDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE defect "
+					+ "SET dtype_no = ?, defect_cnt = ?, solution = ?, dispose = ? "
+					+ "WHERE defect_id=?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setInt(1, dto.getdType());
+			ps.setInt(2, dto.getDefCnt());
+			ps.setString(3, dto.getSolution());
+			ps.setString(4, dto.getDispose());
+			ps.setString(5, dto.getDefId());
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // updateDef
+	
+	
+	
+	public int deleteDef(String defId) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE defect "
+					+ "SET deleted = 'Y' "
+					+ "WHERE defect_id=?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, defId);
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // deleteDef
+	
+	
+	
+	public int modifyResult(QcDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE quality_check "
+					+ "SET qc_edate = ?, qcstatus_no = ? "
+					+ "WHERE qc_id = ?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setDate(1, dto.geteDate());
+			ps.setInt(2, dto.getQcStatus());
+			ps.setString(3, dto.getQcId());
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // modifyResult
 	
 }

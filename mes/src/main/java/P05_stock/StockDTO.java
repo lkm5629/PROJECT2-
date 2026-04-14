@@ -30,7 +30,7 @@ public class StockDTO {
 	private String item_name;
 	
 	private String unit;
-	private Integer spec;
+	private String spec;
 	
 	// lot ÄÚµå
 	private String lot_id;
@@ -152,10 +152,10 @@ public class StockDTO {
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
-	public Integer getSpec() {
+	public String getSpec() {
 		return spec;
 	}
-	public void setSpec(Integer spec) {
+	public void setSpec(String spec) {
 		this.spec = spec;
 	}
 	public String getLot_id() {

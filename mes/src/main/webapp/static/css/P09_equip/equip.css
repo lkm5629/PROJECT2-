@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+.run {
+	background-color : var(--color-success);
+}
+
+.error {
+	background-color : var(--color-danger);
+}
+
+.insp {
+	background-color : var(--color-warning);
+}

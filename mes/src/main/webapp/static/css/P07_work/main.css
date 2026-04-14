@@ -28,6 +28,10 @@
 }
 
 /* 목록 */
+.woDetail:hover {
+	background-color: var(--color-white-hover);
+}
+
 .list {
     background: #fff;
     border-radius: 10px;

@@ -145,87 +145,74 @@
 		    	</table>
 		    </div>
 		
+			<div class="procInfo">
+			    <!-- BOM -->
+			    <div class="card">
+			        <div class="card-header">
+			            <strong>BOM (자재 구성)</strong>
+			        </div>
 			
-		    <!-- BOM -->
-		    <div class="card">
-		        <div class="card-header">
-		            <strong>BOM (자재 구성)</strong>
-		        </div>
-		
-		        <table class="table">
-		            <thead>
-		                <tr>
-		                    <th>자재코드 (자재명)</th>
-		                    <th>소요량</th>
-		                    <th>단위</th>
-		                </tr>
-		            </thead>
-		            <tbody>
-		                <tr>
-		                    <td>자재 ID (자재명)</td>
-		                    <td>1</td>
-		                    <td>장</td>
-		                </tr>
-		                <tr>
-		                    <td>자재 ID (자재명)</td>
-		                    <td>1</td>
-		                    <td>장</td>
-		                </tr>
-		                <tr>
-		                    <td>자재 ID (자재명)</td>
-		                    <td>1</td>
-		                    <td>장</td>
-		                </tr>
-		                <tr>
-		                    <td>자재 ID (자재명)</td>
-		                    <td>1</td>
-		                    <td>장</td>
-		                </tr>
-		            </tbody>
-		        </table>
-		    </div>
-		
-		
-		    <!-- 공정 정보 -->
-		    <div class="card">
-		        <div class="card-header">
-		            <strong>공정 정보</strong>
-		        </div>
-		
-		        <div class="process-list">
-		            <div class="process-item">
-		                <div class="step">1</div>
-		                <div>
-		                    <div class="process-title">용액 합침</div>
-		                    <div class="process-desc">재단된 원단을 용액에 합침</div>
-		                </div>
-		            </div>
-		
-		            <div class="process-item">
-		                <div class="step">2</div>
-		                <div>
-		                    <div class="process-title">롤러 프레싱</div>
-		                    <div class="process-desc">롤러로 이동, 과다 용액 제거</div>
-		                </div>
-		            </div>
-		
-		            <div class="process-item">
-		                <div class="step">3</div>
-		                <div>
-		                    <div class="process-title">포장 준비</div>
-		                    <div class="process-desc">포장지 위로 이동</div>
-		                </div>
-		            </div>
-		
-		            <div class="process-item">
-		                <div class="step">4</div>
-		                <div>
-		                    <div class="process-title">포장지 실링</div>
-		                    <div class="process-desc">포장지 4면 heat sealing</div>
-		                </div>
-		            </div>
-		        </div>
-		    </div>
+			        <table class="bomList">
+			            <thead>
+			                <tr>
+			                    <th>자재명 (자재코드)</th>
+			                    <th>소요량</th>
+			                    <th>단위</th>
+			                </tr>
+			            </thead>
+			            <tbody>
+			                <tr>
+			                    <td>자재명 (자재코드)</td>
+			                    <td>1</td>
+			                    <td>장</td>
+			                </tr>
+			            </tbody>
+			        </table>
+			    </div>
+			
+			
+			    <!-- 공정 정보 -->
+			    <div class="card">
+			        <div class="card-header">
+			            <strong>공정 정보 (공정번호)</strong>
+			        </div>
+			
+			        <div class="process-list">
+			            <div class="process-item">
+			                <div class="step">1</div>
+			                <div>
+			                    <div class="process-title">용액 합침</div>
+			                    <div class="process-desc">재단된 원단을 용액에 합침</div>
+			                </div>
+			            </div>
+			
+			            <div class="process-item">
+			                <div class="step">2</div>
+			                <div>
+			                    <div class="process-title">롤러 프레싱</div>
+			                    <div class="process-desc">롤러로 이동, 과다 용액 제거</div>
+			                </div>
+			            </div>
+			
+			            <div class="process-item">
+			                <div class="step">3</div>
+			                <div>
+			                    <div class="process-title">포장 준비</div>
+			                    <div class="process-desc">포장지 위로 이동</div>
+			                </div>
+			            </div>
+			
+			            <div class="process-item">
+			                <div class="step">4</div>
+			                <div>
+			                    <div class="process-title">포장지 실링</div>
+			                    <div class="process-desc">포장지 4면 heat sealing</div>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		    
 		</div>
 	</div>
 

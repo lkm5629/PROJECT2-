@@ -27,10 +27,6 @@
     padding: 7px 12px;
 }
 
-.qcDetail:hover {
-	background-color: var(--color-white-hover);
-}
-
 /* 요약 카드 */
 .summary {
     display: flex;
@@ -55,6 +51,85 @@
 
 .card strong {
     font-size: 22px;
+}
+
+.cardClean {
+	display: flex;
+	gap: 5px;
+}
+
+.cardSmall {
+	background-color: var(--color-success);
+	
+	flex: 1;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    
+    color: white;
+}
+
+.cardTitle {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 15px 15px;
+}
+
+.cardTitle h3 {
+	margin: 0 0;
+}
+
+
+.type {
+	display: flex;
+	gap: 15px;
+}
+
+.typeTag {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.color {
+	width: 10px;
+	height: 10px;
+}
+
+.success {
+	background-color: var(--color-success);
+}
+
+.warning {
+	background-color: var(--color-warning);
+}
+
+.danger {
+	background-color: var(--color-danger);
+}
+
+.cardSmall p {
+	color: white;
+}
+
+.equipSummary {
+	padding: 0 15px;
+}
+
+.summaryTable {
+	border-collapse: collapse;
+	width: 100%
+}
+.summaryTable td {
+	border-top: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--color-border);
+	
+	padding : 5px;
+	
+	width: 50%;
+	
+	font-size: 14px;
 }
 
 /* 리스트 */
@@ -87,45 +162,46 @@
     background-color: #fff;
 }
 
-.category {
+.search-tools input {
+	width: 250px;
+	padding-left: 10px;
+}
+
+.search {
     display: flex;
     gap: 10px;
 }
 
-.search-area {
-    display: flex;
-    gap: 8px;
-}
 
-.search-area input {
-    padding: 8px 14px;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    width: 220px;
-}
 
 /* 테이블 */
-.qc-table {
+.eq-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.qc-table th,
-.qc-table td {
+.eq-table th,
+.eq-table td {
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid var(--color-border);
     font-size: 13px;
 }
 
-.qc-table thead {
+.eq-table thead {
     background-color: var(--color-main-blue);
     color: white;
 }
 
-.qc-table tbody tr {
+.eq-table tbody tr {
     cursor: pointer;
 }
+
+
+.eqDetail:hover {
+	background-color: var(--color-white-hover);
+}
+
 
 /* 상태 */
 
@@ -137,22 +213,16 @@
     color: white;
 }
 
-.before {
-	background-color : var(--color-sub-hover);
-}
-
-.ongoing {
-	background-color : var(--color-main-blue);
-}
-
-.finish {
+.run {
 	background-color : var(--color-success);
 }
 
-.qcFin {
-	background-color : white;
-	color : var(--color-text-sub);
-	border : 1px solid var(--color-text-sub);
+.error {
+	background-color : var(--color-danger);
+}
+
+.insp {
+	background-color : var(--color-warning);
 }
 
 .hold {

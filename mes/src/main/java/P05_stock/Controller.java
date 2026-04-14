@@ -59,7 +59,9 @@ public class Controller extends HttpServlet {
                   .append("\"item_id\":"    ).append("\"").append(d.getItem_id()).append("\",")
                   .append("\"item_name\":"  ).append("\"").append(d.getItem_name()).append("\",")
                   .append("\"spec\":"       ).append(d.getSpec()).append(",")
-                  .append("\"unit\":"       ).append("\"").append(d.getUnit()).append("\"")
+                  .append("\"unit\":"       ).append("\"").append(d.getUnit()).append("\",")
+                  .append("\"emp_id\":"     ).append("\"").append(d.getEmp_id()).append("\",")
+                  .append("\"ename\":"      ).append("\"").append(d.getEname()).append("\"")
                   .append("}");
             }
             sb.append("]");
@@ -172,6 +174,17 @@ public class Controller extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if (dto.getIo_type() == 1) {  // 출고일 때만
+            int currentStock = service.getStockNo(dto.getItem_id());
+            if (currentStock - dto.getLot_qty() < 0) {
+                request.setAttribute("errorMsg", 
+                    "재고 부족입니다. (현재 재고: " + currentStock + ")");
+                // 목록 다시 포워드
+                request.getRequestDispatcher("WEB-INF/views/P05_stock/io.jsp")
+                       .forward(request, response);
+                return;
+            }
         }
 
         service.insert(dto);
