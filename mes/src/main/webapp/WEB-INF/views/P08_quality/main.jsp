@@ -129,7 +129,7 @@
 		                <tr>
 		                    <th>검사코드</th>
 		                    <th>작업코드</th>
-		                    <th>제품명(제품코드)</th>
+		                    <th>제품명 (제품코드)</th>
 		                    <th>검사수량</th>
 		                    <th>불량률</th>
 		                    <th>검사 완료일</th>
@@ -143,13 +143,13 @@
 		                    <tr onclick="location.href='/mes/qclist?cmd=detail&qcId=${i.qcId}'">
 		                        <td>${ i.qcId }</td>
 		                        <td>${ i.woId }</td>
-		                        <td>${ i.iName }(${ i.itemId })</td>
+		                        <td>${ i.iName } (${ i.itemId })</td>
 		                        <td>${ i.qty }</td>
 		                        <td>
 		                            <fmt:formatNumber value="${ (i.defSum / i.qty) * 100 }" maxFractionDigits="1"/>%
 		                        </td>
 		                        <td>${ empty i.eDate ? '-' : i.eDate }</td>
-		                        <td>${ i.wName }(${ i.wId })</td>
+		                        <td>${ i.wName } (${ i.wId })</td>
 		                        <td>
 		                            <c:if test="${ i.qcStatus == 10 }">
 		                                <span class="status before">검사 전</span>

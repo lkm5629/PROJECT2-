@@ -100,7 +100,7 @@
 		            </div>
 		
 		            <div class="info-box">
-		                <span class="label">작업코드</span>
+		                <span class="label">작업코드 (작업일)</span>
 		                <span class="value">${qcInfo != null ? qcInfo.woId : ' - '}</span>
 		            </div>
 		

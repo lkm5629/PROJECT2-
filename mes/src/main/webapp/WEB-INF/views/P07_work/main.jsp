@@ -103,7 +103,7 @@
 			            <tr>
 			                <th></th>
 			                <th>작업코드</th>
-			                <th>제품</th>
+			                <th>제품명 (제품코드)</th>
 			                <th>작업자</th>
 			                <th>작업일</th>
 			                <th>작업 수량</th>
@@ -116,8 +116,8 @@
 			        		<tr onclick="location.href='/mes/worklist?cmd=detail&woId=${i.woId}'">
 				                <td><input type="checkbox"></td>
 				                <td>${ i.woId }</td>
-				                <td>${ i.itemName }(${ i.itemId })</td>
-				                <td>${ i.wName }(${ i.worker })</td>
+				                <td>${ i.itemName } (${ i.itemId })</td>
+				                <td>${ i.wName } (${ i.worker })</td>
 				                <td>${ i.workDate }</td>
 				                <td>${ i.woQty }</td>
 				                <td>

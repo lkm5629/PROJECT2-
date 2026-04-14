@@ -75,8 +75,20 @@ public class WoContentController extends HttpServlet {
 	    int result = service.updateContent(woId, status, prevQty);
 
 	    System.out.println(result);
+	    
+	    updatePlan(request, response);
 		
 		response.sendRedirect("/mes/workorder?woId=" + woId);
+	}
+	
+	protected void updatePlan(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    System.out.println("/workadd updatePlan 실행");
+	    
+	    WoService service = new WoService();
+	    int result = service.updatePlan();
+
+	    System.out.println(result);
+		
 	}
 
 }

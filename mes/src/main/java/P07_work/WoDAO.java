@@ -1091,5 +1091,74 @@ public class WoDAO {
 
 		return result;
 	} // modify
+	
+	
+	
 
+	public int updatePlan() {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+		
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE production_plan p "
+					+ "SET p.prev_qty = ( "
+					+ "    SELECT NVL(SUM(w.wo_qty), 0) "
+					+ "    FROM work_order w "
+					+ "    WHERE w.plan_id = p.plan_id "
+					+ "      AND w.wostatus_no IN (30, 40) "
+					+ "      AND w.deleted IS null "
+					+ ")";
+			
+			ps = new LoggableStatement(conn, query);
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // updatePlan
+	
+	
 }
