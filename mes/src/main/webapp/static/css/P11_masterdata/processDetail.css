@@ -1,0 +1,270 @@
+@charset "UTF-8";
+
+@charset "UTF-8";
+
+.content {
+	width: 100%;
+	padding: 24px 28px;
+	background: #fff;
+}
+
+.process-detail-page {
+	width: 100%;
+	max-width: 1120px;
+	margin: 0 auto;
+	color: #222;
+}
+
+.detail-top {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 26px;
+}
+
+.detail-title-wrap h1 {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 800;
+	color: #111;
+}
+
+.detail-edit-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 110px;
+	height: 40px;
+	padding: 0 18px;
+	border: none;
+	border-radius: 6px;
+	background: #4b86f0;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: 0 2px 6px rgba(75, 134, 240, 0.16);
+}
+
+.detail-edit-btn:hover {
+	background: #3d76de;
+}
+
+.detail-summary-grid {
+	display: grid;
+	grid-template-columns: 1fr 1.1fr;
+	gap: 16px;
+	margin-bottom: 16px;
+}
+
+.detail-card {
+	background: #fff;
+	border: 1px solid #dfe3e8;
+	border-radius: 8px;
+	padding: 18px 18px 20px;
+	margin-bottom: 16px;
+}
+
+.summary-card {
+	min-height: 132px;
+}
+
+.process-code-badge {
+	display: inline-block;
+	min-width: 78px;
+	padding: 6px 12px;
+	border-radius: 10px;
+	background: #dce9ff;
+	color: #6e96dd;
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 1.2;
+	margin-bottom: 18px;
+}
+
+.summary-main {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.summary-label {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 52px;
+	height: 26px;
+	padding: 0 10px;
+	border: 1px solid #d7dce3;
+	border-radius: 6px;
+	background: #fff;
+	font-size: 12px;
+	font-weight: 600;
+	color: #777;
+}
+
+.summary-value {
+	font-size: 22px;
+	font-weight: 800;
+	color: #111;
+}
+
+.summary-desc {
+	margin: 0;
+	font-size: 14px;
+	color: #666;
+	line-height: 1.6;
+}
+
+.card-title-row {
+	display: flex;
+	align-items: baseline;
+	gap: 10px;
+	margin-bottom: 16px;
+}
+
+.card-title-row h2 {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 800;
+	color: #111;
+}
+
+.card-sub-text {
+	font-size: 13px;
+	color: #888;
+}
+
+.equip-list {
+	margin: 0;
+	padding: 0;
+}
+
+.equip-list li {
+	list-style: none;
+	font-size: 15px;
+	color: #555;
+	line-height: 2.1;
+}
+
+.card-header-block {
+	margin-bottom: 14px;
+}
+
+.card-header-block h2 {
+	margin: 0 0 8px;
+	font-size: 16px;
+	font-weight: 800;
+	color: #111;
+}
+
+.card-header-block p {
+	margin: 0;
+	font-size: 14px;
+	color: #888;
+}
+
+.table-box {
+	border: 1px solid #dfe3e8;
+	border-radius: 8px;
+	overflow: hidden;
+	background: #fff;
+}
+
+.material-table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+.material-table thead th {
+	padding: 18px 14px 14px;
+	font-size: 15px;
+	font-weight: 700;
+	color: #222;
+	text-align: left;
+	border-bottom: 1px solid #dfe3e8;
+	background: #fff;
+}
+
+.material-table tbody td {
+	padding: 18px 14px;
+	font-size: 14px;
+	color: #444;
+	text-align: left;
+	border-bottom: 1px solid #eef1f4;
+}
+
+.material-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.description-box {
+	min-height: 104px;
+	padding: 14px 16px;
+	border: 1px solid #dfe3e8;
+	border-radius: 8px;
+	background: #fff;
+	font-size: 15px;
+	color: #666;
+	line-height: 1.8;
+}
+
+.detail-bottom {
+	margin-top: 18px;
+}
+
+.back-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 76px;
+	height: 38px;
+	padding: 0 14px;
+	border: 1px solid #d7dce3;
+	border-radius: 6px;
+	background: #fff;
+	color: #666;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.back-btn:hover {
+	background: #f5f7fa;
+}
+
+@media (max-width: 900px) {
+	.detail-summary-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.detail-top {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 14px;
+	}
+}
+
+@media (max-width: 640px) {
+	.content {
+		padding: 18px 16px;
+	}
+
+	.detail-card {
+		padding: 16px;
+	}
+
+	.card-title-row {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 4px;
+	}
+
+	.material-table thead th,
+	.material-table tbody td {
+		padding: 14px 10px;
+		font-size: 13px;
+	}
+}
