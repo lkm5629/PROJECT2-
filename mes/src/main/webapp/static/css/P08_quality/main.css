@@ -27,6 +27,10 @@
     padding: 7px 12px;
 }
 
+.qcDetail:hover {
+	background-color: var(--color-white-hover);
+}
+
 /* 요약 카드 */
 .summary {
     display: flex;

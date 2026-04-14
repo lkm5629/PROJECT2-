@@ -515,3 +515,149 @@
     .pp .info-grid   { grid-template-columns: 1fr 1fr; }
     .pp .metric-grid { grid-template-columns: 1fr; }
 }
+
+
+/* ==========================================================
+   prod.css 추가분
+   - .pagination  (페이지네이션)
+   - .pp-modal-*  (등록/수정 모달)
+   ========================================================== */
+
+/* ── 페이지네이션 ─────────────────────────────────────────── */
+.pp .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: 20px;
+  padding-bottom: 12px;
+}
+
+.pp .page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text-primary, #1e293b);
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.pp .page-btn:hover:not(:disabled):not(.page-btn-active) {
+  background: var(--bg-hover, #f1f5f9);
+  border-color: var(--primary, #3b82f6);
+  color: var(--primary, #3b82f6);
+}
+
+.pp .page-btn-active {
+  background: var(--primary, #3b82f6);
+  border-color: var(--primary, #3b82f6);
+  color: #fff;
+  font-weight: 600;
+  cursor: default;
+}
+
+.pp .page-btn:disabled {
+  color: var(--text-disabled, #cbd5e1);
+  cursor: default;
+  border-color: var(--border-color, #e2e8f0);
+}
+
+
+/* ── 모달 오버레이 ───────────────────────────────────────── */
+.pp .pp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;               /* openModal 에서 flex 로 변경 */
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* ── 모달 박스 ───────────────────────────────────────────── */
+.pp .pp-modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+  width: 560px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: ppModalIn 0.2s ease;
+}
+
+@keyframes ppModalIn {
+  from { opacity: 0; transform: translateY(-16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)     scale(1);    }
+}
+
+/* ── 모달 헤더 ───────────────────────────────────────────── */
+.pp .pp-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 0;
+}
+
+.pp .pp-modal-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+  margin: 0;
+}
+
+.pp .pp-modal-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--text-secondary, #64748b);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.pp .pp-modal-close:hover {
+  background: var(--bg-hover, #f1f5f9);
+  color: var(--text-primary, #1e293b);
+}
+
+/* ── 모달 바디 ───────────────────────────────────────────── */
+.pp .pp-modal-body {
+  padding: 20px 24px 24px;
+}
+
+/* badge 추가 색상 (완료/보류) */
+.pp .badge-green {
+  background: #dcfce7;
+  color: #16a34a;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.pp .badge-yellow {
+  background: #fef9c3;
+  color: #ca8a04;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.pp-link {
+    font-weight: 500;
+    cursor: pointer;
+}
+.pp-link:hover {
+    text-decoration: underline;
+    color: var(--primary);
+}

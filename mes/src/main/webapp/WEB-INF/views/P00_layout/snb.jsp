@@ -19,15 +19,15 @@
 
         <li class="snb-item"><span class="menu-label_snb" id="qc_snb">품질관리</span></li>
 
+        <li class="snb-item"><span class="menu-label_snb" id="eq_snb">설비관리</span></li>
+
         <li class="snb-item">
             <span class="menu-label_snb" id="stock_snb">재고관리</span>
             <ul class="snb-sub">
-                <li class="snb-sub-item"><span class="menu-label_snb" id="ioIn_snb">입고 등록</span></li>
-                <li class="snb-sub-item"><span class="menu-label_snb" id="ioOut_snb">출고 등록</span></li>
+                <li class="snb-sub-item"><span class="menu-label_snb" id="io_snb">입출고 관리</span></li>
+                <li class="snb-sub-item"><span class="menu-label_snb" id="stockAdd_snb">자재 현황 등록</span></li>
             </ul>
         </li>
-
-        <li class="snb-item"><span class="menu-label_snb" id="eq_snb">설비관리</span></li>
 
         <li class="snb-item">
             <span class="menu-label_snb" id="report_snb">리포팅</span>
