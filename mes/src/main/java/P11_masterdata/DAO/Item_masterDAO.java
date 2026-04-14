@@ -124,7 +124,6 @@ public class Item_masterDAO {
 
 			conn.setAutoCommit(false);
 
-			// 1. item 테이블 insert
 			String itemQuery = "";
 			itemQuery += "INSERT INTO item (item_id, item_name, unit, spec, g_id) ";
 			itemQuery += "VALUES (?, ?, ?, ?, ?)";
@@ -138,7 +137,6 @@ public class Item_masterDAO {
 
 			int itemResult = psItem.executeUpdate();
 
-			// 2. stock_id 최대값 조회
 			String maxQuery = "";
 			maxQuery += "SELECT MAX(TO_NUMBER(SUBSTR(stock_id, 5))) AS max_num ";
 			maxQuery += "FROM stock";
@@ -156,7 +154,6 @@ public class Item_masterDAO {
 
 			String stockId = "sto_" + nextStockNum;
 
-			// 3. stock 테이블 insert
 			String stockQuery = "";
 			stockQuery += "INSERT INTO stock (stock_id, item_id, stock_no, safe_no, deleted) ";
 			stockQuery += "VALUES (?, ?, ?, ?, ?)";
@@ -170,7 +167,6 @@ public class Item_masterDAO {
 
 			int stockResult = psStock.executeUpdate();
 
-			// 4. 둘 다 성공하면 commit
 			if (itemResult > 0 && stockResult > 0) {
 				conn.commit();
 				result = 1;
