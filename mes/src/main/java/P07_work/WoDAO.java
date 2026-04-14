@@ -32,31 +32,48 @@ public class WoDAO {
 
 			conn = dataFactory.getConnection();
 
-			String query = "SELECT "
-					+ "    wo.*, "
-					+ "	   worker.ename workerName, "
-					+ "    pp.status, "
-					+ "    pp.plan_qty, "
-					+ "    pp.prev_qty, "
-					+ "    pp.item_id, "
-					+ "    pp.emp_id director, "
-					+ "    director.ename directorName, "
-					+ "    i.item_name, "
-					+ "    i.unit, "
-					+ "    i.spec, "
-					+ "    i.g_id "
-					+ "FROM work_order wo "
-					+ "LEFT OUTER JOIN user_info worker "
-					+ "	ON wo.emp_id = worker.emp_id "
-					+ "LEFT outer JOIN production_plan pp "
-					+ "    ON wo.plan_id = pp.plan_id "
-					+ "LEFT OUTER JOIN user_info director "
-					+ "	ON pp.emp_id = director.emp_id "
-					+ "LEFT OUTER JOIN item i "
-					+ "    ON pp.item_id = i.item_id "
-					+ "where wo.deleted is null "
-					+ "order by workdate desc";
+			String query = 
+					"SELECT *  "
+					+ "FROM ( "
+					+ "    SELECT ROWNUM rnum, inner_query.* "
+					+ "    FROM ( "
+					+ "        SELECT "
+					+ "            wo.wo_id, "
+					+ "            wo.workdate, "
+					+ "            wo.plan_id, "
+					+ "            wo.wostatus_no, "
+					+ "            wo.wo_qty, "
+					+ "            wo.deleted, "
+					+ "            wo.emp_id, "
+					+ "            worker.ename AS workerName, "
+					+ "            pp.status     AS plan_status, "
+					+ "            pp.plan_qty   AS plan_qty, "
+					+ "            pp.prev_qty   AS prev_qty, "
+					+ "            pp.item_id    AS plan_item_id, "
+					+ "            pp.emp_id     AS director, "
+					+ "            director.ename AS directorName, "
+					+ "            i.item_name, "
+					+ "            i.unit, "
+					+ "            i.spec, "
+					+ "            i.g_id "
+					+ "        FROM work_order wo "
+					+ "        LEFT OUTER JOIN user_info worker "
+					+ "            ON wo.emp_id = worker.emp_id "
+					+ "        LEFT OUTER JOIN production_plan pp "
+					+ "            ON wo.plan_id = pp.plan_id "
+					+ "        LEFT OUTER JOIN user_info director "
+					+ "            ON pp.emp_id = director.emp_id "
+					+ "        LEFT OUTER JOIN item i "
+					+ "            ON pp.item_id = i.item_id "
+					+ "        WHERE wo.deleted IS NULL "
+					+ "        ORDER BY wo.workdate DESC "
+					+ "    ) inner_query "
+					+ ") "
+					+ "WHERE rnum BETWEEN ? AND ?";
+			
 			ps = conn.prepareStatement(query);
+			ps.setInt(1, start);
+			ps.setInt(2, end);
 
 			rs = ps.executeQuery();
 
@@ -70,10 +87,10 @@ public class WoDAO {
 				String deleted = rs.getString("deleted");
 				String worker = rs.getString("emp_id");
 				String wName = rs.getString("workerName");
-				int planStatus = rs.getInt("status");
+				int planStatus = rs.getInt("plan_status");
 				int planQty = rs.getInt("plan_qty");
 				int prevQty = rs.getInt("prev_qty");
-				String itemId = rs.getString("item_id");
+				String itemId = rs.getString("plan_item_id");
 				String director = rs.getString("director");
 				String dName = rs.getString("directorName");
 				String itemName = rs.getString("item_name");
@@ -153,49 +170,66 @@ public class WoDAO {
 
 			conn = dataFactory.getConnection();
 
-			String query = "SELECT "
-					+ "    wo.*, "
-					+ "    worker.ename workerName, "
-					+ "    pp.status, "
-					+ "    pp.plan_qty, "
-					+ "    pp.prev_qty, "
-					+ "    pp.item_id, "
-					+ "    pp.emp_id director, "
-					+ "    director.ename directorName, "
-					+ "    i.item_name, "
-					+ "    i.unit, "
-					+ "    i.spec, "
-					+ "    i.g_id "
-					+ "FROM work_order wo "
-					+ "LEFT OUTER JOIN user_info worker "
-					+ "	ON wo.emp_id = worker.emp_id "
-					+ "LEFT outer JOIN production_plan pp "
-					+ "    ON wo.plan_id = pp.plan_id "
-					+ "LEFT OUTER JOIN user_info director "
-					+ "	ON pp.emp_id = director.emp_id "
-					+ "LEFT OUTER JOIN item i "
-					+ "    ON pp.item_id = i.item_id "
-					+ "where wo.deleted is null";
+			String query = 
+				    "SELECT * "
+					+ "FROM ( "
+					+ "    SELECT ROWNUM rnum, inner_query.* "
+					+ "    FROM ( "
+					+ "        SELECT "
+					+ "            wo.wo_id, "
+					+ "            wo.workdate, "
+					+ "            wo.plan_id, "
+					+ "            wo.wostatus_no, "
+					+ "            wo.wo_qty, "
+					+ "            wo.deleted, "
+					+ "            wo.emp_id, "
+					+ "            worker.ename AS workerName, "
+					+ "            pp.status AS plan_status, "
+					+ "            pp.plan_qty, "
+					+ "            pp.prev_qty, "
+					+ "            pp.item_id AS plan_item_id, "
+					+ "            pp.emp_id AS director, "
+					+ "            director.ename AS directorName, "
+					+ "            i.item_name, "
+					+ "            i.unit, "
+					+ "            i.spec, "
+					+ "            i.g_id "
+					+ "        FROM work_order wo "
+					+ "        LEFT JOIN user_info worker ON wo.emp_id = worker.emp_id "
+					+ "        LEFT JOIN production_plan pp ON wo.plan_id = pp.plan_id "
+					+ "        LEFT JOIN user_info director ON pp.emp_id = director.emp_id "
+					+ "        LEFT JOIN item i ON pp.item_id = i.item_id "
+					+ "        WHERE wo.deleted IS NULL ";
 			
 			if (search.getStatus() != 0) {
-				query += " and wo.wostatus_no = " + search.getStatus();
+			    query += " AND wo.wostatus_no = ? ";
 			}
-			
-			int idx = 1;
 
 			if (search.getsDate() != null && !search.getsDate().isEmpty()) {
-			    query += " and workdate >= TO_DATE(?, 'YYYY-MM-DD') ";
+			    query += " AND wo.workdate >= TO_DATE(?, 'YYYY-MM-DD') ";
 			}
 
 			if (search.geteDate() != null && !search.geteDate().isEmpty()) {
-			    query += " and workdate <= TO_DATE(?, 'YYYY-MM-DD') ";
+			    query += " AND wo.workdate <= TO_DATE(?, 'YYYY-MM-DD') ";
+			}
+
+			if (search.getKeyword() != null && !search.getKeyword().isEmpty()) {
+			    query += " AND (UPPER(i.item_name) LIKE UPPER(?) OR UPPER(worker.ename) LIKE UPPER(?)) ";
 			}
 			
-			if (!( "".equals(search.getKeyword()) )) {
-				query += " and (upper(i.item_name) like upper(?) or upper(worker.ename) like upper(?)) ";
-			}
+			query += 
+				    " ORDER BY wo.workdate DESC "
+					+ "    ) inner_query "
+					+ ") "
+					+ "WHERE rnum BETWEEN ? AND ?";
 			
 			ps = conn.prepareStatement(query);
+			
+			int idx = 1;
+
+			if (search.getStatus() != 0) {
+			    ps.setInt(idx++, search.getStatus());
+			}
 
 			if (search.getsDate() != null && !search.getsDate().isEmpty()) {
 			    ps.setString(idx++, search.getsDate());
@@ -204,14 +238,17 @@ public class WoDAO {
 			if (search.geteDate() != null && !search.geteDate().isEmpty()) {
 			    ps.setString(idx++, search.geteDate());
 			}
-			
+
 			if (search.getKeyword() != null && !search.getKeyword().isEmpty()) {
 			    String keyword = "%" + search.getKeyword() + "%";
-
 			    ps.setString(idx++, keyword);
 			    ps.setString(idx++, keyword);
 			}
 
+			ps.setInt(idx++, start);
+			ps.setInt(idx++, end);
+
+			
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
@@ -224,10 +261,10 @@ public class WoDAO {
 				String deleted = rs.getString("deleted");
 				String worker = rs.getString("emp_id");
 				String wName = rs.getString("workername");
-				int planStatus = rs.getInt("status");
+				int planStatus = rs.getInt("plan_status");
 				int planQty = rs.getInt("plan_qty");
 				int prevQty = rs.getInt("prev_qty");
-				String itemId = rs.getString("item_id");
+				String itemId = rs.getString("plan_item_id");
 				String director = rs.getString("director");
 				String dName = rs.getString("directorname");
 				String itemName = rs.getString("item_name");

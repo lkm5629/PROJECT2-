@@ -34,33 +34,58 @@ public class QcDAO {
 
 			conn = dataFactory.getConnection();
 
-			String query = "SELECT q.*, d.eName dName, w.eName wName, wo.WO_QTY qty, wo.itemID, wo.iNAME, NVL(def_sum.def_cnt, 0) def_sum FROM QUALITY_CHECK q "
-					+ "LEFT OUTER JOIN user_info w "
-					+ "	ON q.worker = w.emp_id "
-					+ "LEFT OUTER JOIN user_info d "
-					+ "	ON q.director = d.EMP_ID  "
-					+ "LEFT OUTER JOIN ( "
-					+ "	SELECT * "
-					+ "	FROM WORK_ORDER wo "
-					+ "	LEFT OUTER JOIN ( "
-					+ "		SELECT p.plan_id, p.ITEM_ID  itemId, i.ITEM_NAME iName "
-					+ "		FROM production_plan p "
-					+ "		LEFT OUTER JOIN item i "
-					+ "			ON p.ITEM_ID = i.item_id "
-					+ "		) p "
-					+ "		ON wo.PLAN_ID = p.plan_Id "
-					+ ") wo "
-					+ "	ON q.WO_ID = wo.WO_ID "
-					+ "LEFT OUTER JOIN ( "
-					+ "	SELECT qc_id, sum(defect_cnt) def_cnt "
-					+ "	FROM defect "
-					+ "	GROUP BY qc_id "
-					+ ") def_sum "
-					+ "	ON q.qc_id = def_sum.qc_id "
-					+ "WHERE q.deleted IS null "
-					+ "order by q.qc_id desc";
+			String query = "SELECT * "
+					+ "FROM ( "
+					+ "    SELECT ROWNUM rnum, inner_query.* "
+					+ "    FROM ( "
+					+ "        SELECT  "
+					+ "            q.*,  "
+					+ "            d.ename AS dName,  "
+					+ "            w.ename AS wName,  "
+					+ "            wo.WO_QTY AS qty,  "
+					+ "            wo.itemID,  "
+					+ "            wo.iNAME,  "
+					+ "            NVL(def_sum.def_cnt, 0) AS def_sum "
+					+ "        FROM QUALITY_CHECK q "
+					+ "        LEFT JOIN user_info w "
+					+ "            ON q.worker = w.emp_id "
+					+ "        LEFT JOIN user_info d "
+					+ "            ON q.director = d.emp_id "
+					+ "        LEFT JOIN ( "
+					+ "            SELECT  "
+					+ "                wo.*,  "
+					+ "                p.itemId,  "
+					+ "                p.iName "
+					+ "            FROM WORK_ORDER wo "
+					+ "            LEFT JOIN ( "
+					+ "                SELECT  "
+					+ "                    p.plan_id,  "
+					+ "                    p.item_id AS itemId,  "
+					+ "                    i.item_name AS iName "
+					+ "                FROM production_plan p "
+					+ "                LEFT JOIN item i "
+					+ "                    ON p.item_id = i.item_id "
+					+ "            ) p "
+					+ "            ON wo.plan_id = p.plan_id "
+					+ "        ) wo "
+					+ "        ON q.wo_id = wo.wo_id "
+					+ "        LEFT JOIN ( "
+					+ "            SELECT qc_id, SUM(defect_cnt) AS def_cnt "
+					+ "            FROM defect "
+					+ "            GROUP BY qc_id "
+					+ "        ) def_sum "
+					+ "        ON q.qc_id = def_sum.qc_id "
+					+ "        WHERE q.deleted IS NULL "
+					+ "        ORDER BY q.qc_id DESC "
+					+ "    ) inner_query "
+					+ ") "
+					+ "WHERE rnum BETWEEN ? AND ?";
+			
 			ps = conn.prepareStatement(query);
-
+			
+			ps.setInt(1, start);
+			ps.setInt(2, end);
+			
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
@@ -249,50 +274,81 @@ public class QcDAO {
 
 			conn = dataFactory.getConnection();
 
-			String query = "SELECT q.*, d.eName dName, w.eName wName, wo.WO_QTY qty, wo.itemID, wo.iNAME, NVL(def_sum.def_cnt, 0) def_sum FROM QUALITY_CHECK q "
-					+ "LEFT OUTER JOIN user_info w "
-					+ "	ON q.worker = w.emp_id "
-					+ "LEFT OUTER JOIN user_info d "
-					+ "	ON q.director = d.EMP_ID  "
-					+ "LEFT OUTER JOIN ( "
-					+ "	SELECT * "
-					+ "	FROM WORK_ORDER wo "
-					+ "	LEFT OUTER JOIN ( "
-					+ "		SELECT p.plan_id, p.ITEM_ID  itemId, i.ITEM_NAME iName "
-					+ "		FROM production_plan p "
-					+ "		LEFT OUTER JOIN item i "
-					+ "			ON p.ITEM_ID = i.item_id "
-					+ "		) p "
-					+ "		ON wo.PLAN_ID = p.plan_Id "
-					+ ") wo "
-					+ "	ON q.WO_ID = wo.WO_ID "
-					+ "LEFT OUTER JOIN ( "
-					+ "	SELECT qc_id, sum(defect_cnt) def_cnt "
-					+ "	FROM defect "
-					+ "	GROUP BY qc_id "
-					+ ") def_sum "
-					+ "	ON q.qc_id = def_sum.qc_id "
-					+ "WHERE q.deleted IS null ";
+			String query =
+				    "SELECT * "
+					+ "FROM ( "
+					+ "    SELECT ROWNUM rnum, inner_query.* "
+					+ "    FROM ( "
+					+ "        SELECT "
+					+ "            q.qc_id, "
+					+ "            q.qc_sdate, "
+					+ "            q.qc_edate, "
+					+ "            q.qcstatus_no, "
+					+ "            q.content, "
+					+ "            q.worker, "
+					+ "            q.director, "
+					+ "            d.ename AS dName, "
+					+ "            w.ename AS wName, "
+					+ "            wo.wo_id, "
+					+ "            wo.wo_qty AS qty, "
+					+ "            wo.itemID AS itemId, "
+					+ "            wo.iNAME AS iName, "
+					+ "            NVL(def_sum.def_cnt, 0) AS def_sum "
+					+ "        FROM QUALITY_CHECK q "
+					+ "        LEFT JOIN user_info w ON q.worker = w.emp_id "
+					+ "        LEFT JOIN user_info d ON q.director = d.emp_id "
+					+ "        LEFT JOIN ( "
+					+ "            SELECT "
+					+ "                wo.wo_id, "
+					+ "                wo.wo_qty, "
+					+ "                p.itemId, "
+					+ "                p.iName "
+					+ "            FROM WORK_ORDER wo "
+					+ "            LEFT JOIN ( "
+					+ "                SELECT "
+					+ "                    p.plan_id, "
+					+ "                    p.item_id AS itemId, "
+					+ "                    i.item_name AS iName "
+					+ "                FROM production_plan p "
+					+ "                LEFT JOIN item i ON p.item_id = i.item_id "
+					+ "            ) p ON wo.plan_id = p.plan_id "
+					+ "        ) wo ON q.wo_id = wo.wo_id "
+					+ "        LEFT JOIN ( "
+					+ "            SELECT qc_id, SUM(defect_cnt) AS def_cnt "
+					+ "            FROM defect "
+					+ "            GROUP BY qc_id "
+					+ "        ) def_sum ON q.qc_id = def_sum.qc_id "
+					+ "        WHERE q.deleted IS NULL ";
 			
 			if (search.getStatus() != 0) {
-				query += " and q.qcstatus_no = " + search.getStatus();
+			    query += " AND q.qcstatus_no = ? ";
 			}
-			
-			int idx = 1;
 
 			if (search.getsDate() != null && !search.getsDate().isEmpty()) {
-			    query += " and qc_edate >= TO_DATE(?, 'YYYY-MM-DD') ";
+			    query += " AND q.qc_edate >= TO_DATE(?, 'YYYY-MM-DD') ";
 			}
 
 			if (search.geteDate() != null && !search.geteDate().isEmpty()) {
-			    query += " and qc_edate <= TO_DATE(?, 'YYYY-MM-DD') ";
+			    query += " AND q.qc_edate <= TO_DATE(?, 'YYYY-MM-DD') ";
+			}
+
+			if (search.getKeyword() != null && !search.getKeyword().isEmpty()) {
+			    query += " AND (UPPER(wo.iName) LIKE UPPER(?) OR UPPER(w.ename) LIKE UPPER(?)) ";
 			}
 			
-			if (!( "".equals(search.getKeyword()) )) {
-				query += " and (upper(wo.iName) like upper(?) or upper(w.ename) like upper(?)) ";
-			}
+			query += " ORDER BY q.qc_id DESC "
+					+ "    ) inner_query "
+					+ ") "
+					+ "WHERE rnum BETWEEN ? AND ?";
 			
 			ps = conn.prepareStatement(query);
+
+			
+			int idx = 1;
+
+			if (search.getStatus() != 0) {
+			    ps.setInt(idx++, search.getStatus());
+			}
 
 			if (search.getsDate() != null && !search.getsDate().isEmpty()) {
 			    ps.setString(idx++, search.getsDate());
@@ -301,13 +357,15 @@ public class QcDAO {
 			if (search.geteDate() != null && !search.geteDate().isEmpty()) {
 			    ps.setString(idx++, search.geteDate());
 			}
-			
+
 			if (search.getKeyword() != null && !search.getKeyword().isEmpty()) {
 			    String keyword = "%" + search.getKeyword() + "%";
-
 			    ps.setString(idx++, keyword);
 			    ps.setString(idx++, keyword);
 			}
+
+			ps.setInt(idx++, start);
+			ps.setInt(idx++, end);
 
 			rs = ps.executeQuery();
 
