@@ -1,0 +1,105 @@
+.content{
+	width: 1160px;
+    display: flex;
+    justify-content : center;
+    align-items: center;
+  
+}
+
+.input-1 {
+    width : 300px;
+    height : 40px;
+    padding-left : 15px;
+    box-sizing : border-box;    
+}
+.input-2 {
+    width : 100px;
+    height : 35px;
+    padding-left : 10px;
+    box-sizing : border-box;    
+}
+.btn-1 {
+    width : 350px;
+    height : 50px;
+    
+}
+.h2 {
+    width : 340px;
+    margin : 0;    
+}
+h7 {
+    height : 50px;
+    margin-bottom: 1px;    
+}
+.center {
+    width : 350px;
+    height : 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box; 
+    margin-bottom : 20px;
+}
+.model-body {
+    width : 450px;
+    height : auto;
+    min-higet : 600px;
+    border: 1px solid black;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;    
+    border-radius: 10px;
+    box-sizing : border-box !important;
+}
+.radius {
+    border-radius: 10px;
+}
+.logo {
+    width : 100px;
+    height : 100px;
+
+}
+.close-btn {
+	width : 25px;
+	height : 25px;
+}
+.model-high {
+	width : 370px;
+	height : 60px;
+	display : flex;
+	margin-top : 40px;
+}
+.chain {
+	width : 350px;
+    height : 40px;
+	display : flex;
+	flex-direction : row;
+	align-items : center;
+	justify-content : space-between;
+	
+}
+a {
+	color : black;
+	margin-right : 150px;
+	text-decoration : none;
+}
+[name='pd_btn'] {
+	width : 270px;
+    height : 30px;
+    display : flex;
+    justify-content : center;
+    align-items : center;
+}
+.pd-box {
+	width : 350px;
+    height : 40px;
+	
+}
+strong {
+	font-size : 1.5em;
+}
+
+
