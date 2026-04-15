@@ -211,39 +211,37 @@
 					%>
 
 					<div class="pagination">
-						<c:if test="<%=start_section == 1%>">
-							<a>&laquo;</a>
+						<%-- 이전 버튼 --%>
+						<c:if test="<%=pageNum == 1%>">
+							<a>이전</a>
 						</c:if>
-						<c:if test="<%=start_section != 1%>">
-							<a
-								href="/mes/iocontroller?page=<%=start_section-1%>&size=${map.size}<%=filterParams%>">&laquo;</a>
+						<c:if test="<%=pageNum != 1%>">
+							<a href="/mes/io?page=<%=pageNum-1%>&size=${map.size}<%=filterParams%>">이전</a>
 						</c:if>
 
-						<c:forEach var="i" begin="<%=start_section%>"
-							end="<%=end_section%>">
+						<%-- 페이지 번호 --%>
+						<c:forEach var="i" begin="<%=start_section%>" end="<%=end_section%>">
 							<c:if test="${map.page eq i}">
-								<a
-									href="/mes/iocontroller?page=${i}&size=${map.size}<%=filterParams%>"
-									class="active"><strong>${i}</strong></a>
+								<a href="/mes/io?page=${i}&size=${map.size}<%=filterParams%>" class="active"><strong>${i}</strong></a>
 							</c:if>
 							<c:if test="${map.page ne i}">
-								<a
-									href="/mes/iocontroller?page=${i}&size=${map.size}<%=filterParams%>">${i}</a>
+								<a href="/mes/io?page=${i}&size=${map.size}<%=filterParams%>">${i}</a>
 							</c:if>
 						</c:forEach>
 
-						<c:if test="<%=end_section == totalPage%>">
-							<a>&raquo;</a>
+						<%-- 다음 버튼 --%>
+						<c:if test="<%=pageNum == totalPage%>">
+							<a>다음</a>
 						</c:if>
-						<c:if test="<%=end_section != totalPage%>">
-							<a
-								href="/mes/iocontroller?page=<%=end_section+1%>&size=${map.size}<%=filterParams%>">&raquo;</a>
+						<c:if test="<%=pageNum != totalPage%>">
+							<a href="/mes/io?page=<%=pageNum+1%>&size=${map.size}<%=filterParams%>">다음</a>
 						</c:if>
 					</div>
+
 					<%-- 입출고 등록 모달 --%>
 					<dialog id="myModal" class="modal-box">
 					<h2 class="modal-title" id="modalTitle">입출고 등록</h2>
-					<form method="post" action="/mes/iocontroller">
+					<form method="post" action="/mes/io">
 
 						<%-- io_type hidden --%>
 						<select name="io_type" id="io_type" style="display: none;">

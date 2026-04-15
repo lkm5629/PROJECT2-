@@ -26,7 +26,6 @@
         <div class="content">
             <div class="page-wrapper">
 
-                <%-- 페이지 헤더 --%>
                 <div class="page-header">
                     <div>
                         <h1>재고 관리</h1>
@@ -34,7 +33,6 @@
                     </div>
                 </div>
 
-                <%-- 요약 카드 --%>
                 <div class="inv-summary-cards">
                     <div class="inv-card">
                         <div class="inv-card-label">수량</div>
@@ -46,7 +44,6 @@
                         <div class="inv-card-value">${map.normalStock != null ? map.normalStock : 0}</div>
                         <div class="inv-card-title">정상재고</div>
                     </div>
-                    <%-- ★ 부족재고: DB에서 집계한 lackStock 값 표시 --%>
                     <div class="inv-card inv-card-lack">
                         <div class="inv-card-label">수량</div>
                         <div class="inv-card-value">${map.lackStock != null ? map.lackStock : 0}</div>
@@ -54,7 +51,6 @@
                     </div>
                 </div>
 
-                <%-- 필터 / 검색 영역 --%>
                 <div class="filter-bar">
                     <select id="filterGId">
                         <option value="">자재분류</option>
@@ -78,7 +74,6 @@
                     </div>
                 </div>
 
-                <%-- 페이지당 표시 건수 --%>
                 <select id="size">
                     <option value="5"  ${map.size == 5  ? 'selected' : ''}>5</option>
                     <option value="10" ${map.size == 10 ? 'selected' : ''}>10</option>
@@ -86,7 +81,6 @@
                     <option value="20" ${map.size == 20 ? 'selected' : ''}>20</option>
                 </select>
 
-                <%-- 테이블 --%>
                 <div class="table-wrap">
                     <table>
                         <thead>
@@ -118,7 +112,6 @@
                                     <td>${not empty dto.unit ? dto.unit : '-'}</td>
                                     <td>${dto.stock_no != null ? dto.stock_no : 0}</td>
                                     <td>${dto.safe_no != null ? dto.safe_no : 0}</td>
-                                    <%-- ★ 안전재고 수정 버튼 --%>
                                     <td>
                                         <button class="btn-edit-safe"
                                             data-stock-id="${dto.stock_id}"
@@ -151,11 +144,11 @@
                     %>
 
                     <div class="pagination">
-                        <c:if test="<%=start_section == 1%>">
-                            <a>&laquo;</a>
+                        <c:if test="<%=pageNum == 1%>">
+                            <a>이전</a>
                         </c:if>
-                        <c:if test="<%=start_section != 1%>">
-                            <a href="/mes/stock?page=<%=start_section-1%>&size=<%=size%><%=filterParams%>">&laquo;</a>
+                        <c:if test="<%=pageNum != 1%>">
+                            <a href="/mes/stock?page=<%=pageNum-1%>&size=<%=size%><%=filterParams%>">이전</a>
                         </c:if>
 
                         <c:forEach var="i" begin="<%=start_section%>" end="<%=end_section%>">
@@ -167,11 +160,11 @@
                             </c:if>
                         </c:forEach>
 
-                        <c:if test="<%=end_section == totalPage%>">
-                            <a>&raquo;</a>
+                        <c:if test="<%=pageNum == totalPage%>">
+                            <a>다음</a>
                         </c:if>
-                        <c:if test="<%=end_section != totalPage%>">
-                            <a href="/mes/stock?page=<%=end_section+1%>&size=<%=size%><%=filterParams%>">&raquo;</a>
+                        <c:if test="<%=pageNum != totalPage%>">
+                            <a href="/mes/stock?page=<%=pageNum+1%>&size=<%=size%><%=filterParams%>">다음</a>
                         </c:if>
                     </div>
                 </div>
@@ -180,7 +173,7 @@
         </div>
     </div>
 
-    <%-- ★ 안전재고 수정 모달 --%>
+    <%-- 안전재고 수정 모달 --%>
     <dialog id="safeNoModal" class="modal-box">
         <h2 class="modal-title">안전재고 수정</h2>
         <div class="modal-grid">
@@ -196,6 +189,5 @@
         </div>
     </dialog>
 
-   
 </body>
 </html>
