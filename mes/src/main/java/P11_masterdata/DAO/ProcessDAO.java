@@ -293,7 +293,6 @@ public class ProcessDAO {
 		return dto;
 	}
 
-	// 자재 목록: process.item_id 와 item 테이블 조인
 	public List<ProcessDTO> selectMaterialList(String processId) {
 		List<ProcessDTO> list = new ArrayList<ProcessDTO>();
 
@@ -356,7 +355,6 @@ public class ProcessDAO {
 		return list;
 	}
 
-	// 설비 목록: 매핑 테이블이 없어서 process_name 포함 검색으로 임시 연결
 	public List<ProcessDTO> selectEquipmentList(String processId) {
 		List<ProcessDTO> list = new ArrayList<ProcessDTO>();
 
@@ -419,6 +417,59 @@ public class ProcessDAO {
 		}
 
 		return list;
+	}
+
+	public int updateProcess(ProcessDTO processDTO) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int update_result = -1;
+
+		try {
+			
+			Context ctx;
+			ctx = new InitialContext();
+			// DataSource: 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// Sql 작성
+			String query = "UPDATE process";
+			query += " SET process_name = ?, process_info = ?";
+			query += " WHERE process_id = ?";
+
+			ps = conn.prepareStatement(query);
+			ps.setString(1, processDTO.getProcess_name());
+			ps.setString(2, processDTO.getProcess_info());
+			ps.setString(3, processDTO.getProcess_id());
+
+			// SQL 실행
+			update_result = ps.executeUpdate();
+			System.out.println("update 결과: " + update_result);
+
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return update_result;
 	}
 
 }
