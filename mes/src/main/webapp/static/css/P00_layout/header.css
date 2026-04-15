@@ -10,6 +10,14 @@
     padding: 10px;
 
     border-bottom: 1px solid var(--color-border);
+    
+    height: 65px;
+    
+    position: sticky;
+  	top: 0;
+  	z-index: 1000;
+  	
+  	background-color: white;
 }
 
 .headerContent {
@@ -63,7 +71,7 @@
 
 .alarm-box_header {
   position: absolute;
-  top: 50px;   /* ¹öÆ° ¾Æ·¡ */
+  top: 50px;   /* ï¿½ï¿½Æ° ï¿½Æ·ï¿½ */
   right: 100px;
 
   width: 300px;
@@ -111,4 +119,11 @@
 
 .profile_header {
 	font-weight: 700;
+}
+
+@media (max-width: 768px) {
+	 .headerContainer {
+	 	width: 100vw;
+	 }
+	
 }
