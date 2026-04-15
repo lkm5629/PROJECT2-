@@ -94,6 +94,11 @@ a {
     justify-content : center;
     align-items : center;
 }
+[name='clean_status'] {
+	width : 180px;
+    height : 30px;
+    
+}
 
 
 

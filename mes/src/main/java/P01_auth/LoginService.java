@@ -139,15 +139,50 @@ public class LoginService {
 		//로그인 함수 실행결과 리턴
 		return a.defect();				
 	}
-	public List<DashDTO> notice() {
+	
+	
+	public int nread() {
+		System.out.println("/login service.nread() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.nread();				
+	}
+	
+	public List<DashDTO> notice(int nstart_no, int ncountPageNo) {
 		System.out.println("/dashboard service.notice() 실행 ");
 		
 		//실무 함수 소환
 		LoginDAO a = new LoginDAO();
 		
 		//로그인 함수 실행결과 리턴
-		return a.notice();				
+		return a.notice(nstart_no, ncountPageNo);				
 	}
+	
+	public int sread() {
+		System.out.println("/login service.sread() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.sread();				
+	} 
+	
+	
+	public List<DashDTO> suggestion(int sstart_no, int scountPageNo) {
+		System.out.println("/dashboard service.suggestion() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.suggestion(sstart_no, scountPageNo);				
+	}
+
+	
 	
 	
 	

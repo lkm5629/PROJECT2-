@@ -40,9 +40,23 @@ header {
 	margin : 0px 15px; 
 	flex-shirink : 0;
 } 
+.box-type1-1 {
+	width : 1160px;
+	height : 150px;
+	padding : 0px 10px;
+	margin : 0px 15px; 
+	flex-shirink : 0;
+} 
 .box-type2 {
 	width : 540px;
-	height : 450px;
+	height : 170px;
+	padding : 0px 10px;
+	margin : 0px 15px; 
+	flex-shirink : 0;
+} 
+.box-type2-1 {
+	width : 540px;
+	height : 300px;
 	padding : 0px 10px;
 	margin : 0px 15px; 
 	flex-shirink : 0;
@@ -56,7 +70,7 @@ header {
 } 
 .box-type4 {
 	width : 360px;
-	height : 280px;
+	height : 220px;
 	padding : 0px 10px;
 	margin : 0px 12px; 
 	flex-shirink : 0;
@@ -72,7 +86,7 @@ header {
 	align-items : center;
 }
 h4 {
-	margin : 15px 0px;
+	margin : 5px 0px;
 }
 
 .chart-2 {
@@ -82,9 +96,7 @@ h4 {
 element.style {
 	height : 270px ! importants;
 }
-.semi {
-	width : 300px;
-}
+
 .short-box {
 	width : 340px;
 	height : 260px;
@@ -99,3 +111,21 @@ element.style {
     display : flex;
     justify-content : center;
 }
+.search-box{
+	display : flex;
+	justify-content : space-evenly;
+}
+.input-2 {
+    width : 250px;
+    height : 35px;
+    padding-left : 10px;
+    box-sizing : border-box;    
+}
+[name=clean_status] {
+	width : 180px;
+    height : 30px;    
+}
+.up-1 {
+	height : 20px;
+}
+

@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/dashboard")
-public class DashboardController extends HttpServlet {
+@WebServlet("/defectreporting")
+public class DefectReportingController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("dashboard의 doget 실행");
+		System.out.println("defectreporting의 doget 실행");
 		// TODO Auto-generated method stub
 
 		// 주소 : http://localhost:8080/mes/login.jsp
@@ -27,7 +27,7 @@ public class DashboardController extends HttpServlet {
 		// 함수 모음집 소환
 		LoginService s = new LoginService();
 		// 데이터 바구니 소환
-		DashDTO d = new DashDTO();
+		DreportingDTO d = new DreportingDTO();
 		
 		
 		
