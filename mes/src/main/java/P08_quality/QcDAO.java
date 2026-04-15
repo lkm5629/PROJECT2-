@@ -1391,7 +1391,7 @@ public class QcDAO {
 			conn = dataFactory.getConnection();
 
 			// SQL 준비
-			String seqSql = "SELECT 'def_id'||defect_seq.NEXTVAL FROM dual";
+			String seqSql = "SELECT 'def_'||defect_seq.NEXTVAL FROM dual";
 			ps = conn.prepareStatement(seqSql);
 			rs = ps.executeQuery();
 
