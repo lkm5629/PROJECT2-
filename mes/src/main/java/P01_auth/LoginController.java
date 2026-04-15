@@ -159,6 +159,58 @@ public class LoginController extends HttpServlet {
 			}
 
 		}
+		
+		
+		//이 값이 있다면 권한 부여로
+				String permission = request.getParameter("permission");
+				String pd_empid = request.getParameter("pd-empid");
+				
+				//권한부여 로직
+				if(permission != null && pd_empid != null) {
+					System.out.println("/login doget.permission 실행");
+					
+					int level = 0;
+					
+					
+					if ("작업자".equals(permission)) {
+						
+						level = 1;
+						
+					} else if ("관리자".equals(permission)) {
+						
+						level = 2;
+						
+					} else if ("슈퍼바이저".equals(permission)) {
+						
+						level = 3;						
+						
+					}
+					
+					
+					
+					d.setAuth(level);
+					d.setEmpid(pd_empid);
+					
+					
+				   //함수 소환
+				   int count = s.permission(d);
+				   
+				   if (count > 0) {
+						System.out.println("권한 변경이 완료 되었습니다.");
+						request.setAttribute("messege", pd_empid + " : 권한 변경에 성공했습니다.");
+						
+						
+					} else {
+						System.out.println("권한 변경에 실패 했습니다.");
+						request.setAttribute("messege", pd_empid + " : 권한 변경에 실패했습니다. 다시.");
+					}
+					
+				   request.getRequestDispatcher("/pdetail").forward(request, response);
+				   return;      
+					
+				}
+		
+		
 
 		// 이 값들이 있다면 비밀번호 변경으로
 		String change_empid = request.getParameter("change_empid");
@@ -168,7 +220,7 @@ public class LoginController extends HttpServlet {
 
 		// 비밀번호 변경 로직
 		if (!(change_empid == null && "".equals(change_empid)) && !(change_phone == null && "".equals(change_phone))
-				&& !(change_pw == null && "".equals(change_pw)) && !(change_pw2 == null && "".equals(change_pw2))) {
+				&& !(change_pw == null && "".equals(change_pw)) && !(change_pw2 == null && "".equals(change_pw2)) ) {
 			System.out.println("/login doget.changepw 실행");
 
 			// 만약 null이 아니라면 공백 제거 후 덮어씌우기
@@ -269,8 +321,13 @@ public class LoginController extends HttpServlet {
 			return;
 
 		}
+		
+		
+		
 
 	}
+	
+	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

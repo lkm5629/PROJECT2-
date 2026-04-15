@@ -13,20 +13,30 @@ public class LoginDTO {
 	String license;
 	String deptno;
 	String deptname;
+	int auth;
 	
 	Date hiredate;
 	
 	
 
 	
+	
 	@Override
 	public String toString() {
 		return "LoginDTO [empid=" + empid + ", ename=" + ename + ", phone=" + phone + ", password=" + password
 				+ ", password2=" + password2 + ", mgr=" + mgr + ", license=" + license + ", deptno=" + deptno
-				+ ", deptname=" + deptname + ", hiredate=" + hiredate + "]";
+				+ ", deptname=" + deptname + ", auth=" + auth + ", hiredate=" + hiredate + "]";
+	}
+
+	public int getAuth() {
+		return auth;
 	}
 	
 	
+	public void setAuth(int auth) {
+		this.auth = auth;
+	}
+
 	public String getDeptname() {
 		return deptname;
 	}

@@ -64,8 +64,57 @@ public class EqService {
 		return dao.setting(dto);
 	}
 	
-	public List getLog(EqLogDTO dto) {
-		return dao.getLog(dto);
+	public Map getLog(EqLogDTO dto) {
+		Map map = new HashMap();
+		
+		int size = dto.getSize();
+		int page = dto.getPage();
+		
+		int start = 0, end = 0;
+		
+		end = size*page;
+		start = end - (size-1);
+		
+		int cnt = dao.countLog(dto.getEqId());
+		
+		map.put("list", dao.getLog(start, end, dto));
+		map.put("totalPage", (int)Math.ceil ((double)cnt/size));
+		map.put("size", size);
+		map.put("page", page);
+		
+		return map;
+	}
+	
+	public int eqStop(String eqId) {
+		return dao.eqStop(eqId);
+	}
+	
+	public int stopLog(String eqId) {
+		return dao.stopLog(eqId);
+	}
+	
+	public int eqRun(String eqId) {
+		return dao.eqRun(eqId);
+	}
+	
+	public int startLog(String eqId) {
+		return dao.startLog(eqId);
+	}
+	
+	public int statusChange(String status, String eqId) {
+		return dao.statusChange(status, eqId);
+	}
+	
+	public int addLog(EqLogDTO dto) {
+		return dao.addLog(dto);
+	}
+	
+	public EqLogDTO getLogDetail(EqLogDTO dto) {
+		return dao.getLogDetail(dto);
+	}
+	
+	public int modifyLog(EqLogDTO dto) {
+		return dao.modifyLog(dto);
 	}
 
 }

@@ -64,6 +64,32 @@ public class LoginService {
 	}
 	
 	
+	public LoginDTO detail(String empid) {
+		System.out.println("/login service.detail() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();		
+		
+		//정보수정 실행 결과 리턴.
+		return a.detail(empid);
+		
+		
+	}
+	
+	
+	public int permission(LoginDTO d) {
+		System.out.println("/login service.permission() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();		
+		
+		//정보수정 실행 결과 리턴.
+		return a.permission(d);
+		
+		
+	}
+	
+	
 	public List join(LoginDTO d) {
 		System.out.println("/login service.join() 실행 ");
 		
@@ -102,5 +128,63 @@ public class LoginService {
 		//로그인 함수 실행결과 리턴
 		return a.paging(start_no, countPageNo);				
 	}
+	
+	
+	public List<DashDTO> defect() {
+		System.out.println("/dashboard service.defect() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.defect();				
+	}
+	
+	
+	public int nread() {
+		System.out.println("/login service.nread() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.nread();				
+	}
+	
+	public List<DashDTO> notice(int nstart_no, int ncountPageNo) {
+		System.out.println("/dashboard service.notice() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.notice(nstart_no, ncountPageNo);				
+	}
+	
+	public int sread() {
+		System.out.println("/login service.sread() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.sread();				
+	} 
+	
+	
+	public List<DashDTO> suggestion(int sstart_no, int scountPageNo) {
+		System.out.println("/dashboard service.suggestion() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.suggestion(sstart_no, scountPageNo);				
+	}
+
+	
+	
+	
+	
 
 }

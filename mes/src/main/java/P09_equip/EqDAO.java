@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import javax.sql.DataSource;
 
 import P00_layout.LoggableStatement;
 import P07_work.SearchDTO;
+import P07_work.WoAddDTO;
 import P07_work.WoDTO;
 import P09_equip.DTO.EqDTO;
 import P09_equip.DTO.EqLogDTO;
@@ -639,7 +641,7 @@ public class EqDAO {
 	} // setting
 	
 	
-	public List<EqLogDTO> getLog(EqLogDTO eqDTO) {
+	public List<EqLogDTO> getLog(int start, int end, EqLogDTO eqDTO) {
 		
 		List<EqLogDTO> list = new ArrayList();
 		
@@ -654,14 +656,25 @@ public class EqDAO {
 
 			conn = dataFactory.getConnection();
 
-			String query = "SELECT l.*, u.eName "
-					+ "FROM equipment_log l "
-					+ "	LEFT OUTER JOIN user_info u "
-					+ "		ON l.EMP_ID = u.EMP_ID "
-					+ "WHERE l.eq_id = ?";
+			String query =
+				    "SELECT * " +
+				    "FROM ( " +
+				    "    SELECT ROWNUM rnum, a.* " +
+				    "    FROM ( " +
+				    "        SELECT l.*, u.eName " +
+				    "        FROM equipment_log l " +
+				    "        LEFT OUTER JOIN user_info u " +
+				    "            ON l.EMP_ID = u.EMP_ID " +
+				    "        WHERE l.eq_id = ? " +
+				    "        ORDER BY l.EQ_LOG_ID DESC " +
+				    "    ) a " +
+				    ") " +
+				    "WHERE rnum BETWEEN ? AND ?";
 			
 			ps = conn.prepareStatement(query);
 			ps.setString(1, eqDTO.getEqId());
+			ps.setInt(2, start);
+			ps.setInt(3, end);
 
 			rs = ps.executeQuery();
 
@@ -673,8 +686,8 @@ public class EqDAO {
 				String wId = rs.getString("emp_id");
 				String wName = rs.getString("ename");
 				
-				Date sTime = rs.getDate("start_time");
-				Date eTime = rs.getDate("end_time");
+				Timestamp sTime = rs.getTimestamp("start_time");
+				Timestamp eTime = rs.getTimestamp("end_time");
 				
 				String inspType = rs.getString("insp_type");
 				String inspContent = rs.getString("insp_content");
@@ -724,6 +737,599 @@ public class EqDAO {
 	
 		return list;
 		
-	} // setting
+	} // getLog
+	
+	public int countLog(String eqId) {
+		
+		int cnt = 0;
 
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = " SELECT count(*) cnt from equipment_log where eq_id = ? ";
+			
+			ps= new LoggableStatement(conn, query);
+			ps.setString(1, eqId);
+			
+			rs = ps.executeQuery();
+			
+			
+
+			while (rs.next()) {
+				
+				cnt = rs.getInt("cnt");
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return cnt;
+
+	} // countLog
+	
+	
+	public int eqStop(String eqId) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "update equipment set eq_status = '점검 중' where eq_id = ?";
+			
+			ps = new LoggableStatement(conn, query);
+			ps.setString(1,  eqId);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // eqStop
+	
+	
+	
+	public int stopLog(String eqId) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "UPDATE eqrun_log "
+					+ "SET etime = sysdate "
+					+ "WHERE eq_id = ? AND etime IS NULL ";
+			
+			ps = new LoggableStatement(conn, query);
+			ps.setString(1, eqId);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // stopLog
+	
+	
+
+	public int eqRun(String eqId) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "update equipment set eq_status = '가동' where eq_id = ?";
+			
+			ps = new LoggableStatement(conn, query);
+			ps.setString(1,  eqId);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // eqRun
+	
+	
+	
+	public int startLog(String eqId) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "INSERT INTO EQRUN_LOG (eqrun_id, eq_id, stime) "
+					+ "VALUES ('run_'||run_seq.nextval, ?, sysdate)";
+			
+			ps = new LoggableStatement(conn, query);
+			ps.setString(1, eqId);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // startLog
+	
+	
+
+	public int statusChange(String status, String eqId) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "UPDATE EQUIPMENT "
+					+ "SET eq_status = ? "
+					+ "WHERE eq_id = ? ";
+			
+			ps = new LoggableStatement(conn, query);
+			ps.setString(1, status);
+			ps.setString(2, eqId);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // statusChange
+	
+	
+
+	public int addLog(EqLogDTO dto) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "INSERT INTO EQUIPMENT_LOG (Eq_log_id, start_time, end_time, emp_id, eq_id, insp_type, insp_content) "
+					+ "VALUES ('log_'||log_seq.nextval, ?, ?, ?, ?, ?, ?)";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setTimestamp(1, dto.getsTime());
+			ps.setTimestamp(2, dto.geteTime());
+			ps.setString(3, dto.getwId());
+			ps.setString(4, dto.getEqId());
+			ps.setString(5, dto.getInspType());
+			ps.setString(6, dto.getInspContent());
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // addLog
+	
+
+	public EqLogDTO getLogDetail(EqLogDTO dto) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT l.*, u.eName, e.eq_name "
+					+ "FROM EQUIPMENT_LOG l	 "
+					+ "LEFT OUTER JOIN user_info u "
+					+ "	ON l.emp_id = u.EMP_ID "
+					+ "LEFT OUTER JOIN equipment e "
+					+ "	ON l.eq_id = e.eq_id "
+					+ "WHERE l.EQ_LOG_ID = ?";
+			
+			ps = conn.prepareStatement(query);
+			ps.setString(1, dto.getLogId());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				// eq
+				String logId = rs.getString("eq_log_id");
+				String eqId = rs.getString("eq_id");
+				String eqName = rs.getString("eq_name");
+				String wId = rs.getString("emp_id");
+				String wName = rs.getString("ename");
+				
+				Timestamp sTime = rs.getTimestamp("start_time");
+				Timestamp eTime = rs.getTimestamp("end_time");
+				
+				String inspType = rs.getString("insp_type");
+				String inspContent = rs.getString("insp_content");
+				
+				dto.setLogId(logId);
+				dto.setEqId(eqId);
+				dto.setEqName(eqName);
+				dto.setwId(wId);
+				dto.setwName(wName);
+				dto.setsTime(sTime);
+				dto.seteTime(eTime);
+				dto.setInspType(inspType);
+				dto.setInspContent(inspContent);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+	
+		return dto;
+		
+	} // getLogDetail
+
+	
+
+	public int modifyLog(EqLogDTO dto) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "UPDATE EQUIPMENT_LOG\r\n"
+					+ "SET start_time=?, end_time=?, insp_type=?, insp_content=?\r\n"
+					+ "WHERE eq_log_id=?";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setTimestamp(1, dto.getsTime());
+			ps.setTimestamp(2, dto.geteTime());
+			ps.setString(3, dto.getInspType());
+			ps.setString(4, dto.getInspContent());
+			ps.setString(5, dto.getLogId());
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // modifyLog
 }

@@ -49,16 +49,13 @@
 					
 					<c:forEach var="l" items="${ list }">
 						<div class="per-tool">
+						<a href="pdetail?empid=${ l.empid }">
 						<div class="per-chain radius">
 							<li>사번 : ${ l.empid }</li> 
 							<li>이름 : ${ l.ename }</li> 
-							<li>부서 : ${ l.deptname }</li> 
-							<select class="grant" name="">
-							<option>작업자</option>
-							<option>관리자</option>
-							<option>슈퍼바이저</option>
-							</select> 
+							<li>부서 : ${ l.deptname }</li> 							
 						</div>						
+						</a>
 						</div>
 					</c:forEach>
 					

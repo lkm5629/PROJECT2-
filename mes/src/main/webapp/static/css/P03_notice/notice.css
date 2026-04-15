@@ -131,7 +131,7 @@
     font-size: 13px;
     font-weight: 500;
     font-family: var(--nc-font);
-    cursor: pointer;
+    
     border: none;
     transition: background var(--nc-transition), transform var(--nc-transition), box-shadow var(--nc-transition);
     letter-spacing: -0.1px;
@@ -175,9 +175,14 @@
     flex-wrap: wrap;
 }
 
+.nc .table-toolbar form {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
 .nc .search-wrap {
     position: relative;
-    margin-left: auto;
 }
 
 .nc .search-icon {
@@ -242,7 +247,7 @@
 .nc tbody tr {
     border-bottom: 1px solid #F1F5F9;
     transition: background var(--nc-transition);
-    cursor: pointer;
+    
 }
 
 .nc tbody tr:last-child { border-bottom: none; }
@@ -491,4 +496,31 @@
 @media (max-width: 900px) {
     .nc .form-row      { grid-template-columns: 1fr 1fr; }
     .nc .post-meta-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* 제목 td 클릭 커서 */
+.nc .nc-title-col {
+    cursor: pointer;
+}
+ 
+.nc .nc-title-col:hover {
+    text-decoration: underline;
+    color: var(--nc-primary);
+}
+ 
+/* 검색 버튼 간격 */
+.nc .nc-search-btn {
+    margin-left: 6px;
+}
+ 
+/* 검색 form 오른쪽 정렬 */
+.nc .table-toolbar form {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+ 
+.nc .search-wrap {
+    position: relative;
+    /* margin-left: auto; ← 이 줄 삭제 (form으로 이동) */
 }

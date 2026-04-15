@@ -1,19 +1,24 @@
 package P09_equip.DTO;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class EqLogDTO {
 	
 	String logId;
 	String eqId;
+	String eqName;
 	String wId;
 	String wName;
 	
-	Date sTime;
-	Date eTime;
+	Timestamp sTime;
+	Timestamp eTime;
 	
 	String inspType;
 	String inspContent;
+	
+	int page;
+	int size;
 	
 	public String getLogId() {
 		return logId;
@@ -27,6 +32,12 @@ public class EqLogDTO {
 	public void setEqId(String eqId) {
 		this.eqId = eqId;
 	}
+	public String getEqName() {
+		return eqName;
+	}
+	public void setEqName(String eqName) {
+		this.eqName = eqName;
+	}
 	public String getwId() {
 		return wId;
 	}
@@ -39,16 +50,16 @@ public class EqLogDTO {
 	public void setwName(String wName) {
 		this.wName = wName;
 	}
-	public Date getsTime() {
+	public Timestamp getsTime() {
 		return sTime;
 	}
-	public void setsTime(Date sTime) {
+	public void setsTime(Timestamp sTime) {
 		this.sTime = sTime;
 	}
-	public Date geteTime() {
+	public Timestamp geteTime() {
 		return eTime;
 	}
-	public void seteTime(Date eTime) {
+	public void seteTime(Timestamp eTime) {
 		this.eTime = eTime;
 	}
 	public String getInspType() {
@@ -64,11 +75,28 @@ public class EqLogDTO {
 		this.inspContent = inspContent;
 	}
 	
-	@Override
-	public String toString() {
-		return "EqLogDTO [logId=" + logId + ", eqId=" + eqId + ", wId=" + wId + ", wName=" + wName + ", sTime=" + sTime
-				+ ", eTime=" + eTime + ", inspType=" + inspType + ", inspContent=" + inspContent + "]";
+	
+	
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public int getSize() {
+		return size;
+	}
+	public void setSize(int size) {
+		this.size = size;
 	}
 	
+	
+	
+	@Override
+	public String toString() {
+		return "EqLogDTO [logId=" + logId + ", eqId=" + eqId + ", eqName=" + eqName + ", wId=" + wId + ", wName="
+				+ wName + ", sTime=" + sTime + ", eTime=" + eTime + ", inspType=" + inspType + ", inspContent="
+				+ inspContent + "]";
+	}
 
 }
