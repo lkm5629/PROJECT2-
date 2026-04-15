@@ -820,11 +820,90 @@ public class LoginDAO {
 	}
 	
 	
-	public List<DashDTO> notice() {
+	public int nread() {
+		System.out.println("/login DAO.nread 실행");
+
+		int count = 0;
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			// JNDI 방식
+			// connection.xml 맨 아래에 있는 DB정보로 커넥션 풀을 가져온다. Server 폴더에 있다. 기억!
+			Context ctx = new InitialContext();
+
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB접속(그런데 이제 커넥션 풀로.)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = " SELECT boardno, title FROM announcement ";
+		           query += " order by boardno desc ";
+				   
+
+			ps = conn.prepareStatement(query);
+			
+
+			// SQL 실행 및 결과 확보
+			rs = ps.executeQuery();
+
+			// 결과 활용
+			
+			
+			while (rs.next()) {
+				
+				//숫자세기
+				count++;
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+		System.out.println(" nread 함수 실행 : " + count);
+		return count;
+
+	}
+	
+	
+	
+	public List<DashDTO> notice(int nstart_no, int ncountPageNo) {
 		System.out.println("/dashboard DAO.notice 실행");
 		
+		//리스트 소환		
 		List<DashDTO> list = new ArrayList<DashDTO>();
 		
+		//의례
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -840,12 +919,17 @@ public class LoginDAO {
 			// DB접속(그런데 이제 커넥션 풀로.)
 			conn = dataFactory.getConnection();
 			
-			// SQL 준비
-			String query = " SELECT boardno, title FROM announcement ";
-			       query += " order by boardno desc ";
-				 
-			
-			ps = conn.prepareStatement(query);
+			String query = " SELECT * FROM ( ";
+			       query += " SELECT rownum AS rn, a.* FROM ( ";
+			       query += " SELECT boardno, title ";
+			       query += " FROM announcement ";
+			       query += " ORDER BY boardno DESC ";
+			       query += " ) a WHERE rownum <= ? ";
+			       query += " ) WHERE rn > ? "; 
+		
+			       ps = conn.prepareStatement(query);
+			       ps.setInt(1, ncountPageNo);
+			       ps.setInt(2, nstart_no);
 			
 			
 			// SQL 실행 및 결과 확보
@@ -857,8 +941,8 @@ public class LoginDAO {
 				DashDTO dto = new DashDTO();
 				
 				//바구니에 담기
-				dto.setBoardno(rs.getString("boardno"));				
-				dto.setTitle(rs.getString("title"));				
+				dto.setNboardno(rs.getString("boardno"));				
+				dto.setNtitle(rs.getString("title"));				
 				
 				//바구니를 리스트에 싣기
 				list.add(dto);
@@ -894,6 +978,169 @@ public class LoginDAO {
 			
 		}
 		System.out.println("notice 함수 실행 : " + list.size());
+		return list;
+		
+	}
+	
+	
+	public int sread() {
+		System.out.println("/login DAO.sread 실행");
+
+		int count = 0;
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			// JNDI 방식
+			// connection.xml 맨 아래에 있는 DB정보로 커넥션 풀을 가져온다. Server 폴더에 있다. 기억!
+			Context ctx = new InitialContext();
+
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB접속(그런데 이제 커넥션 풀로.)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = " SELECT boardno, title FROM suggestion ";
+			       query += " order by boardno desc ";
+				   
+
+			ps = conn.prepareStatement(query);
+			
+
+			// SQL 실행 및 결과 확보
+			rs = ps.executeQuery();
+
+			// 결과 활용
+			
+			
+			while (rs.next()) {
+				
+				//숫자세기
+				count++;
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+		System.out.println(" sread 함수 실행 : " + count);
+		return count;
+
+	}
+
+	
+	
+	public List<DashDTO> suggestion(int sstart_no, int scountPageNo) {
+		System.out.println("/dashboard DAO.suggestion 실행");
+		
+		//리스트 소환
+		List<DashDTO> list = new ArrayList<DashDTO>();
+		
+		//의례
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			// JNDI 방식
+			// connection.xml 맨 아래에 있는 DB정보로 커넥션 풀을 가져온다. Server 폴더에 있다. 기억!
+			Context ctx = new InitialContext();
+			
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB접속(그런데 이제 커넥션 풀로.)
+			conn = dataFactory.getConnection();
+			
+			String query = " SELECT * FROM ( ";
+		           query += " SELECT rownum AS rn, a.* FROM ( ";
+		           query += " SELECT boardno, title ";
+		           query += " FROM suggestion ";
+		           query += " ORDER BY boardno DESC ";
+		           query += " ) a WHERE rownum <= ? ";
+		           query += " ) WHERE rn > ? "; 
+	
+		           ps = conn.prepareStatement(query);
+		           ps.setInt(1, scountPageNo);
+		           ps.setInt(2, sstart_no);
+			
+			
+			// SQL 실행 및 결과 확보
+			rs = ps.executeQuery();
+			
+			// 결과 활용
+			
+			while (rs.next()) {
+				DashDTO dto = new DashDTO();
+				
+				//바구니에 담기
+				dto.setSboardno(rs.getString("boardno"));				
+				dto.setStitle(rs.getString("title"));				
+				
+				//바구니를 리스트에 싣기
+				list.add(dto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		System.out.println("suggestion 함수 실행 : " + list.size());
 		return list;
 		
 	}

@@ -20,7 +20,7 @@
 
 <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 <script src="/mes/static/js/00_layout/snb.js"></script>
-<link rel="stylesheet" href="static/css/dashboard.css">
+<link rel="stylesheet" href="static/css/defectReporting.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -38,12 +38,13 @@
 
 			<div class="snb-bro">
 				<div class="title-box">
-					<h1>알콜스왑 MES</h1>
-					<h7>제조 실행 시스템</h7>
+					<h1>부적합 보고서</h1>
+					<h7>부적합 발생 현황 및 시정조치 관리</h7>
 				</div>
 				<div class="board-box">
 				
-				    <div class="box-type4 radius">						
+				
+				<div class="box-type4 radius">						
 						<div class="weather">
 							
 						</div>
@@ -52,7 +53,7 @@
 				    <div class="box-type4 radius">
 						<div class="chart-1 weather" >
 							<h3>품질 기준</h3>
-							<h4>성상 & 포장상태 : 육안 검사 결과 (합격/불합격)</h4>
+							<h4>성상 & 포장상태 : 육안 검사 & 누설 검사</h4>
 							<h4>알콜함량 & 성분분석 : 63% ~ 77%, 5mL 이상</h4>
 							<h4>미생물 한도 시험 : 오염이 없어야함.</h4>
 							<h4>포장밀봉상태 : 누설시험 진행</h4>
@@ -69,29 +70,86 @@
 						</div>
 					</div>
 				
-					<div class="box-type1 radius">
-						<h3>일별 생산 현황 (완제품별)</h3>
-						<div class="chart-1">
-							<canvas id="deily-pro-chart-1"></canvas>
+				
+				<div class="box-type1-1 radius">
+						<h3>조회조건</h3>
+						<div class="search-box">
+						
+							<div>
+							<li>&nbsp; &nbsp;시작일</li>
+							<input type="date" name="defect-search" class="input-2 radius">
+							</div>
+							
+							<div>
+							<li>&nbsp; &nbsp;종료일</li>
+							<input type="date" name="defect-search" class="input-2 radius">
+							</div>
+							
+							<div>
+							<li>&nbsp; 처리상태</li>
+							<select name="clean_status" class="radius">
+							
+							<c:forEach var="m" items="">
+							<option>el</option>							
+							</c:forEach>
+														
+							</select>							
+							</div>
+							
+							<div>
+							<li class="up-1"></li>
+							<button name="dr-push" class="buttonMain">내보내기</button>
+							</div>
+							
+							<div>
+							<li class="up-1"></li>
+							<button name="dr-print" class="buttonMain">인쇄</button>
+							</div>
+							
 						</div>
 					</div>
-
-					<div class="box-type1 radius">
-						<div style="width: 100%; display : flex; justify-content : center;">						
-						<h3 class="semi">불량 유형별 분포 (공정별)</h3>
-						<div style="width : 680px;">
+					
+					<div class="box-type2 radius">
+						<h3>검사 전</h3>
+						<div class="alam">
+						el
+						</div>
+					</div>
+					
+					<div class="box-type2 radius">
+						<h3>검사 완료</h3>
+						<div class="alam">
+						el
+						</div>
+						
+					</div>
+				
+				
+				    
+				
+				<div class="box-type2-1 radius">
+						<div style="width: 100%; display : flex; flex-direction : column; justify-content : space-evenly;">						
+						<h3 >불량 유형별 분포</h3>
+						<div style="width : 430px;">
 							<canvas id="defect-type-chart"></canvas>
 						</div>
 						</div>
 					</div>
-
-					<div class="box-type3 radius">
-						<h3>알림</h3>
-						<div class="short-box">
+					
+					<div class="box-type2-1 radius">
+						<div style="width: 100%; display : flex; flex-direction : column; justify-content : space-evenly;">							
+						<h3>월간 부적합 개수</h3>
+						<div style="width : 430px;">
+							<canvas id="month-defect-chart"></canvas>
+						</div>
 						</div>
 					</div>
-					<div class="box-type3 radius">
-						<h3>공지사항</h3>
+					
+
+
+					
+					<div class="box-type1 radius">
+						<h3>부적합 보고서</h3>
 						<div class="short-box">
 						<c:forEach var="n" items="${ notice }" >
 	                         <div><a>${ n.nboardno }  :  ${ n.ntitle }</a></div>
@@ -105,23 +163,7 @@
 					         </c:forEach>
 					       </div>
 					</div>
-					<div class="box-type3 radius">
-						<h3>건의사항</h3>
-						<div class="short-box">
-						<c:forEach var="s" items="${ suggestion }" >
-	                         <div><a>${ s.sboardno }  :  ${ s.stitle }</a></div>
-	                    </c:forEach>
-	                    
-	                    
-	                    
-	                    
-						</div>
-	                     <div class="next">
-					         <c:forEach var="m" begin="0" end="${ spage_no }">
-						          <button name="s_btn" value="${ m == 0 ? 1 : m }" class="buttonMain">${ m == 0 ? 1 : m }</button>
-					         </c:forEach>
-					       </div>
-					</div>
+					
 				</div>
 			</div>
 
