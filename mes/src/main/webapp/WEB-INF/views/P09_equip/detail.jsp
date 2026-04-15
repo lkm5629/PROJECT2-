@@ -48,19 +48,31 @@
 			        <a href="/mes/equipment">
 			            <button type="button" class="buttonWhite">목록으로</button>
 			        </a>
-			        <a href="/mes/eqlogadd?eqId=${eqInfo.eqId}">
+			        <a href="/mes/eqlogadd?eqId=${eqInfo.eqId}&eqName=${eqInfo.eqName}">
 			            <button type="button" class="buttonMain">설비 점검이력 추가</button>
 			        </a>
-			        <c:if test="${ eqInfo.status == '가동' }">
-			        	<a href="/mes/eqdetail?eqId=${eqInfo.eqId}&cmd=eqStop">
-						    <button type="button" id="btnStop" class="buttonSub">설비 정지</button>
-						</a>
-			        </c:if>
-			        <c:if test="${ eqInfo.status != '가동' }">
-			        	<a href="/mes/eqdetail?eqId=${eqInfo.eqId}&cmd=eqRun">
-					        <button type="button" id="btnRun" class="buttonSub">설비 가동</button>
-						</a>
-			        </c:if>
+<%-- 			        <c:if test="${ eqInfo.status == '가동' }"> --%>
+<%-- 			        	<a href="/mes/eqdetail?eqId=${eqInfo.eqId}&cmd=eqStop" id="btnStop" class="buttonSub"> --%>
+<!-- 						    <button type="button" id="btnStop" class="buttonSub">설비 정지</button> -->
+<!-- 						</a> -->
+<%-- 			        </c:if> --%>
+<%-- 			        <c:if  test="${ eqInfo.status != '가동' }"> --%>
+<%-- 			        	<a href="/mes/eqdetail?eqId=${eqInfo.eqId}&cmd=eqRun"> --%>
+<!-- 					        <button type="button" id="btnRun" class="buttonSub">설비 가동</button> -->
+<!-- 						</a> -->
+<%-- 			        </c:if> --%>
+			        <c:choose>
+					    <c:when test="${eqInfo.status == '가동'}">
+					        <a href="${pageContext.request.contextPath}/eqdetail?eqId=${eqInfo.eqId}&cmd=eqStop"
+					           id="btnStop"
+					           class="buttonSub error">설비 정지</a>
+					    </c:when>
+					    <c:otherwise>
+					        <a href="${pageContext.request.contextPath}/eqdetail?eqId=${eqInfo.eqId}&cmd=eqRun"
+					           id="btnRun"
+					           class="buttonSub run">설비 가동</a>
+					    </c:otherwise>
+					</c:choose>
 		        </div>
 		    </div>
 		
@@ -91,18 +103,17 @@
 			            	</c:if>
 		            	</div>
 		            	<c:if test="${ eqInfo.status != '가동' }">
-			            	<div class="button-group">
-				            	<form id="status" method="post" action="">
-				            		<select name="status" >
-									    <option value="점검 중" ${eqInfo.status == '점검 중' ? 'selected' : ''}>점검 중</option>
-									    <option value="고장" ${eqInfo.status == '고장' ? 'selected' : ''}>고장</option>
-									    <option value="사용중단" ${eqInfo.status == '사용중단' ? 'selected' : ''}>사용중단</option>
-									</select>
-									<a href="/mes/eqdetail?eqId=${eqInfo.eqId}&cmd=statusChange">
-										<button type="button" id="statusChange" class="buttonSub">상태 변경</button>
-									</a>
-				            	</form>
-			            	</div>
+			            	<form id="statusForm" method="post" action="/mes/eqdetail" class="button-group">
+			            		<input type="hidden" name="cmd" value="statusChange">
+			            		<input type="hidden" name="eqId" value="${eqInfo.eqId}">
+			            		<select name="status" id="statusSelecthhvh">
+								    <option value="점검 중" selected disabled>상태 선택</option>
+								    <option value="점검 중" ${eqInfo.status == '점검 중' ? 'selected' : ''}>점검 중</option>
+								    <option value="고장" ${eqInfo.status == '고장' ? 'selected' : ''}>고장</option>
+								    <option value="사용중단" ${eqInfo.status == '사용중단' ? 'selected' : ''}>사용중단</option>
+								</select>
+								<button type="button" id="statusChange" class="buttonSub">상태 변경</button>
+			            	</form>
 		            	</c:if>
 		            </div>
 		        </div>
@@ -134,7 +145,23 @@
 		        </div>
 		    </div>
 		    
-		    
+		    <% 
+				Map eqMap = (Map)request.getAttribute("eqMap");
+		
+				int size = (int)eqMap.get("size"); // 현재 페이지
+				int totalPage = (int)eqMap.get("totalPage");
+				
+				int section = 5; // 한 번에 보여줄 페이지들의 수
+				int pageNum = (int)eqMap.get("page"); // 현재 페이지
+				
+				int endSection = (int)Math.ceil((double)pageNum/section)*section;
+				int startSection = endSection - section + 1;
+				
+				if (endSection > totalPage) {
+					endSection = totalPage;
+				}
+			%>
+			
 		    <div class="card">
 		    	<div class="card-header">
 		    		<strong>설비 점검이력</strong>
@@ -152,7 +179,7 @@
 		    		</thead>
 		    		<tbody>
 		    			<c:forEach var="i" items="${ log }">
-			        		<tr class="logDetail">
+			        		<tr class="logDetail" onclick="location.href='/mes/eqlogmodify?logId=${i.logId}'">
 				                <td>${ i.sTime }</td>
 				                <td>${ i.eTime }</td>
 				                <td>${ i.wName } (${ i.wId })</td>
@@ -168,6 +195,38 @@
 			        	</c:if>
 		    		</tbody>
 		    	</table>
+		    	
+		    	<div class="page">
+			    	<c:if test="<%= startSection == 1 %>">
+						&lt;
+					</c:if>
+					<c:if test="<%= startSection != 1 %>">
+						<a href="./equipment?page=<%= startSection-1 %>&size=10">
+							&lt;
+						</a>
+					</c:if>
+					<c:forEach var="i" begin="<%= startSection %>" end="<%= endSection %>">
+						<a href="./equipment?page=${ i }&size=10">
+							<c:if test="${eqMap.page eq i}">
+								<strong>
+									${ i }
+								</strong>
+							</c:if>
+							<c:if test="${!(eqMap.page eq i)}">
+									${ i }
+							</c:if>
+						</a>
+					</c:forEach>
+					
+					<c:if test="<%= endSection <= totalPage %>">
+						&gt;
+					</c:if>
+					<c:if test="<%= !(endSection <= totalPage) %>">
+						<a href="./equipment?page=<%= endSection+1 %>&size=10">
+							&gt;
+						</a>
+					</c:if>
+			    </div>
 		    </div>
 		    
 			

@@ -117,7 +117,7 @@
         </div>
 
         <button type="button" class="profile_header">
-            이름 (사원번호)
+            ${ dto.ename } (${ dto.empid })
         </button>
     </div>
 </div>

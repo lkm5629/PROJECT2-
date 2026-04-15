@@ -67,15 +67,15 @@
 		        	continue;
 		        }
 		        if("점검 중".equals(status)) {
-		        	eqRun++;
+		        	eqInsp++;
 		        	continue;
 		        }
 		        if("고장".equals(status)) {
-		        	eqRun++;
+		        	eqError++;
 		        	continue;
 		        }
 		        if("사용중단".equals(status)) {
-		        	eqRun++;
+		        	eqHold++;
 		        	continue;
 		        }
 		    } // for

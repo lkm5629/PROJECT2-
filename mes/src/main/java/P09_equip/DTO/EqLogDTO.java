@@ -7,6 +7,7 @@ public class EqLogDTO {
 	
 	String logId;
 	String eqId;
+	String eqName;
 	String wId;
 	String wName;
 	
@@ -15,6 +16,9 @@ public class EqLogDTO {
 	
 	String inspType;
 	String inspContent;
+	
+	int page;
+	int size;
 	
 	public String getLogId() {
 		return logId;
@@ -27,6 +31,12 @@ public class EqLogDTO {
 	}
 	public void setEqId(String eqId) {
 		this.eqId = eqId;
+	}
+	public String getEqName() {
+		return eqName;
+	}
+	public void setEqName(String eqName) {
+		this.eqName = eqName;
 	}
 	public String getwId() {
 		return wId;
@@ -65,11 +75,28 @@ public class EqLogDTO {
 		this.inspContent = inspContent;
 	}
 	
-	@Override
-	public String toString() {
-		return "EqLogDTO [logId=" + logId + ", eqId=" + eqId + ", wId=" + wId + ", wName=" + wName + ", sTime=" + sTime
-				+ ", eTime=" + eTime + ", inspType=" + inspType + ", inspContent=" + inspContent + "]";
+	
+	
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public int getSize() {
+		return size;
+	}
+	public void setSize(int size) {
+		this.size = size;
 	}
 	
+	
+	
+	@Override
+	public String toString() {
+		return "EqLogDTO [logId=" + logId + ", eqId=" + eqId + ", eqName=" + eqName + ", wId=" + wId + ", wName="
+				+ wName + ", sTime=" + sTime + ", eTime=" + eTime + ", inspType=" + inspType + ", inspContent="
+				+ inspContent + "]";
+	}
 
 }
