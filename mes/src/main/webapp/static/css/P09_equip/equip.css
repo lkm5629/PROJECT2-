@@ -11,3 +11,36 @@
 .insp {
 	background-color : var(--color-warning);
 }
+
+
+/* 버튼 */
+#btnStop {
+	background-color : var(--color-danger);
+}
+#btnRun {
+	background-color : var(--color-success);
+}
+
+
+/* 테이블 */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    border: none;
+    padding: 10px;
+    text-align: center;
+}
+
+.table th {
+    background: var(--color-main-blue);
+    color: white;
+}
+
+.table td {
+	border-bottom: 1px solid #ddd;
+	font-size: 14px;
+}

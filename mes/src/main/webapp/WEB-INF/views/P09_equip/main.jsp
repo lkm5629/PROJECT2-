@@ -199,7 +199,6 @@
 			    <table class="eq-table">
 			        <thead>
 			            <tr>
-			                <th></th>
 			                <th>설비코드</th>
 			                <th>설비명</th>
 			                <th>전체시간</th>
@@ -213,7 +212,6 @@
 			        
 			        	<c:forEach var="i" items="${ eqMap.list }">
 			        		<tr class="eqDetail" onclick="location.href='/mes/equipment?cmd=detail&eqId=${i.eqId}'">
-				                <td><input type="checkbox"></td>
 				                <td>${ i.eqId }</td>
 				                <td>${ i.eqName }</td>
 				                <td><fmt:formatNumber value="${i.totalMin / 60}" pattern="0" />시간 ${ i.totalMin%60 }분</td>

@@ -45,12 +45,22 @@
 		        </div>
 		
 		        <div class="button-group">
-			        <a href="/mes/worklist">
+			        <a href="/mes/equipment">
 			            <button type="button" class="buttonWhite">목록으로</button>
 			        </a>
 			        <a href="/mes/eqlogadd?eqId=${eqInfo.eqId}">
 			            <button type="button" class="buttonMain">설비 점검이력 추가</button>
 			        </a>
+			        <c:if test="${ eqInfo.status == '가동' }">
+			        	<a href="/mes/eqdetail?eqId=${eqInfo.eqId}&cmd=eqStop">
+						    <button type="button" id="btnStop" class="buttonSub">설비 정지</button>
+						</a>
+			        </c:if>
+			        <c:if test="${ eqInfo.status != '가동' }">
+			        	<a href="/mes/eqdetail?eqId=${eqInfo.eqId}&cmd=eqRun">
+					        <button type="button" id="btnRun" class="buttonSub">설비 가동</button>
+						</a>
+			        </c:if>
 		        </div>
 		    </div>
 		
@@ -62,21 +72,39 @@
 		                <strong>설비정보</strong>
 		                <span class="sub">${eqInfo.eqName} (${eqInfo.eqId})</span>
 		            </div>
-	            	<c:if test="${ eqInfo.status == '가동' }">
-	            		<span class="status run">가동</span>
-	            	</c:if>
-	            	<c:if test="${ eqInfo.status == '점검 중' }">
-	            		<span class="status insp">점검 중</span>
-	            	</c:if>
-	            	<c:if test="${ eqInfo.status == '고장'}">
-	            		<span class="status error">고장</span>
-	            	</c:if>
-	            	<c:if test="${ eqInfo.status == '사용중단' }">
-	            		<span class="status hold">사용중단</span>
-	            	</c:if>
-	            	<c:if test="${ eqInfo == null }">
-	            		<span class="status">-</span>
-	            	</c:if>
+		            <div class="button-group">
+		            	<div class="status-flex">
+			            	<c:if test="${ eqInfo.status == '가동' }">
+			            		<span class="status run">가동</span>
+			            	</c:if>
+			            	<c:if test="${ eqInfo.status == '점검 중' }">
+			            		<span class="status insp">점검 중</span>
+			            	</c:if>
+			            	<c:if test="${ eqInfo.status == '고장'}">
+			            		<span class="status error">고장</span>
+			            	</c:if>
+			            	<c:if test="${ eqInfo.status == '사용중단' }">
+			            		<span class="status hold">사용중단</span>
+			            	</c:if>
+			            	<c:if test="${ eqInfo == null }">
+			            		<span class="status">-</span>
+			            	</c:if>
+		            	</div>
+		            	<c:if test="${ eqInfo.status != '가동' }">
+			            	<div class="button-group">
+				            	<form id="status" method="post" action="">
+				            		<select name="status" >
+									    <option value="점검 중" ${eqInfo.status == '점검 중' ? 'selected' : ''}>점검 중</option>
+									    <option value="고장" ${eqInfo.status == '고장' ? 'selected' : ''}>고장</option>
+									    <option value="사용중단" ${eqInfo.status == '사용중단' ? 'selected' : ''}>사용중단</option>
+									</select>
+									<a href="/mes/eqdetail?eqId=${eqInfo.eqId}&cmd=statusChange">
+										<button type="button" id="statusChange" class="buttonSub">상태 변경</button>
+									</a>
+				            	</form>
+			            	</div>
+		            	</c:if>
+		            </div>
 		        </div>
 		
 		        <div class="info-grid">
@@ -96,12 +124,12 @@
 		        <!-- 진행률 -->
 		        <div class="progress-area">
 		            <div class="progress-header">
-		                <span class="progress-title">현재 가동률</span>
+		                <span class="progress-title">가동률</span>
 		                <span class="percent"><strong><fmt:formatNumber value="${eqInfo != null ? (eqInfo.runMin/eqInfo.totalMin)*100 : ' 0 '}" maxFractionDigits="1"/>%</strong></span>
 		            </div>
 		
 		            <div class="progress-bar">
-		                <div class="progress-fill" style="width: ${eqInfo != null ? (eqInfo.totalMin/eqInfo.runMin)*100 : '0'}%;"></div>
+		                <div class="progress-fill" style="width: ${eqInfo != null ? (eqInfo.runMin/eqInfo.totalMin)*100 : '0'}%;"></div>
 		            </div>
 		        </div>
 		    </div>
@@ -114,10 +142,34 @@
 		    	
 		    	<table class="table">
 		    		<thead>
+		    			<tr>
+		    				<th>점검 시작일</th>
+		    				<th>점검 종료일</th>
+		    				<th>담당자</th>
+		    				<th>관리 항목</th>
+		    				<th>결과 및 조치</th>
+		    			</tr>
 		    		</thead>
+		    		<tbody>
+		    			<c:forEach var="i" items="${ log }">
+			        		<tr class="logDetail">
+				                <td>${ i.sTime }</td>
+				                <td>${ i.eTime }</td>
+				                <td>${ i.wName } (${ i.wId })</td>
+				                <td>${ i.inspType }</td>
+				                <td>${ i.inspContent }</td>
+				            </tr>
+			        	</c:forEach>
+			        	
+			        	<c:if var="i" test="${ empty log }">
+			        		<tr>
+			        			<td colspan="5">내용 없음</td>
+			        		</tr>
+			        	</c:if>
+		    		</tbody>
 		    	</table>
 		    </div>
-		
+		    
 			
         </div>
     </div>
