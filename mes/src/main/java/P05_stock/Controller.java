@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/iocontroller")
+@WebServlet("/io")
 public class Controller extends HttpServlet {
     StockService service = new StockService();
 
@@ -19,7 +19,7 @@ public class Controller extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        // Ãâ°í µî·Ï ½Ã ÀÔ°í ¸ñ·Ï AJAX ¿äÃ»
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ô°ï¿½ ï¿½ï¿½ï¿½ AJAX ï¿½ï¿½Ã»
         if ("getInList".equals(action)) {
             List<StockDTO> inList = service.getInList();
 
@@ -92,7 +92,7 @@ public class Controller extends HttpServlet {
             return;
         }
 
-        // ±âÁ¸ ¸ñ·Ï Á¶È¸
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½È¸
         response.setContentType("text/html; charset=UTF-8;");
 
         int size = 10;
@@ -159,7 +159,7 @@ public class Controller extends HttpServlet {
             dto.setLot_qty(Integer.parseInt(request.getParameter("lot_qty")));
             dto.setIo_time(Date.valueOf(request.getParameter("io_time")));
 
-            // Ãâ°í ½Ã ±âÁ¸ lot_id ÂüÁ¶
+            // ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ lot_id ï¿½ï¿½ï¿½ï¿½
             String lotId = request.getParameter("lot_id");
             if (lotId != null && !lotId.isEmpty()) {
                 dto.setLot_id(lotId);
@@ -175,12 +175,12 @@ public class Controller extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (dto.getIo_type() == 1) {  // Ãâ°íÀÏ ¶§¸¸
+        if (dto.getIo_type() == 1) {  // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             int currentStock = service.getStockNo(dto.getItem_id());
             if (currentStock - dto.getLot_qty() < 0) {
                 request.setAttribute("errorMsg", 
-                    "Àç°í ºÎÁ·ÀÔ´Ï´Ù. (ÇöÀç Àç°í: " + currentStock + ")");
-                // ¸ñ·Ï ´Ù½Ã Æ÷¿öµå
+                    "ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½. (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½: " + currentStock + ")");
+                // ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 request.getRequestDispatcher("WEB-INF/views/P05_stock/io.jsp")
                        .forward(request, response);
                 return;
@@ -188,6 +188,6 @@ public class Controller extends HttpServlet {
         }
 
         service.insert(dto);
-        response.sendRedirect("/mes/iocontroller");
+        response.sendRedirect("/mes/io");
     }
 }

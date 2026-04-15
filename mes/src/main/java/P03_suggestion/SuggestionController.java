@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import P01_auth.LoginDTO;
+
 @WebServlet("/suggestion/*")
 public class SuggestionController extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -19,8 +21,8 @@ public class SuggestionController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) pathInfo = "/list";
@@ -84,8 +86,13 @@ public class SuggestionController extends HttpServlet {
         switch (pathInfo) {
 
             case "/insert":
-                // TODO: String empId = (String) request.getSession().getAttribute("userId");
-                String empId = "user_1001"; // 하드코딩 (로그인 연동 전 임시값)
+                // 세션에서 로그인 정보 가져오기
+                LoginDTO loginDto = (LoginDTO) request.getSession().getAttribute("dto");
+                if (loginDto == null) {
+                    response.sendRedirect(request.getContextPath() + "/login.jsp");
+                    return;
+                }
+                String empId = loginDto.getEmpid();
 
                 SuggestionDTO insertDto = new SuggestionDTO();
                 insertDto.setTitle(request.getParameter("title"));
@@ -98,7 +105,7 @@ public class SuggestionController extends HttpServlet {
 
             case "/detail":
                 // 답변완료 처리 (action=complete)
-                String action       = request.getParameter("action");
+                String action        = request.getParameter("action");
                 String detailBoardno = request.getParameter("boardno");
 
                 if ("complete".equals(action)) {

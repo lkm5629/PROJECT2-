@@ -13,19 +13,21 @@ public class ProdDTO {
     private Date   planEdate;    // plan_edate
     private int    status;       // 0:��� 1:������ 2:�Ϸ� 3:����
     private int progressPct;
+    
 
     // JOIN ���
     private String itemName;     // item.item_name  �� ��ǰ��
     private String ename;        // user_info.ename �� �����
     private int prevQty;  // prev_qty  �������
-
+     
     // ���������̼ǿ�
     private int size  = 10;
-    private int page  = 1;
+	private int page  = 1;
     private int start;
     private int end;
 
     // ������ Getters / Setters ������������������������������������������������������������������������������
+    
     
     public int  getProgressPct()                   { return progressPct; }
     public void setProgressPct(int progressPct)    { this.progressPct = progressPct; }

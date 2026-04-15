@@ -1,19 +1,26 @@
 window.addEventListener("load", function () {
     bind();
+    initDetailPage();
 });
 
 function bind() {
 
-    /* ── size 변경 ── */
-    document.getElementById("sizeSelect").addEventListener("change", function () {
-        location.href = "list?page=1&size=" + this.value;
-    });
+    /* ── size 변경 (목록 페이지에만 존재) ── */
+    var sizeSelect = document.getElementById("sizeSelect");
+    if (sizeSelect) {
+        sizeSelect.addEventListener("change", function () {
+            location.href = "list?page=1&size=" + this.value;
+        });
+    }
 
-    /* ── 전체 체크박스 ── */
-    document.getElementById("chkAll").addEventListener("change", function () {
-        document.querySelectorAll("input[name='chk']")
-                .forEach(chk => chk.checked = this.checked);
-    });
+    /* ── 전체 체크박스 (목록 페이지에만 존재) ── */
+    var chkAll = document.getElementById("chkAll");
+    if (chkAll) {
+        chkAll.addEventListener("change", function () {
+            document.querySelectorAll("input[name='chk']")
+                    .forEach(chk => chk.checked = this.checked);
+        });
+    }
 
     /* ── 오버레이 클릭 닫기 ── */
     document.querySelectorAll(".pp-modal-overlay").forEach(overlay => {
@@ -205,4 +212,37 @@ function escHtml(str) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
+}
+
+/* ==========================================================
+   상세 페이지 초기화
+   ========================================================== */
+function initDetailPage() {
+    /* 진행률 바 width 세팅 (style 속성 대신 data-width로 전달) */
+    var fill = document.getElementById("dtlProgressFill");
+    if (fill) {
+        fill.style.width = (fill.dataset.width || 0) + "%";
+    }
+}
+
+/* ==========================================================
+   상세 페이지 — 수정 모달 열기/닫기
+   ========================================================== */
+function openEditModal() {
+    document.getElementById("modalEdit").classList.remove("dtl-hidden");
+    document.getElementById("modalEdit").style.display = "flex";
+}
+function closeEditModal() {
+    document.getElementById("modalEdit").style.display = "none";
+    document.getElementById("modalEdit").classList.add("dtl-hidden");
+}
+
+/* ==========================================================
+   상세 페이지 — 삭제
+   ========================================================== */
+function deletePlan() {
+    var planId = document.querySelector('#editForm input[name="planId"]').value;
+    if (confirm("정말 삭제하시겠습니까?")) {
+        location.href = "/mes/prod/delete?planId=" + planId;
+    }
 }
