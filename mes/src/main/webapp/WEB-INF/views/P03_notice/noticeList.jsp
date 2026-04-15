@@ -38,14 +38,12 @@
         <h1>공지사항</h1>
         <p>공장 운영 관련 공지사항을 확인하세요</p>
       </div>
-      <%-- ④ auth=3인 경우에만 등록 버튼 노출 --%>
       <c:if test="${auth == 3}">
         <button class="btn btn-primary btn-sm"
           onclick="location.href='${ctx}/notice/register'">+ 공지사항 등록</button>
       </c:if>
     </div>
 
-    <%-- ① 검색 폼 --%>
     <div class="table-toolbar">
       <form id="searchForm" action="${ctx}/notice/list" method="get">
         <input type="hidden" name="page"  value="1">
@@ -75,14 +73,13 @@
         </thead>
         <tbody>
           <c:forEach var="dto" items="${list}">
-          <%-- ② tr에 onclick 제거, 제목 td에만 onclick --%>
           <tr>
             <td class="center">${fn:substringAfter(dto.boardno, 'ann_')}</td>
             <td class="nc-title-col"
               onclick="location.href='${ctx}/notice/detail?boardno=${dto.boardno}&page=${page}&size=${size}'">
               ${dto.title}
             </td>
-            <td>${dto.ename}</td>  <%-- ③ ename 표시 --%>
+            <td>${dto.ename}</td>
             <td><fmt:formatDate value="${dto.ctime}" pattern="yyyy-MM-dd"/></td>
             <td class="center">${dto.views}</td>
           </tr>
@@ -94,12 +91,12 @@
     <%-- 페이지네이션 --%>
     <div class="pagination">
       <c:choose>
-        <c:when test="${groupStartPage <= 1}">
-          <button class="page-btn disabled">&lt;</button>
+        <c:when test="${page <= 1}">
+          <button class="page-btn disabled">이전</button>
         </c:when>
         <c:otherwise>
           <button class="page-btn"
-            onclick="location.href='${ctx}/notice/list?page=${groupStartPage-1}&size=${size}&keyword=${keyword}'">&lt;</button>
+            onclick="location.href='${ctx}/notice/list?page=${page-1}&size=${size}&keyword=${keyword}'">이전</button>
         </c:otherwise>
       </c:choose>
 
@@ -116,12 +113,12 @@
       </c:forEach>
 
       <c:choose>
-        <c:when test="${groupEndPage >= totalPages}">
-          <button class="page-btn disabled">&gt;</button>
+        <c:when test="${page >= totalPages}">
+          <button class="page-btn disabled">다음</button>
         </c:when>
         <c:otherwise>
           <button class="page-btn"
-            onclick="location.href='${ctx}/notice/list?page=${groupEndPage+1}&size=${size}&keyword=${keyword}'">&gt;</button>
+            onclick="location.href='${ctx}/notice/list?page=${page+1}&size=${size}&keyword=${keyword}'">다음</button>
         </c:otherwise>
       </c:choose>
     </div>
