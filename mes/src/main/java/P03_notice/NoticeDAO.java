@@ -24,8 +24,8 @@ public class NoticeDAO {
         return conn;
     }
 
-    // ── 목록 조회 (페이지네이션 + 제목 검색) ──────
-    // ③ user_info JOIN해서 ename 가져오기
+    // 공지 목록 조회 (페이지네이션 + 키워드 검색)
+    // + user_info JOIN해서 ename 포함
     public List<NoticeDTO> selectAllNotice(NoticeDTO noticeDTO) {
         List<NoticeDTO> list = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class NoticeDAO {
                     dto.setMtime(   rs.getDate("mtime") );
                     dto.setViews(   rs.getInt("views") );
                     dto.setEmpId(   rs.getString("emp_id") );
-                    dto.setEname(   rs.getString("ename") );  // ③ 작성자 이름
+                    dto.setEname(   rs.getString("ename") );
                     list.add(dto);
                 }
             }
@@ -76,7 +76,7 @@ public class NoticeDAO {
         return list;
     }
 
-    // ── 전체 건수 (검색 포함) ─────────────────────
+    // 공지 전체 건수 (검색 포함)
     public int selectNoticeTotal(String keyword) {
         int totalCount = 0;
 
@@ -105,7 +105,7 @@ public class NoticeDAO {
         return totalCount;
     }
 
-    // ── 단건 조회 (ename JOIN) ────────────────────
+    // 공지 단건 조회 (ename JOIN)
     public NoticeDTO selectOneNotice(String boardno) {
         NoticeDTO dto = null;
 
@@ -130,7 +130,7 @@ public class NoticeDAO {
                     dto.setMtime(   rs.getDate("mtime") );
                     dto.setViews(   rs.getInt("views") );
                     dto.setEmpId(   rs.getString("emp_id") );
-                    dto.setEname(   rs.getString("ename") );  // ③ 작성자 이름
+                    dto.setEname(   rs.getString("ename") );
                 }
             }
 
@@ -141,30 +141,53 @@ public class NoticeDAO {
         return dto;
     }
 
-    // ── 등록 ─────────────────────────────────────
+    // 공지 등록
     public int insertNotice(NoticeDTO noticeDTO) {
         int result = 0;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        String sql = "INSERT INTO announcement (boardno, title, content, ctime, mtime, views, emp_id)"
-                   + " VALUES (announcement_seq.nextval, ?, ?, sysdate, sysdate, 0, ?)";
+        try {
+            conn = getConn();
+            conn.setAutoCommit(false);
 
-        try (Connection conn = getConn();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+            // ── boardno 채번: 'ann_' || ann_seq.nextval ──────────────
+            ps = conn.prepareStatement(
+                "SELECT 'ann_' || ann_seq.nextval AS boardno FROM dual"
+            );
+            rs = ps.executeQuery();
+            String boardno = null;
+            if (rs.next()) boardno = rs.getString("boardno");
+            rs.close();
+            ps.close();
 
-            ps.setString(1, noticeDTO.getTitle());
-            ps.setString(2, noticeDTO.getContent());
-            ps.setString(3, noticeDTO.getEmpId());
+            // ── INSERT ────────────────────────────────────────────────
+            ps = conn.prepareStatement(
+                "INSERT INTO announcement (boardno, title, content, ctime, mtime, views, emp_id)"
+              + " VALUES (?, ?, ?, sysdate, sysdate, 0, ?)"
+            );
+            ps.setString(1, boardno);
+            ps.setString(2, noticeDTO.getTitle());
+            ps.setString(3, noticeDTO.getContent());
+            ps.setString(4, noticeDTO.getEmpId());
 
             result = ps.executeUpdate();
+            conn.commit();
 
         } catch (Exception e) {
+            try { if (conn != null) conn.rollback(); } catch (Exception ex) { ex.printStackTrace(); }
             e.printStackTrace();
+        } finally {
+            try { if (rs   != null) rs.close();   } catch (Exception e) { e.printStackTrace(); }
+            try { if (ps   != null) ps.close();   } catch (Exception e) { e.printStackTrace(); }
+            try { if (conn != null) conn.close(); } catch (Exception e) { e.printStackTrace(); }
         }
 
         return result;
     }
 
-    // ── 수정 ─────────────────────────────────────
+    // 공지 수정
     public int updateNotice(NoticeDTO noticeDTO) {
         int result = 0;
 
@@ -188,7 +211,7 @@ public class NoticeDAO {
         return result;
     }
 
-    // ── 삭제 ─────────────────────────────────────
+    // 공지 삭제
     public int deleteNotice(String boardno) {
         int result = 0;
 
@@ -207,7 +230,7 @@ public class NoticeDAO {
         return result;
     }
 
-    // ── 조회수 +1 ────────────────────────────────
+    // 공지 조회수 +1
     public void updateViews(String boardno) {
         String sql = "UPDATE announcement SET views = views + 1 WHERE boardno = ?";
 

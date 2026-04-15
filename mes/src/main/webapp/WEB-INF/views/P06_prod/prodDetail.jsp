@@ -56,7 +56,7 @@
       </div>
       <div class="action-header">
         <button class="btn btn-outline btn-sm"
-                onclick="location.href='/production/list'">목록</button>
+                onclick="location.href='list'">목록</button>
         <button class="btn btn-success-outline btn-sm">수정</button>
         <button class="btn btn-danger btn-sm">삭제</button>
       </div>

@@ -36,7 +36,7 @@
     <div class="card">
       <div class="card-title">공지 작성</div>
       <form id="noticeEditForm"
-            action="${ctx}/board/notice/update" method="post">
+            action="${ctx}/notice/update" method="post">
         <input type="hidden" name="boardno" value="${dto.boardno}">
 
         <div class="form-group">

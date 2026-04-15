@@ -39,6 +39,9 @@
                     목록
                 </button>
                 <button class="btn btn-danger btn-sm" id="btnDelete">삭제</button>
+                <c:if test="${detail.complete == 0}">
+                    <button class="btn btn-success btn-sm" id="btnComplete">답변완료</button>
+                </c:if>
             </div>
         </div>
 
@@ -47,17 +50,20 @@
             <div class="card-title">건의사항 정보</div>
 
             <div class="form-row">
-                <div class="form-group" style="margin-bottom:0;">
+                <div class="form-group form-group-no-mb">
                     <label class="form-label">번호</label>
-                    <input type="text" class="form-control" value="${detail.boardno}" readonly>
+                    <%-- sugg_ 접두사(5글자) 제거, 숫자만 표시 --%>
+                    <input type="text" class="form-control"
+                           value="${fn:substring(detail.boardno, 5, fn:length(detail.boardno))}"
+                           readonly>
                 </div>
-                <div class="form-group" style="margin-bottom:0;">
+                <div class="form-group form-group-no-mb">
                     <label class="form-label">작성일</label>
                     <input type="text" class="form-control"
                            value="<fmt:formatDate value='${detail.ctime}' pattern='yyyy-MM-dd'/>"
                            readonly>
                 </div>
-                <div class="form-group" style="margin-bottom:0;">
+                <div class="form-group form-group-no-mb">
                     <label class="form-label">최종수정일</label>
                     <input type="text" class="form-control"
                            value="<fmt:formatDate value='${detail.mtime}' pattern='yyyy-MM-dd'/>"
@@ -65,18 +71,19 @@
                 </div>
             </div>
 
-            <div class="form-row" style="margin-top:4px;">
-                <div class="form-group" style="margin-bottom:0;">
+            <div class="form-row form-row-mt">
+                <div class="form-group form-group-no-mb">
                     <label class="form-label">작성자</label>
-                    <input type="text" class="form-control" value="${detail.empId}" readonly>
+                    <%-- user_info JOIN으로 가져온 ename 표시 --%>
+                    <input type="text" class="form-control" value="${detail.ename}" readonly>
                 </div>
-                <div class="form-group" style="margin-bottom:0;">
+                <div class="form-group form-group-no-mb">
                     <label class="form-label">조회수</label>
                     <input type="text" class="form-control" value="${detail.views}" readonly>
                 </div>
-                <div class="form-group" style="margin-bottom:0;">
+                <div class="form-group form-group-no-mb">
                     <label class="form-label">상태</label>
-                    <div style="display:flex; align-items:center; height:40px;">
+                    <div class="badge-cell">
                         <c:choose>
                             <c:when test="${detail.complete == 0}">
                                 <span class="badge badge-blue">처리중</span>
@@ -89,7 +96,7 @@
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top:4px;">
+            <div class="form-group form-group-mt">
                 <label class="form-label">제목</label>
                 <input type="text" class="form-control" value="${detail.title}" readonly>
             </div>
@@ -100,19 +107,23 @@
             </div>
         </div>
 
-        <!-- 답변 (댓글) — 추후 구현 -->
+        <!-- 답변 (댓글) -->
         <div class="card">
             <div class="comment-section">
                 <div class="comment-section-title">
                     답변 <span class="comment-count">0건</span>
                 </div>
-                <div class="comment-input-row">
-                    <input type="text" class="comment-input"
-                           placeholder="답글을 입력하세요" id="commentInput">
-                    <button type="button" class="btn btn-primary btn-sm"
-                            style="height:40px; padding:0 16px;"
-                            id="btnCommentInsert">등록</button>
-                </div>
+                <form method="post"
+                      action="${pageContext.request.contextPath}/suggestion/comment">
+                    <input type="hidden" name="boardno" value="${detail.boardno}">
+                    <div class="comment-input-row">
+                        <input type="text" class="comment-input"
+                               name="commentContent"
+                               placeholder="답글을 입력하세요"
+                               id="commentInput">
+                        <button type="submit" class="btn btn-primary comment-submit-btn">등록</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -122,7 +133,7 @@
 </div>
 
 <script>
-    // ── 삭제
+    // 삭제
     document.querySelector('#btnDelete').addEventListener('click', function () {
         if (!confirm('정말 삭제하시겠습니까?')) return;
 
@@ -139,6 +150,33 @@
         document.body.appendChild(form);
         form.submit();
     });
+
+    // 답변완료
+    const btnComplete = document.querySelector('#btnComplete');
+    if (btnComplete) {
+        btnComplete.addEventListener('click', function () {
+            if (!confirm('답변완료로 처리하시겠습니까?')) return;
+
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = '${pageContext.request.contextPath}/suggestion/detail';
+
+            const inputBoardno = document.createElement('input');
+            inputBoardno.type  = 'hidden';
+            inputBoardno.name  = 'boardno';
+            inputBoardno.value = '${detail.boardno}';
+
+            const inputAction = document.createElement('input');
+            inputAction.type  = 'hidden';
+            inputAction.name  = 'action';
+            inputAction.value = 'complete';
+
+            form.appendChild(inputBoardno);
+            form.appendChild(inputAction);
+            document.body.appendChild(form);
+            form.submit();
+        });
+    }
 </script>
 
 </body>

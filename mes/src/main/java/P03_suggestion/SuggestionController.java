@@ -48,8 +48,7 @@ public class SuggestionController extends HttpServlet {
                 break;
 
             case "/detail":
-                int boardno = 0;
-                try { boardno = Integer.parseInt(request.getParameter("boardno")); } catch (Exception e) {}
+                String boardno = request.getParameter("boardno");
 
                 SuggestionDTO detail = suggestionService.getDetail(boardno);
                 request.setAttribute("detail", detail);
@@ -86,7 +85,7 @@ public class SuggestionController extends HttpServlet {
 
             case "/insert":
                 // TODO: String empId = (String) request.getSession().getAttribute("userId");
-                String empId = "user_1001"; // ÇÏµåÄÚµù (¼¼¼Ç ¿¬µ¿ Àü ÀÓ½Ã°ª)
+                String empId = "user_1001"; // í•˜ë“œì½”ë”© (ë¡œê·¸ì¸ ì—°ë™ ì „ ì„ì‹œê°’)
 
                 SuggestionDTO insertDto = new SuggestionDTO();
                 insertDto.setTitle(request.getParameter("title"));
@@ -94,16 +93,32 @@ public class SuggestionController extends HttpServlet {
                 insertDto.setEmpId(empId);
 
                 suggestionService.insert(insertDto);
-
                 response.sendRedirect(request.getContextPath() + "/suggestion/list?page=1");
                 break;
 
+            case "/detail":
+                // ë‹µë³€ì™„ë£Œ ì²˜ë¦¬ (action=complete)
+                String action       = request.getParameter("action");
+                String detailBoardno = request.getParameter("boardno");
+
+                if ("complete".equals(action)) {
+                    suggestionService.updateComplete(detailBoardno);
+                }
+                response.sendRedirect(request.getContextPath() + "/suggestion/detail?boardno=" + detailBoardno);
+                break;
+
+            case "/comment":
+                // ëŒ“ê¸€ ë“±ë¡
+                String commentBoardno = request.getParameter("boardno");
+                String commentContent = request.getParameter("commentContent");
+
+                suggestionService.insertComment(commentBoardno, commentContent);
+                response.sendRedirect(request.getContextPath() + "/suggestion/detail?boardno=" + commentBoardno);
+                break;
+
             case "/delete":
-                int boardno = 0;
-                try { boardno = Integer.parseInt(request.getParameter("boardno")); } catch (Exception e) {}
-
-                suggestionService.delete(boardno);
-
+                String deleteBoardno = request.getParameter("boardno");
+                suggestionService.delete(deleteBoardno);
                 response.sendRedirect(request.getContextPath() + "/suggestion/list?page=1");
                 break;
 
