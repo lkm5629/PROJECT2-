@@ -12,6 +12,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>작업관리</title>
 
 <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
@@ -80,8 +82,10 @@
 								    <option value="50" ${param.status == '50' ? 'selected' : ''}>보류</option>
 								</select>
 								
-								<input type="date" name="startDate" value="${param.startDate}" class="date"> ~
-								<input type="date" name="endDate" value="${param.endDate}" class="date" min="${param.startDate}">
+								<div>
+									<input type="date" name="startDate" value="${param.startDate}" class="date"> ~
+									<input type="date" name="endDate" value="${param.endDate}" class="date" min="${param.startDate}">
+								</div>
 							</div>
 							
 					        <div class="search-area">
@@ -136,7 +140,7 @@
 			        	
 			        	<c:if var="i" test="${ empty woMap.list }">
 			        		<tr>
-			        			<td colspan="7">내용 없음</td>
+			        			<td colspan="6">내용 없음</td>
 			        		</tr>
 			        	</c:if>
 			            <!-- 반복 -->

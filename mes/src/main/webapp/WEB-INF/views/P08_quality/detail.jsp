@@ -11,6 +11,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>품질검사 결과</title>
 
 <script>

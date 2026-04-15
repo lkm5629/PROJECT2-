@@ -155,3 +155,30 @@
 	
 	font-size : 14px
 }
+
+
+
+@media (max-width: 768px) {
+
+	.search-tools {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+	
+	.work-table td:nth-child(1),
+    .work-table th:nth-child(1),
+    .work-table td:nth-child(5),
+    .work-table th:nth-child(5) {
+        display: none;
+    }
+    
+    .work-table td:nth-child(6) {
+	    white-space: nowrap;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    max-width: 120px;
+	}
+	
+}
