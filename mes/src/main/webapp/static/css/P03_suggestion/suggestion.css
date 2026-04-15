@@ -7,6 +7,7 @@
     --sg-danger:         #DC2626;
     --sg-danger-hover:   #B91C1C;
     --sg-success:        #16A34A;
+    --sg-success-hover:  #15803D;
     --sg-surface:        #FFFFFF;
     --sg-border:         #E2E8F0;
     --sg-text-primary:   #0F172A;
@@ -72,6 +73,20 @@
 }
 
 .sg .form-group:last-of-type { margin-bottom: 0; }
+
+/* 인라인 style="margin-bottom:0" 대체 */
+.sg .form-group-no-mb { margin-bottom: 0; }
+
+/* 인라인 style="margin-top:4px" 대체 */
+.sg .form-row-mt   { margin-top: 4px; }
+.sg .form-group-mt { margin-top: 4px; }
+
+/* 인라인 style="display:flex; align-items:center; height:40px" 대체 */
+.sg .badge-cell {
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
 
 .sg .form-row {
     display: grid;
@@ -159,10 +174,16 @@
 }
 .sg .btn-outline:hover { background: #F8FAFC; color: var(--sg-text-primary); border-color: #CBD5E1; }
 
-.sg .btn-danger { background: var(--sg-danger); color: #fff; }
-.sg .btn-danger:hover { background: var(--sg-danger-hover); }
+.sg .btn-danger  { background: var(--sg-danger);  color: #fff; }
+.sg .btn-danger:hover  { background: var(--sg-danger-hover); }
+
+.sg .btn-success { background: var(--sg-success); color: #fff; }
+.sg .btn-success:hover { background: var(--sg-success-hover); }
 
 .sg .btn-sm { height: 32px; padding: 0 12px; font-size: 12px; }
+
+/* 인라인 style="height:40px; padding:0 16px" 대체 (댓글 등록 버튼) */
+.sg .comment-submit-btn { height: 40px; padding: 0 16px; }
 
 /* ── Form Actions ── */
 .sg .form-actions {

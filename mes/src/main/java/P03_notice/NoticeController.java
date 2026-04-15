@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/board/notice/*")
+@WebServlet("/notice/*")
 public class NoticeController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -78,14 +78,14 @@ public class NoticeController extends HttpServlet {
                 String boardno = request.getParameter("boardno");
 
                 if (boardno == null || boardno.trim().isEmpty()) {
-                    response.sendRedirect(request.getContextPath() + "/board/notice/list");
+                    response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
                 }
 
                 NoticeDTO dto = noticeService.selectOneNotice(boardno);
 
                 if (dto == null) {
-                    response.sendRedirect(request.getContextPath() + "/board/notice/list");
+                    response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
                 }
 
@@ -125,7 +125,7 @@ public class NoticeController extends HttpServlet {
             case "/register": {
                 // ④ auth=3 아니면 목록으로
                 if (auth != 3) {
-                    response.sendRedirect(request.getContextPath() + "/board/notice/list");
+                    response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
                 }
                 request.getRequestDispatcher(
@@ -137,7 +137,7 @@ public class NoticeController extends HttpServlet {
             case "/edit": {
                 // ④ auth=3 아니면 목록으로
                 if (auth != 3) {
-                    response.sendRedirect(request.getContextPath() + "/board/notice/list");
+                    response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
                 }
                 String boardno = request.getParameter("boardno");
@@ -151,7 +151,7 @@ public class NoticeController extends HttpServlet {
             }
 
             default:
-                response.sendRedirect(request.getContextPath() + "/board/notice/list");
+                response.sendRedirect(request.getContextPath() + "/notice/list");
         }
     }
 
@@ -176,7 +176,7 @@ public class NoticeController extends HttpServlet {
             case "/insert": {
                 // ④ auth=3 아니면 목록으로
                 if (auth != 3) {
-                    response.sendRedirect(request.getContextPath() + "/board/notice/list");
+                    response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
                 }
                 NoticeDTO dto = new NoticeDTO();
@@ -185,14 +185,14 @@ public class NoticeController extends HttpServlet {
                 dto.setEmpId(loginId);
 
                 noticeService.insertNotice(dto);
-                response.sendRedirect(request.getContextPath() + "/board/notice/list?page=1");
+                response.sendRedirect(request.getContextPath() + "/notice/list?page=1");
                 break;
             }
 
             case "/update": {
                 // ④ auth=3 아니면 목록으로
                 if (auth != 3) {
-                    response.sendRedirect(request.getContextPath() + "/board/notice/list");
+                    response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
                 }
                 NoticeDTO dto = new NoticeDTO();
@@ -201,24 +201,24 @@ public class NoticeController extends HttpServlet {
                 dto.setContent( request.getParameter("content") );
 
                 noticeService.updateNotice(dto);
-                response.sendRedirect(request.getContextPath() + "/board/notice/detail?boardno=" + dto.getBoardno());
+                response.sendRedirect(request.getContextPath() + "/notice/detail?boardno=" + dto.getBoardno());
                 break;
             }
 
             case "/delete": {
                 // ④ auth=3 아니면 목록으로
                 if (auth != 3) {
-                    response.sendRedirect(request.getContextPath() + "/board/notice/list");
+                    response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
                 }
                 String boardno = request.getParameter("boardno");
                 noticeService.deleteNotice(boardno);
-                response.sendRedirect(request.getContextPath() + "/board/notice/list?page=1");
+                response.sendRedirect(request.getContextPath() + "/notice/list?page=1");
                 break;
             }
 
             default:
-                response.sendRedirect(request.getContextPath() + "/board/notice/list");
+                response.sendRedirect(request.getContextPath() + "/notice/list");
         }
     }
 }

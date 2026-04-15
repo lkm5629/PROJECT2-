@@ -4,28 +4,31 @@ import java.sql.Date;
 
 public class ProdDTO {
 
-    // production_plan ÄÃ·³
+    // production_plan ï¿½Ã·ï¿½
     private String planId;       // plan_id (PK)
     private String itemId;       // item_id (FK)
     private String empId;        // emp_id  (FK)
-    private int    planQty;      // plan_qty  ¸ñÇ¥¼ö·®
+    private int    planQty;      // plan_qty  ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½
     private Date   planSdate;    // plan_sdate
     private Date   planEdate;    // plan_edate
-    private int    status;       // 0:´ë±â 1:ÁøÇàÁß 2:¿Ï·á 3:º¸·ù
+    private int    status;       // 0:ï¿½ï¿½ï¿½ 1:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2:ï¿½Ï·ï¿½ 3:ï¿½ï¿½ï¿½ï¿½
+    private int progressPct;
 
-    // JOIN °á°ú
-    private String itemName;     // item.item_name  ¡æ Á¦Ç°¸í
-    private String ename;        // user_info.ename ¡æ ´ã´çÀÚ
-    private int prevQty;  // prev_qty  »ý»ê¼ö·®
+    // JOIN ï¿½ï¿½ï¿½
+    private String itemName;     // item.item_name  ï¿½ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½
+    private String ename;        // user_info.ename ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+    private int prevQty;  // prev_qty  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    // ÆäÀÌÁö³×ÀÌ¼Ç¿ë
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¼Ç¿ï¿½
     private int size  = 10;
     private int page  = 1;
     private int start;
     private int end;
 
-    // ¦¡¦¡¦¡ Getters / Setters ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Getters / Setters ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     
+    public int  getProgressPct()                   { return progressPct; }
+    public void setProgressPct(int progressPct)    { this.progressPct = progressPct; }
     public int  getPrevQty()              { return prevQty; }
     public void setPrevQty(int prevQty)   { this.prevQty = prevQty; }
 

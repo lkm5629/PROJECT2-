@@ -41,13 +41,13 @@
       <%-- ④ auth=3인 경우에만 등록 버튼 노출 --%>
       <c:if test="${auth == 3}">
         <button class="btn btn-primary btn-sm"
-          onclick="location.href='${ctx}/board/notice/register'">+ 공지사항 등록</button>
+          onclick="location.href='${ctx}/notice/register'">+ 공지사항 등록</button>
       </c:if>
     </div>
 
     <%-- ① 검색 폼 --%>
     <div class="table-toolbar">
-      <form id="searchForm" action="${ctx}/board/notice/list" method="get">
+      <form id="searchForm" action="${ctx}/notice/list" method="get">
         <input type="hidden" name="page"  value="1">
         <input type="hidden" name="size"  value="${size}">
         <div class="search-wrap">
@@ -79,7 +79,7 @@
           <tr>
             <td class="center">${fn:substringAfter(dto.boardno, 'ann_')}</td>
             <td class="nc-title-col"
-              onclick="location.href='${ctx}/board/notice/detail?boardno=${dto.boardno}&page=${page}&size=${size}'">
+              onclick="location.href='${ctx}/notice/detail?boardno=${dto.boardno}&page=${page}&size=${size}'">
               ${dto.title}
             </td>
             <td>${dto.ename}</td>  <%-- ③ ename 표시 --%>
@@ -99,7 +99,7 @@
         </c:when>
         <c:otherwise>
           <button class="page-btn"
-            onclick="location.href='${ctx}/board/notice/list?page=${groupStartPage-1}&size=${size}&keyword=${keyword}'">&lt;</button>
+            onclick="location.href='${ctx}/notice/list?page=${groupStartPage-1}&size=${size}&keyword=${keyword}'">&lt;</button>
         </c:otherwise>
       </c:choose>
 
@@ -110,7 +110,7 @@
           </c:when>
           <c:otherwise>
             <button class="page-btn"
-              onclick="location.href='${ctx}/board/notice/list?page=${p}&size=${size}&keyword=${keyword}'">${p}</button>
+              onclick="location.href='${ctx}/notice/list?page=${p}&size=${size}&keyword=${keyword}'">${p}</button>
           </c:otherwise>
         </c:choose>
       </c:forEach>
@@ -121,7 +121,7 @@
         </c:when>
         <c:otherwise>
           <button class="page-btn"
-            onclick="location.href='${ctx}/board/notice/list?page=${groupEndPage+1}&size=${size}&keyword=${keyword}'">&gt;</button>
+            onclick="location.href='${ctx}/notice/list?page=${groupEndPage+1}&size=${size}&keyword=${keyword}'">&gt;</button>
         </c:otherwise>
       </c:choose>
     </div>

@@ -331,7 +331,7 @@
 
 							<%-- 입출고일 --%>
 							<div class="modal-field">
-								<label>입출고일</label> <input type="date" name="io_time"
+								<label id="io_time_label">입출고일</label> <input type="date" name="io_time"
 									id="io_time">
 							</div>
 

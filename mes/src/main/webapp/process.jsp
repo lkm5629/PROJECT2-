@@ -138,7 +138,12 @@
 												<td>${p.item_id}</td>
 												<td>
 													<div class="process-action-group">
-														<button type="button" class="process-icon-btn edit">수정</button>
+														<button type="button" class="process-icon-btn edit"
+															data-process-id="${p.process_id}"
+															data-process-name="${fn:escapeXml(p.process_name)}"
+															data-process-info="${fn:escapeXml(p.process_info)}">
+															수정</button>
+
 														<!-- 														<button type="button" class="process-icon-btn delete">삭제</button> -->
 													</div>
 												</td>
@@ -243,6 +248,7 @@
 					</div>
 				</div>
 
+
 				<div class="process-edit-form-row">
 					<div class="process-edit-form-group name">
 						<label for="editProcessName">공정명</label> <input type="text"
@@ -262,6 +268,7 @@
 				<div class="process-edit-modal-actions">
 					<button type="button" class="process-edit-cancel-btn"
 						id="closeProcessEditModal">취소</button>
+
 					<button type="submit" class="process-edit-save-btn">수정</button>
 				</div>
 

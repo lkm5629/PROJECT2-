@@ -35,7 +35,7 @@
       <div class="card-title">공지 작성</div>
       <%-- action=insert, POST --%>
       <form id="noticeRegisterForm"
-            action="${ctx}/board/notice/insert" method="post"
+            action="${ctx}/notice/insert" method="post"
             enctype="multipart/form-data">
 
         <div class="form-group">
@@ -66,7 +66,7 @@
 
         <div class="form-actions">
           <button type="button" class="btn btn-outline"
-            onclick="location.href='${ctx}/board/notice/list'">취소</button>
+            onclick="location.href='${ctx}/notice/list'">취소</button>
           <button type="submit" class="btn btn-primary">등록</button>
         </div>
       </form>

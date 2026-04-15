@@ -30,11 +30,11 @@
       <div><h1>공지사항</h1></div>
       <div class="action-header">
         <button class="btn btn-outline btn-sm"
-          onclick="location.href='${ctx}/board/notice/list?page=${page}&size=${size}'">목록</button>
+          onclick="location.href='${ctx}/notice/list?page=${page}&size=${size}'">목록</button>
         <%-- ④ auth=3인 경우에만 수정/삭제 버튼 노출 --%>
         <c:if test="${auth == 3}">
           <button class="btn btn-outline btn-sm"
-            onclick="location.href='${ctx}/board/notice/edit?boardno=${dto.boardno}'">수정</button>
+            onclick="location.href='${ctx}/notice/edit?boardno=${dto.boardno}'">수정</button>
           <button class="btn btn-danger btn-sm" onclick="submitDelete()">삭제</button>
         </c:if>
       </div>
@@ -64,7 +64,7 @@
     </div>
   </div>
 
-  <form id="deleteForm" action="${ctx}/board/notice/delete" method="post">
+  <form id="deleteForm" action="${ctx}/notice/delete" method="post">
     <input type="hidden" name="boardno" value="${dto.boardno}">
   </form>
 

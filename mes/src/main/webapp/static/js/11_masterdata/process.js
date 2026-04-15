@@ -35,8 +35,25 @@ process_step_cancel_btn.addEventListener('click',function(){
 
 //공정 수정 클릭 시
 const process_edit_modal = document.querySelector('.process-edit-modal');
-const process_icon_btn_edit = document.querySelector('.process-icon-btn.edit');
+const process_icon_btn_edit = document.querySelectorAll('.process-table .process-icon-btn.edit');
 
-process_icon_btn_edit.addEventListener('click',function(){
-	process_edit_modal.style.display = 'flex';
+const editProcessId = document.getElementById('editProcessId');
+const editProcessName = document.getElementById('editProcessName');
+const editProcessInfo = document.getElementById('editProcessInfo');
+const editProcessModalTitleText = document.getElementById('editProcessModalTitleText');
+const closeProcessEditModal = document.getElementById('closeProcessEditModal');
+
+process_icon_btn_edit.forEach(function(btn) {
+	btn.addEventListener('click', function() {
+		editProcessId.value = btn.dataset.processId;
+		editProcessName.value = btn.dataset.processName;
+		editProcessInfo.value = btn.dataset.processInfo;
+		editProcessModalTitleText.textContent = btn.dataset.processName;
+
+		process_edit_modal.style.display = 'flex';
+	});
+});
+
+closeProcessEditModal.addEventListener('click', function() {
+	process_edit_modal.style.display = 'none';
 });
