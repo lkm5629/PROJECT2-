@@ -1,6 +1,7 @@
 package P09_equip.DTO;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class EqLogDTO {
 	
@@ -9,8 +10,8 @@ public class EqLogDTO {
 	String wId;
 	String wName;
 	
-	Date sTime;
-	Date eTime;
+	Timestamp sTime;
+	Timestamp eTime;
 	
 	String inspType;
 	String inspContent;
@@ -39,16 +40,16 @@ public class EqLogDTO {
 	public void setwName(String wName) {
 		this.wName = wName;
 	}
-	public Date getsTime() {
+	public Timestamp getsTime() {
 		return sTime;
 	}
-	public void setsTime(Date sTime) {
+	public void setsTime(Timestamp sTime) {
 		this.sTime = sTime;
 	}
-	public Date geteTime() {
+	public Timestamp geteTime() {
 		return eTime;
 	}
-	public void seteTime(Date eTime) {
+	public void seteTime(Timestamp eTime) {
 		this.eTime = eTime;
 	}
 	public String getInspType() {

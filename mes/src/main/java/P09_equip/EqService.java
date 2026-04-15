@@ -67,5 +67,21 @@ public class EqService {
 	public List getLog(EqLogDTO dto) {
 		return dao.getLog(dto);
 	}
+	
+	public int eqStop(String eqId) {
+		return dao.eqStop(eqId);
+	}
+	
+	public int stopLog(String eqId) {
+		return dao.stopLog(eqId);
+	}
+	
+	public int eqRun(String eqId) {
+		return dao.eqRun(eqId);
+	}
+	
+	public int startLog(String eqId) {
+		return dao.startLog(eqId);
+	}
 
 }

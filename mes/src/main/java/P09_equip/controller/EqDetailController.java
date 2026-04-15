@@ -21,8 +21,20 @@ public class EqDetailController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("/equipdetail doGet 실행");
 		
-		setting(request, response);
+		String cmd = request.getParameter("cmd");
 		
+		if("eqStop".equals(cmd)) {
+			eqStop(request, response);
+			return;
+		} else if("eqRun".equals(cmd)) {
+			eqRun(request, response);
+			return;
+		} else if ("statusChange".equals(cmd)) {
+			statusChange(request, response);
+			return;
+		}
+		
+		setting(request, response);
 		request.getRequestDispatcher("/WEB-INF/views/P09_equip/detail.jsp").forward(request, response);
 	}
 
@@ -51,6 +63,57 @@ public class EqDetailController extends HttpServlet {
 		// forward
 		request.setAttribute("eqInfo", dto);
 		request.setAttribute("log", logList);
+	}
+	
+
+	protected void eqStop(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/eqdetail eqStop 실행");
+		
+		String eqId = request.getParameter("eqId");
+		
+		EqService service = new EqService();
+		int eqStop = service.eqStop(eqId);
+		int stopLog = service.stopLog(eqId);
+		
+		System.out.println(eqStop);
+		System.out.println(stopLog);
+		
+		String cp = request.getContextPath();
+		response.sendRedirect(cp + "/eqdetail?eqId=" + eqId);
+
+	}
+	
+	protected void eqRun(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/eqdetail eqRun 실행");
+		
+		String eqId = request.getParameter("eqId");
+		
+		EqService service = new EqService();
+		int eqRun = service.eqRun(eqId);
+		int startLog = service.startLog(eqId);
+		
+		System.out.println(eqRun);
+		System.out.println(startLog);
+
+		String cp = request.getContextPath();
+		response.sendRedirect(cp + "/eqdetail?eqId=" + eqId);
+	}
+
+	protected void statusChange(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/eqdetail statusChange 실행");
+		
+		String eqId = request.getParameter("eqId");
+		
+		EqService service = new EqService();
+		int eqStop = service.eqStop(eqId);
+		int stopLog = service.stopLog(eqId);
+		
+		System.out.println(eqStop);
+		System.out.println(stopLog);
+		
+		String cp = request.getContextPath();
+		response.sendRedirect(cp + "/eqdetail?eqId=" + eqId);
+
 	}
 
 }
