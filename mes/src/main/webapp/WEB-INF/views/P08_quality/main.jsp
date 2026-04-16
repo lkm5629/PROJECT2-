@@ -68,7 +68,7 @@
 		            <p>품질검사 내역</p>
 		        </div>
 		
-		        <button class="addBtn buttonMain">
+		        <button class="addBtn buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 2}">style="display: none;"</c:if> >
 		            검사계획 등록
 		        </button>
 		    </div>

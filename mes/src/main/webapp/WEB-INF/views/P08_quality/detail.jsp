@@ -88,7 +88,7 @@
 			        </a>
 			        <c:if test="${qcInfo.qcStatus != 50}">
 				        <a href="/mes/qcmodify?qcId=${qcInfo.qcId}">
-				            <button type="button" class="buttonMain">계획 수정</button>
+				            <button type="button" class="buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 2}">style="display: none;"</c:if> >계획 수정</button>
 				        </a>
 				        <a href="/mes/qcresultmodify?qcId=${qcInfo.qcId}">
 				            <button type="button" class="buttonSub">결과 수정</button>

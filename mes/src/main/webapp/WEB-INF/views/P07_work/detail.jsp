@@ -53,7 +53,7 @@
 			        </a>
 			        <c:if test="${woInfo.woStatus != 60}">
 				        <a href="/mes/womodify?woId=${woInfo.woId}">
-				            <button type="button" class="buttonMain">지시 수정</button>
+				            <button type="button" class="buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 2}">style="display: none;"</c:if> >지시 수정</button>
 				        </a>
 				        <a href="/mes/contentmodify?woId=${woInfo.woId}">
 				            <button type="button" class="buttonSub">내용 수정</button>
@@ -220,6 +220,7 @@
 			            </div>
 			        </div>
 			    </div>
+			    
 			</div>
 		    
 		</div>

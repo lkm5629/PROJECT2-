@@ -53,13 +53,18 @@
 
         <li class="snb-item"><span class="menu-label_snb hover" id="mypage_snb">마이페이지</span></li>
 
-        <li class="snb-item"><span class="menu-label_snb hover" id="userManage_snb">사용자 관리</span></li>
+        <li class="snb-item" <c:if test="${(empty dto.auth) || dto.auth < 3}">style="display: none;"</c:if> >
+        	<span class="menu-label_snb hover" id="userManage_snb">사용자 관리</span>
+        </li>
 
     </ul>
 
 </div>
 
 
+
+
+<!-- 모바일 -->
 <div class="mobile-menu-overlay" id="mobileMenuOverlay">
     <div class="mobile-menu-panel">
         <div class="mobile-menu-header">
@@ -94,7 +99,9 @@
             <li><a href="/mes/notice">공지사항</a></li>
             <li><a href="/mes/suggestion">건의사항</a></li>
             <li><a href="/mes/mypage">마이페이지</a></li>
-            <li><a href="/mes/userManage">사용자 관리</a></li>
+            <c:if test="${!(empty dto.auth) || dto.auth >= 3}">
+            	<li><a href="/mes/userManage">사용자 관리</a></li>
+            </c:if> 
         </ul>
     </div>
 </div>

@@ -67,12 +67,12 @@
 					    <c:when test="${eqInfo.status == '가동'}">
 					        <a href="${pageContext.request.contextPath}/eqdetail?eqId=${eqInfo.eqId}&cmd=eqStop"
 					           id="btnStop"
-					           class="buttonSub error">설비 정지</a>
+					           class="buttonSub error" <c:if test="${(empty dto.auth) || dto.auth < 2}">style="display: none;"</c:if> >설비 정지</a>
 					    </c:when>
 					    <c:otherwise>
 					        <a href="${pageContext.request.contextPath}/eqdetail?eqId=${eqInfo.eqId}&cmd=eqRun"
 					           id="btnRun"
-					           class="buttonSub run">설비 가동</a>
+					           class="buttonSub run" <c:if test="${(empty dto.auth) || dto.auth < 2}">style="display: none;"</c:if> >설비 가동</a>
 					    </c:otherwise>
 					</c:choose>
 		        </div>
@@ -104,7 +104,7 @@
 			            		<span class="status">-</span>
 			            	</c:if>
 		            	</div>
-		            	<c:if test="${ eqInfo.status != '가동' }">
+		            	<c:if test="${ eqInfo.status != '가동' && (!(empty dto.auth) || dto.auth >= 2)}">
 			            	<form id="statusForm" method="post" action="/mes/eqdetail" class="button-group">
 			            		<input type="hidden" name="cmd" value="statusChange">
 			            		<input type="hidden" name="eqId" value="${eqInfo.eqId}">

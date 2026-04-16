@@ -151,12 +151,22 @@
 		padding: 10px;
 		border-bottom: 1px solid var(--color-border);
 	 }
+	 
+	.mobile-menu-list > li:last-child {
+		border-bottom: none;
+	 }
 	
 	.mobile-menu-list a {
 		color: #111;
 		text-decoration: none;
 		display: inline-block;
 		padding: 4px 0;
+	 }
+	
+	.mobile-menu-list a:hover {
+		opacity: 0.7;
+    	cursor: pointer;
+		text-decoration: underline;
 	 }
 	
 	.mobile-menu-list ul {
