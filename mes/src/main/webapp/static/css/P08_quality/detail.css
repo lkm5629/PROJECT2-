@@ -84,6 +84,11 @@
 	background-color : gray;
 }
 
+.finIo {
+	display: flex;
+	gap: 10px;
+}
+
 
 /* 정보 영역 */
 .info-grid {

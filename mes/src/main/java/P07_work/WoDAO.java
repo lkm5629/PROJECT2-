@@ -386,6 +386,7 @@ public class WoDAO {
 				String wName = rs.getString("workerName");
 				String content = rs.getString("content");
 				String deleted = rs.getString("deleted");
+				String lotId = rs.getString("lot_id");
 				
 				// plan
 				String planId = rs.getString("plan_id");
@@ -415,6 +416,7 @@ public class WoDAO {
 				dto.setwName(wName);
 				dto.setContent(content);
 				dto.setDeleted(deleted);
+				dto.setLotId(lotId);
 				
 				//plan
 				dto.setPlanId(planId);
@@ -1196,6 +1198,101 @@ public class WoDAO {
 
 		return result;
 	} // updatePlan
+	
+	
+	public List<WoBOMDTO> setBOM(WoBOMDTO dto) {
+		
+		List<WoBOMDTO> list = new ArrayList();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT w.wo_id woId, b.BOM_ID, ip.item_name pName, ip.ITEM_ID pId, ic.item_name cName, ic.item_id cId, ic.spec, bd.ea ea, ic.unit unit "
+					+ "FROM work_order w "
+					+ "	LEFT OUTER JOIN production_plan p "
+					+ "		ON w.plan_id = p.PLAN_ID "
+					+ "	LEFT OUTER JOIN item ip "
+					+ "		ON p.item_id = ip.ITEM_ID "
+					+ "	LEFT OUTER JOIN bom2 b "
+					+ "		ON b.PARENT_ITEM_ID = ip.ITEM_ID "
+					+ "	LEFT OUTER JOIN BOM_DETAIL2 bd "
+					+ "		ON bd.BOM_ID = b.BOM_ID "
+					+ "	LEFT OUTER JOIN item ic "
+					+ "		ON bd.CHILD_ITEM_ID = ic.ITEM_ID "
+					+ "WHERE w.wo_id = ? "
+					+ "ORDER BY woId, ic.g_id, ic.ITEM_ID";
+
+			ps = conn.prepareStatement(query);
+			ps.setString(1, dto.getWoId());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				String woId = rs.getString("woId");
+				String bomId = rs.getString("bom_id");
+				String pName = rs.getString("pName");
+				String pId = rs.getString("pId");
+				String cName = rs.getString("cName");
+				String cId = rs.getString("cId");
+				String spec = rs.getString("spec");
+				int ea = rs.getInt("ea");
+				String unit = rs.getString("unit");
+				
+				WoBOMDTO bom = new WoBOMDTO();
+					
+				bom.setWoId(woId);
+				bom.setBomId(bomId);
+				bom.setpName(pName);
+				bom.setpId(pId);
+				bom.setcName(cName);
+				bom.setcId(cId);
+				bom.setSpec(spec);
+				bom.setEa(ea);
+				bom.setUnit(unit);
+				
+				list.add(bom);
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return list;
+	} // setBOM
 	
 	
 }

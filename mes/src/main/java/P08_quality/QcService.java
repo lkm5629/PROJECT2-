@@ -130,5 +130,40 @@ public class QcService {
 		QcDAO dao = new QcDAO();
 		return dao.modifyResult(dto);
 	}
+	
+	public String lotId() {
+		QcDAO dao = new QcDAO();
+		return dao.lotId();
+	}
+	
+	public int addLot(FinIoDTO dto) {
+		QcDAO dao = new QcDAO();
+		return dao.addLot(dto);
+	}
+	
+	public int addIn(FinIoDTO dto) {
+		QcDAO dao = new QcDAO();
+		return dao.addIn(dto);
+	}
+	
+	public int updateStock(FinIoDTO dto) {
+		QcDAO dao = new QcDAO();
+		return dao.updateStock(dto);
+	}
+	
+	public int updateWoStatus(String woId) {
+		QcDAO dao = new QcDAO();
+		return dao.updateWoStatus(woId);
+	}
+	
+	public int updateQcStatus(String qcId) {
+		QcDAO dao = new QcDAO();
+		return dao.updateQcStatus(qcId);
+	}
+	
+	public int updateWoLot(String woId, FinIoDTO dto) {
+		QcDAO dao = new QcDAO();
+		return dao.updateWoLot(woId, dto);
+	}
 
 }

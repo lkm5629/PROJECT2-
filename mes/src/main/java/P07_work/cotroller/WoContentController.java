@@ -1,6 +1,8 @@
 package P07_work.cotroller;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import P07_work.WoAddDTO;
+import P07_work.WoBOMDTO;
 import P07_work.WoDTO;
 import P07_work.WoService;
 
@@ -89,6 +92,28 @@ public class WoContentController extends HttpServlet {
 
 	    System.out.println(result);
 		
+	}
+	
+	protected void getStock(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/workadd getStock 실행");
+		
+		
+	}
+	
+	protected void setBOM(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/workadd setBOM 실행");
+		
+		String woId = request.getParameter("woId");
+		WoBOMDTO dto = new WoBOMDTO();
+		dto.setWoId(woId);
+		
+		WoService service = new WoService();
+		List<WoBOMDTO> bom = service.setBOM(dto);
+		
+		System.out.println(bom);
+		
+		// forward
+		request.setAttribute("bom", bom);
 	}
 
 }

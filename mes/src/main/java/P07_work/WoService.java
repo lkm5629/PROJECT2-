@@ -96,5 +96,10 @@ public class WoService {
 		WoDAO dao = new WoDAO();
 		return dao.updatePlan();
 	}
+	
+	public List setBOM(WoBOMDTO dto) {
+		WoDAO dao = new WoDAO();
+		return dao.setBOM(dto);
+	}
 
 }
