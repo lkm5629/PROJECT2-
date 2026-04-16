@@ -115,17 +115,12 @@ function validateAndSubmitDefectAdd() {
 	})
 	.then(res => res.json())
 	.then(data => {
-		// 성공 시 테이블 반영
-		addRowToTable(data.defectId, defQty, defTypeText, solution, dispose);
-		
-		// 실시간 반영
-		updateSummary();
-
-		// 모달 닫기
-		closeModal();
-
-		// 입력 초기화
-		document.getElementById("defect").reset();
+		if (data.success) {
+	        alert("등록 완료");
+	        location.reload();
+	    } else {
+	        alert("저장 실패");
+	    }
 	})
 	.catch(err => {
 		console.error(err);
@@ -257,17 +252,11 @@ function updateDefect() {
 	.then(res => res.json())
 	.then(data => {
 		if (data.success) {
-			// UI 반영
-			selectedRow.children[0].innerText = defQty;
-			selectedRow.children[1].innerText = defTypeText;
-			selectedRow.children[2].innerText = solution;
-			selectedRow.children[3].innerText = dispose;
-
-			updateSummary();
-			closeModal();
-		} else {
-			alert("수정 실패");
-		}
+	        alert("수정 완료");
+	        location.reload();
+	    } else {
+	        alert("수정 실패");
+	    }
 	})
 	.catch(err => {
 		console.error(err);
@@ -292,14 +281,12 @@ function deleteDefect() {
 	})
 	.then(res => res.json())
 	.then(data => {
-		if (data.success) {
-			selectedRow.remove();
-
-			updateSummary();
-			closeModal();
-		} else {
-			alert("삭제 실패");
-		}
+	    if (data.success) {
+	        alert("삭제 완료");
+	        location.reload();
+	    } else {
+	        alert("삭제 실패");
+	    }
 	})
 	.catch(err => {
 		console.error(err);
@@ -321,4 +308,16 @@ function setModalMode(mode) {
 		modifyBtn.style.display = "inline-block";
 		deleteBtn.style.display = "inline-block";
 	}
+}
+
+function validateAndSubmitResult() {
+    const checkedStatus = document.querySelector("input[name='status']:checked");
+    const eDate = document.querySelector("input[name='eDate']").value;
+
+    if (checkedStatus && checkedStatus.value === "30" && !eDate) {
+        alert("검사 완료일을 입력하세요.");
+        return;
+    }
+
+    document.getElementById("resultModify").submit();
 }

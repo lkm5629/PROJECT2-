@@ -9,7 +9,7 @@ public class WoBOMDTO {
 	String cName;
 	String cId;
 	String spec;
-	int ea;
+	double ea;
 	String unit;
 	
 	
@@ -55,10 +55,10 @@ public class WoBOMDTO {
 	public void setSpec(String spec) {
 		this.spec = spec;
 	}
-	public int getEa() {
+	public double getEa() {
 		return ea;
 	}
-	public void setEa(int ea) {
+	public void setEa(double ea) {
 		this.ea = ea;
 	}
 	public String getUnit() {

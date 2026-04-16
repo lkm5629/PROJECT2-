@@ -34,53 +34,54 @@ public class FinIoController extends HttpServlet {
 	}
 	
 	
-	protected void itemIn (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/fin itemIn 실행");
-		
-		QcService service = new QcService();
-		
-		String lotId = service.lotId();
-		System.out.println(lotId);
-		
-		String empId = request.getParameter("empId");
-		String itemId = request.getParameter("itemId");
-		Integer qty = Integer.parseInt(request.getParameter("qty"));
-		Date date = Date.valueOf(request.getParameter("date"));
-		
-		FinIoDTO ioDTO = new FinIoDTO();
-		
-		ioDTO.setLotId(lotId);
-		ioDTO.setEmpId(empId);
-		ioDTO.setItemId(itemId);
-		ioDTO.setQty(qty);
-		ioDTO.setDate(date);
-		
-		System.out.println("date : " + date);
-		
-		int result = service.addLot(ioDTO);
-		System.out.println("result 1 : " + result);
-		
-		int result2 = service.addIn(ioDTO);
-		System.out.println("result 2 : " + result2);
-		
-		int result3 = service.updateStock(ioDTO);
-		System.out.println("result 3 : " + result3);
-		
-		
-		String woId = request.getParameter("woId");
-		String qcId = request.getParameter("qcId");
-		
-		int result4 = service.updateWoStatus(woId);
-		int result5 = service.updateQcStatus(qcId);
-		
-		System.out.println("result 4 : " + result4);
-		System.out.println("result 5 : " + result5);
-		
-		int result6 = service.updateWoLot(woId, ioDTO);
-		
-		System.out.println("result 6 : " + result6);
-		
-		response.sendRedirect("/mes/qcdetail?qcId=" + qcId);
+	protected void itemIn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    System.out.println("/fin itemIn 실행");
+
+	    request.setCharacterEncoding("utf-8");
+	    response.setContentType("text/html; charset=utf-8;");
+
+	    try {
+	        String empId = request.getParameter("empId");
+	        String itemId = request.getParameter("itemId");
+	        String woId = request.getParameter("woId");
+	        String qcId = request.getParameter("qcId");
+
+	        int qty = Integer.parseInt(request.getParameter("qty"));
+	        Date date = Date.valueOf(request.getParameter("date"));
+
+	        if (empId == null || empId.trim().isEmpty()) {
+	            throw new RuntimeException("작업자 정보가 없습니다.");
+	        }
+	        if (itemId == null || itemId.trim().isEmpty()) {
+	            throw new RuntimeException("제품 정보가 없습니다.");
+	        }
+	        if (woId == null || woId.trim().isEmpty()) {
+	            throw new RuntimeException("작업지시 정보가 없습니다.");
+	        }
+	        if (qcId == null || qcId.trim().isEmpty()) {
+	            throw new RuntimeException("검사 정보가 없습니다.");
+	        }
+	        if (qty <= 0) {
+	            throw new RuntimeException("입고 수량이 0 이하입니다.");
+	        }
+	        if (date == null) {
+	            throw new RuntimeException("입고 기준 날짜가 없습니다.");
+	        }
+
+	        FinIoDTO ioDTO = new FinIoDTO();
+	        ioDTO.setEmpId(empId);
+	        ioDTO.setItemId(itemId);
+	        ioDTO.setQty(qty);
+	        ioDTO.setDate(date);
+
+	        QcService service = new QcService();
+	        service.processFinIn(woId, qcId, ioDTO);
+
+	        response.sendRedirect("/mes/qcdetail?qcId=" + qcId);
+
+	    } catch (Exception e) {
+	        throw new ServletException("입고 처리 중 오류 발생", e);
+	    }
 	}
 
 }

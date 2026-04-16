@@ -37,7 +37,7 @@ function fetchWoList() {
             document.querySelector("#woId").value = data.woId;
 
             document.querySelector("#item").value = `${data.itemName} (${data.itemId})`;
-            document.querySelector("#qty").value = data.woQty;
+            document.querySelector("#qty").value = data.qty;
 
             document.querySelector("input[name='qcDate']").min = data.woDate;
 

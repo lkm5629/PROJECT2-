@@ -1792,8 +1792,8 @@ public class QcDAO {
 			conn = dataFactory.getConnection();
 
 			// SQL 준비
-			String query = "INSERT INTO lot (lot_id, lot_qty, item_id, expiry_date, deleted) "
-					+ "VALUES (?, ?, ?, ADD_MONTHS(?, 36), 'N')";
+			String query = "INSERT INTO lot (lot_id, lot_qty, item_id, expiry_date) "
+							+ "VALUES (?, ?, ?, ADD_MONTHS(?, 36))";
 			
 			ps = new LoggableStatement(conn, query);
 			
@@ -2154,5 +2154,165 @@ public class QcDAO {
 		
 		return result;
 	} // updateWoLot
+	
+	
+	
+	
+	
+	////////////////////////
+	
+	
+	
+	public String lotId(Connection conn) {
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    String result = "";
+
+	    try {
+	        String query = "Select lot_seq.nextval from dual";
+
+	        ps = conn.prepareStatement(query);
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            result = "lot_" + rs.getString(1);
+	        }
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (rs != null) rs.close(); } catch (Exception e) {}
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+
+	    return result;
+	}
+	
+	public int addLot(Connection conn, FinIoDTO dto) {
+	    PreparedStatement ps = null;
+
+	    try {
+	    	String query = "INSERT INTO lot (lot_id, lot_qty, item_id, expiry_date) "
+	    	        + "VALUES (?, ?, ?, ADD_MONTHS(?, 36))";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getLotId());
+	        ps.setInt(2, dto.getQty());
+	        ps.setString(3, dto.getItemId());
+	        ps.setDate(4, dto.getDate());
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int addIn(Connection conn, FinIoDTO dto) {
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "INSERT INTO io (io_id, io_type, io_reason, item_id, lot_id, emp_id, io_time) "
+	                + "values('in_'||in_seq.nextval, 0, '생산', ?, ?, ?, sysdate)";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getItemId());
+	        ps.setString(2, dto.getLotId());
+	        ps.setString(3, dto.getEmpId());
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int updateStock(Connection conn, FinIoDTO dto) {
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE STOCK "
+	                + "SET stock_no = stock_no + ? "
+	                + "WHERE item_id = ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setInt(1, dto.getQty());
+	        ps.setString(2, dto.getItemId());
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int updateWoStatus(Connection conn, String woId) {
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE work_order "
+	                + "SET wostatus_no = 60 "
+	                + "WHERE wo_id = ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, woId);
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int updateQcStatus(Connection conn, String qcId) {
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE quality_check "
+	                + "SET qcstatus_no = 50 "
+	                + "WHERE qc_id = ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, qcId);
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int updateWoLot(Connection conn, String woId, FinIoDTO dto) {
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE WORK_ORDER "
+	                + "SET lot_id = ? "
+	                + "WHERE WO_ID = ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getLotId());
+	        ps.setString(2, woId);
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
 	
 }

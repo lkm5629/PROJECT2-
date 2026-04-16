@@ -44,10 +44,8 @@
 		        </div>
 		
 		        <div class="button-group">
-			        <a href="/mes/workorder?woId=${woInfo.woId}">
-			            <button type="button" class="buttonWhite">취소</button>
-			        </a>
-			        <button type="button" class="buttonMain" onclick="document.getElementById('contentModify').submit()">수정 완료</button>
+			        <button type="button" class="buttonWhite" onclick="location.href='/mes/workorder?woId=${woInfo.woId}'">취소</button>
+			        <button type="button" class="buttonMain" onclick="submitContentModify()">수정 완료</button>
 		        </div>
 		    </div>
 		
@@ -83,7 +81,7 @@
 		
 		                <div class="form-group">
 		                    <label>작업자</label>
-		                    <input type="hidden" value="${woInfo.worker}">
+		                    <input type="hidden" name="worker" value="${woInfo.worker}">
 		                    <input type="text" value="${woInfo.worker} (${woInfo.wName})" placeholder="작업자명 (작업자 사번)" readonly>
 		                </div>
 		            </div>
@@ -106,12 +104,12 @@
 		            <div class="form-row">
 		                <div class="form-group">
 		                    <label>목표 수량</label>
-		                    <input type="number"value="${woInfo.woQty}" placeholder="목표 수량" readonly>
+		                    <input type="number" name="woQty" id="woQty" value="${woInfo.woQty}" placeholder="목표 수량" readonly>
 		                </div>
 		
 		                <div class="form-group">
 		                    <label>완료 수량</label>
-		                    <input type="number" name="prevQty" value="${woInfo.prevQty}" step="1" min="0" max="${woInfo.woQty}" oninput="this.value = clampNumber(this)" onkeydown="return event.key !== '-'" placeholder="현재 완료 수량 입력" id="prevQty">
+		                    <input type="number" name="prevQty" value="${woInfo.prevQty}" step="1" min="0" max="${woInfo.woQty}" oninput="this.value = clampNumber(this)" onkeydown="return event.key !== '-'" placeholder="현재 완료 수량 입력" id="prevQty" required>
 		                </div>
 		            </div>
 		
@@ -119,6 +117,12 @@
 		    </form>
         </div>
     </div>
+    
+    <c:if test="${not empty errorMsg}">
+	    <script>
+	        alert("${fn:escapeXml(errorMsg)}");
+	    </script>
+	</c:if>
 
 </body>
 </html>

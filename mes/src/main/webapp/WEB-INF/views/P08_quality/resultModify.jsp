@@ -47,7 +47,7 @@
 			        <a href="/mes/qcdetail?qcId=${qcInfo.qcId}">
 			            <button type="button" class="buttonWhite">취소</button>
 			        </a>
-			        <button type="button" class="buttonMain" onclick="document.getElementById('resultModify').submit()">수정 완료</button>
+			        <button type="button" class="buttonMain"  onclick="validateAndSubmitResult()">수정 완료</button>
 		        </div>
 		    </div>
 		
@@ -193,7 +193,7 @@
 			        <h2 class="modal-title">불량 내역 관리</h2>
 			
 			        <form method="post" action="/mes/qcresultmodify" id="defect">
-			            <input type="hidden" name="cmd" value="defectAdd">
+			            <input type="hidden" name="cmd" id="cmd" value="defectAdd">
 			            <input type="hidden" name="qcId" value="${qcInfo.qcId}">
 			
 			            <div class="modal-row">
