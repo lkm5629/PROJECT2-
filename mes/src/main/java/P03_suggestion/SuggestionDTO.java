@@ -1,10 +1,10 @@
 package P03_suggestion;
 
 import java.sql.Date;
+import java.util.List;
 
 public class SuggestionDTO {
 
-    // suggestion 테이블 컬럼
     private String boardno;
     private String title;
     private String content;
@@ -14,11 +14,18 @@ public class SuggestionDTO {
     private String empId;
     private int    complete;
 
+    // 첨부파일
+    private String originName;
+    private String saveName;
+
     // user_info JOIN
     private String ename;
 
     // comment_info 입력용
     private String commentContent;
+
+    // 댓글 목록 (detail 조회 시 사용)
+    private List<CommentDTO> commentList;
 
     // 페이지네이션
     private int page;
@@ -26,47 +33,54 @@ public class SuggestionDTO {
     private int start;
     private int end;
 
-    // Getters & Setters
+    public String getBoardno()                           { return boardno; }
+    public void   setBoardno(String boardno)             { this.boardno = boardno; }
 
-    public String getBoardno()               { return boardno; }
-    public void setBoardno(String boardno)   { this.boardno = boardno; }
+    public String getTitle()                             { return title; }
+    public void   setTitle(String title)                 { this.title = title; }
 
-    public String getTitle()                 { return title; }
-    public void setTitle(String title)       { this.title = title; }
+    public String getContent()                           { return content; }
+    public void   setContent(String content)             { this.content = content; }
 
-    public String getContent()               { return content; }
-    public void setContent(String content)   { this.content = content; }
+    public Date   getCtime()                             { return ctime; }
+    public void   setCtime(Date ctime)                   { this.ctime = ctime; }
 
-    public Date getCtime()                   { return ctime; }
-    public void setCtime(Date ctime)         { this.ctime = ctime; }
+    public Date   getMtime()                             { return mtime; }
+    public void   setMtime(Date mtime)                   { this.mtime = mtime; }
 
-    public Date getMtime()                   { return mtime; }
-    public void setMtime(Date mtime)         { this.mtime = mtime; }
+    public int    getViews()                             { return views; }
+    public void   setViews(int views)                    { this.views = views; }
 
-    public int getViews()                    { return views; }
-    public void setViews(int views)          { this.views = views; }
+    public String getEmpId()                             { return empId; }
+    public void   setEmpId(String empId)                 { this.empId = empId; }
 
-    public String getEmpId()                 { return empId; }
-    public void setEmpId(String empId)       { this.empId = empId; }
+    public int    getComplete()                          { return complete; }
+    public void   setComplete(int complete)              { this.complete = complete; }
 
-    public int getComplete()                 { return complete; }
-    public void setComplete(int complete)    { this.complete = complete; }
+    public String getOriginName()                        { return originName; }
+    public void   setOriginName(String originName)       { this.originName = originName; }
 
-    public String getEname()                 { return ename; }
-    public void setEname(String ename)       { this.ename = ename; }
+    public String getSaveName()                          { return saveName; }
+    public void   setSaveName(String saveName)           { this.saveName = saveName; }
 
-    public String getCommentContent()                        { return commentContent; }
-    public void setCommentContent(String commentContent)     { this.commentContent = commentContent; }
+    public String getEname()                             { return ename; }
+    public void   setEname(String ename)                 { this.ename = ename; }
 
-    public int getPage()                     { return page; }
-    public void setPage(int page)            { this.page = page; }
+    public String getCommentContent()                    { return commentContent; }
+    public void   setCommentContent(String c)            { this.commentContent = c; }
 
-    public int getSize()                     { return size; }
-    public void setSize(int size)            { this.size = size; }
+    public List<CommentDTO> getCommentList()             { return commentList; }
+    public void setCommentList(List<CommentDTO> list)    { this.commentList = list; }
 
-    public int getStart()                    { return start; }
-    public void setStart(int start)          { this.start = start; }
+    public int  getPage()                                { return page; }
+    public void setPage(int page)                        { this.page = page; }
 
-    public int getEnd()                      { return end; }
-    public void setEnd(int end)              { this.end = end; }
+    public int  getSize()                                { return size; }
+    public void setSize(int size)                        { this.size = size; }
+
+    public int  getStart()                               { return start; }
+    public void setStart(int start)                      { this.start = start; }
+
+    public int  getEnd()                                 { return end; }
+    public void setEnd(int end)                          { this.end = end; }
 }

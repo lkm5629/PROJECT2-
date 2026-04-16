@@ -24,8 +24,7 @@ public class NoticeDAO {
         return conn;
     }
 
-    // °øÁö ¸ñ·Ï Á¶È¸ (ÆäÀÌÁö³×ÀÌ¼Ç + Å°¿öµå °Ë»ö)
-    // + user_info JOINÇØ¼­ ename Æ÷ÇÔ
+    // ëª©ë¡ ì¡°íšŒ (í˜ì´ì§€ë„¤ì´ì…˜ + í‚¤ì›Œë“œ ê²€ìƒ‰)
     public List<NoticeDTO> selectAllNotice(NoticeDTO noticeDTO) {
         List<NoticeDTO> list = new ArrayList<>();
 
@@ -35,10 +34,11 @@ public class NoticeDAO {
         String sql = "SELECT * FROM ("
                    + "  SELECT rownum AS rnum, n.* FROM ("
                    + "    SELECT a.boardno, a.title, a.content, a.ctime, a.mtime, a.views,"
-                   + "           a.emp_id, u.ename"
+                   + "           a.emp_id, a.deleted, a.origin_name, a.save_name, u.ename"
                    + "    FROM announcement a"
                    + "    LEFT JOIN user_info u ON a.emp_id = u.emp_id"
-                   + (hasKeyword ? " WHERE LOWER(a.title) LIKE LOWER(?)" : "")
+                   + "    WHERE a.deleted = 'N'"
+                   + (hasKeyword ? " AND LOWER(a.title) LIKE LOWER(?)" : "")
                    + "    ORDER BY a.ctime DESC"
                    + "  ) n"
                    + ") WHERE rnum >= ? AND rnum <= ?";
@@ -56,14 +56,17 @@ public class NoticeDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     NoticeDTO dto = new NoticeDTO();
-                    dto.setBoardno( rs.getString("boardno") );
-                    dto.setTitle(   rs.getString("title") );
-                    dto.setContent( rs.getString("content") );
-                    dto.setCtime(   rs.getDate("ctime") );
-                    dto.setMtime(   rs.getDate("mtime") );
-                    dto.setViews(   rs.getInt("views") );
-                    dto.setEmpId(   rs.getString("emp_id") );
-                    dto.setEname(   rs.getString("ename") );
+                    dto.setBoardno(  rs.getString("boardno") );
+                    dto.setTitle(    rs.getString("title") );
+                    dto.setContent(  rs.getString("content") );
+                    dto.setCtime(    rs.getDate("ctime") );
+                    dto.setMtime(    rs.getDate("mtime") );
+                    dto.setViews(    rs.getInt("views") );
+                    dto.setEmpId(    rs.getString("emp_id") );
+                    dto.setEname(    rs.getString("ename") );
+                    dto.setDeleted(  rs.getString("deleted") );
+                    dto.setOriginName(rs.getString("origin_name") );
+                    dto.setSaveName( rs.getString("save_name") );
                     list.add(dto);
                 }
             }
@@ -76,14 +79,15 @@ public class NoticeDAO {
         return list;
     }
 
-    // °øÁö ÀüÃ¼ °Ç¼ö (°Ë»ö Æ÷ÇÔ)
+    // ì „ì²´ ê±´ìˆ˜ (ê²€ìƒ‰ í¬í•¨)
     public int selectNoticeTotal(String keyword) {
         int totalCount = 0;
 
         boolean hasKeyword = (keyword != null && !keyword.trim().isEmpty());
 
         String sql = "SELECT count(*) cnt FROM announcement"
-                   + (hasKeyword ? " WHERE LOWER(title) LIKE LOWER(?)" : "");
+                   + " WHERE deleted = 'N'"
+                   + (hasKeyword ? " AND LOWER(title) LIKE LOWER(?)" : "");
 
         try (Connection conn = getConn();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -105,12 +109,12 @@ public class NoticeDAO {
         return totalCount;
     }
 
-    // °øÁö ´Ü°Ç Á¶È¸ (ename JOIN)
+    // ë‹¨ê±´ ì¡°íšŒ
     public NoticeDTO selectOneNotice(String boardno) {
         NoticeDTO dto = null;
 
         String sql = "SELECT a.boardno, a.title, a.content, a.ctime, a.mtime, a.views,"
-                   + "       a.emp_id, u.ename"
+                   + "       a.emp_id, a.deleted, a.origin_name, a.save_name, u.ename"
                    + " FROM announcement a"
                    + " LEFT JOIN user_info u ON a.emp_id = u.emp_id"
                    + " WHERE a.boardno = ?";
@@ -123,14 +127,17 @@ public class NoticeDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     dto = new NoticeDTO();
-                    dto.setBoardno( rs.getString("boardno") );
-                    dto.setTitle(   rs.getString("title") );
-                    dto.setContent( rs.getString("content") );
-                    dto.setCtime(   rs.getDate("ctime") );
-                    dto.setMtime(   rs.getDate("mtime") );
-                    dto.setViews(   rs.getInt("views") );
-                    dto.setEmpId(   rs.getString("emp_id") );
-                    dto.setEname(   rs.getString("ename") );
+                    dto.setBoardno(  rs.getString("boardno") );
+                    dto.setTitle(    rs.getString("title") );
+                    dto.setContent(  rs.getString("content") );
+                    dto.setCtime(    rs.getDate("ctime") );
+                    dto.setMtime(    rs.getDate("mtime") );
+                    dto.setViews(    rs.getInt("views") );
+                    dto.setEmpId(    rs.getString("emp_id") );
+                    dto.setEname(    rs.getString("ename") );
+                    dto.setDeleted(  rs.getString("deleted") );
+                    dto.setOriginName(rs.getString("origin_name") );
+                    dto.setSaveName( rs.getString("save_name") );
                 }
             }
 
@@ -141,7 +148,7 @@ public class NoticeDAO {
         return dto;
     }
 
-    // °øÁö µî·Ï
+    // ë“±ë¡
     public int insertNotice(NoticeDTO noticeDTO) {
         int result = 0;
         Connection conn = null;
@@ -152,7 +159,7 @@ public class NoticeDAO {
             conn = getConn();
             conn.setAutoCommit(false);
 
-            // ¦¡¦¡ boardno Ã¤¹ø: 'ann_' || ann_seq.nextval ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+            // boardno ì±„ë²ˆ
             ps = conn.prepareStatement(
                 "SELECT 'ann_' || ann_seq.nextval AS boardno FROM dual"
             );
@@ -162,15 +169,18 @@ public class NoticeDAO {
             rs.close();
             ps.close();
 
-            // ¦¡¦¡ INSERT ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+            // INSERT
             ps = conn.prepareStatement(
-                "INSERT INTO announcement (boardno, title, content, ctime, mtime, views, emp_id)"
-              + " VALUES (?, ?, ?, sysdate, sysdate, 0, ?)"
+                "INSERT INTO announcement"
+              + " (boardno, title, content, ctime, mtime, views, emp_id, deleted, origin_name, save_name)"
+              + " VALUES (?, ?, ?, sysdate, sysdate, 0, ?, 'N', ?, ?)"
             );
             ps.setString(1, boardno);
             ps.setString(2, noticeDTO.getTitle());
             ps.setString(3, noticeDTO.getContent());
             ps.setString(4, noticeDTO.getEmpId());
+            ps.setString(5, noticeDTO.getOriginName());  // íŒŒì¼ ì—†ìœ¼ë©´ null
+            ps.setString(6, noticeDTO.getSaveName());   // íŒŒì¼ ì—†ìœ¼ë©´ null
 
             result = ps.executeUpdate();
             conn.commit();
@@ -187,7 +197,7 @@ public class NoticeDAO {
         return result;
     }
 
-    // °øÁö ¼öÁ¤
+    // ìˆ˜ì •
     public int updateNotice(NoticeDTO noticeDTO) {
         int result = 0;
 
@@ -211,7 +221,7 @@ public class NoticeDAO {
         return result;
     }
 
-    // °øÁö »èÁ¦
+    // ì‚­ì œ
     public int deleteNotice(String boardno) {
         int result = 0;
 
@@ -230,7 +240,7 @@ public class NoticeDAO {
         return result;
     }
 
-    // °øÁö Á¶È¸¼ö +1
+    // ì¡°íšŒìˆ˜ +1
     public void updateViews(String boardno) {
         String sql = "UPDATE announcement SET views = views + 1 WHERE boardno = ?";
 
