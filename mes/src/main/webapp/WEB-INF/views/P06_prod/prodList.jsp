@@ -32,25 +32,18 @@
         <h1>생산관리</h1>
         <p class="page-header-desc">주간 생산 계획을 조회하고 관리합니다</p>
       </div>
-      <button class="btn btn-primary" onclick="openRegisterModal()">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-        생산계획 등록
-      </button>
+      <div class="header-actions">
+        <button class="btn btn-danger-outline btn-sm" id="btnBulkDelete">선택 삭제</button>
+        <button class="btn btn-primary" onclick="openRegisterModal()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          생산계획 등록
+        </button>
+      </div>
     </div>
 
     <div class="table-toolbar">
-      <div class="search-wrap">
-        <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <circle cx="6" cy="6" r="4.5" stroke="#94A3B8" stroke-width="1.4"/>
-          <path d="M9.5 9.5L12 12" stroke="#94A3B8" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
-        <input type="text" class="search-input" placeholder="제품명으로 검색"
-               id="searchKeyword" name="searchKeyword">
-      </div>
-      <button class="btn btn-outline btn-sm toolbar-btn">검색</button>
-      <div class="toolbar-sep"></div>
       <input type="date" class="date-input" id="startDate" name="startDate" title="시작일">
       <input type="date" class="date-input" id="endDate"   name="endDate"   title="종료일">
 
@@ -62,7 +55,15 @@
       </select>
 
       <div class="toolbar-right">
-        <button class="btn btn-danger-outline btn-sm toolbar-btn">선택 삭제</button>
+        <div class="search-wrap">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="6" cy="6" r="4.5" stroke="#94A3B8" stroke-width="1.4"/>
+            <path d="M9.5 9.5L12 12" stroke="#94A3B8" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <input type="text" class="search-input" placeholder="제품명으로 검색"
+                 id="searchKeyword" name="searchKeyword">
+        </div>
+        <button class="btn btn-outline btn-sm toolbar-btn">검색</button>
       </div>
     </div>
 
@@ -179,11 +180,8 @@
               <label class="form-label" for="regGroup">대분류 <span class="req">*</span></label>
               <select class="form-control" id="regGroup" name="gId" required>
                 <option value="">대분류 선택</option>
-                <c:forEach var="g" items="${groupList}">
-                  <c:if test="${g.gId != 'raw'}">
-                    <option value="${g.gId}">${g.itemgroupName}</option>
-                  </c:if>
-                </c:forEach>
+                <option value="fin">완제품</option>
+                <option value="semi">반제품</option>
               </select>
             </div>
 

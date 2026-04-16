@@ -72,16 +72,16 @@
           </tr>
         </thead>
         <tbody>
-          <c:forEach var="dto" items="${list}">
+          <c:forEach var="noticeDTO" items="${list}">
           <tr>
-            <td class="center">${fn:substringAfter(dto.boardno, 'ann_')}</td>
+            <td class="center">${fn:substringAfter(noticeDTO.boardno, 'ann_')}</td>
             <td class="nc-title-col"
-              onclick="location.href='${ctx}/notice/detail?boardno=${dto.boardno}&page=${page}&size=${size}'">
-              ${dto.title}
+              onclick="location.href='${ctx}/notice/detail?boardno=${noticeDTO.boardno}&page=${page}&size=${size}'">
+              ${noticeDTO.title}
             </td>
-            <td>${dto.ename}</td>
-            <td><fmt:formatDate value="${dto.ctime}" pattern="yyyy-MM-dd"/></td>
-            <td class="center">${dto.views}</td>
+            <td>${noticeDTO.ename}</td>
+            <td><fmt:formatDate value="${noticeDTO.ctime}" pattern="yyyy-MM-dd"/></td>
+            <td class="center">${noticeDTO.views}</td>
           </tr>
           </c:forEach>
         </tbody>
@@ -129,5 +129,5 @@
   </div>
 </div>
 </body>
-<script src="${ctx}/static/js/P03_notice/noticeList.js"></script>
+<script src="${ctx}/static/js/03_notice/notice.js"></script>
 </html>
