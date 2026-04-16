@@ -19,7 +19,7 @@ public class Controller extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        // ��� ��� �� �԰� ��� AJAX ��û
+        // 출고 등록 시 LOT 목록 AJAX 요청
         if ("getInList".equals(action)) {
             List<StockDTO> inList = service.getInList();
 
@@ -30,11 +30,12 @@ public class Controller extends HttpServlet {
                 sb.append("{")
                   .append("\"io_id\":"     ).append("\"").append(d.getIo_id()).append("\",")
                   .append("\"item_id\":"   ).append("\"").append(d.getItem_id()).append("\",")
-                  .append("\"item_name\":").append("\"").append(d.getItem_name()).append("\",")
+                  .append("\"item_name\":").append("\"").append(d.getItem_name() != null ? d.getItem_name() : "").append("\",")
                   .append("\"lot_id\":"    ).append("\"").append(d.getLot_id()).append("\",")
                   .append("\"lot_qty\":"   ).append(d.getLot_qty()).append(",")
-                  .append("\"spec\":"      ).append(d.getSpec()).append(",")
-                  .append("\"unit\":"      ).append("\"").append(d.getUnit()).append("\"")
+                  // ★ 수정: spec 따옴표 추가 + null 처리
+                  .append("\"spec\":"      ).append("\"").append(d.getSpec() != null ? d.getSpec() : "").append("\",")
+                  .append("\"unit\":"      ).append("\"").append(d.getUnit() != null ? d.getUnit() : "").append("\"")
                   .append("}");
             }
             sb.append("]");
@@ -44,8 +45,8 @@ public class Controller extends HttpServlet {
             return;
         }
         if ("getLotList".equals(action)) {
-        	String keyword = request.getParameter("keyword");
-        	if (keyword != null && keyword.trim().isEmpty()) keyword = null;
+            String keyword = request.getParameter("keyword");
+            if (keyword != null && keyword.trim().isEmpty()) keyword = null;
             List<StockDTO> lotList = service.getAvailableLotList(keyword);
 
             StringBuilder sb = new StringBuilder("[");
@@ -57,11 +58,12 @@ public class Controller extends HttpServlet {
                   .append("\"lot_qty\":"    ).append(d.getLot_qty()).append(",")
                   .append("\"expiry_date\":").append("\"").append(d.getExpiry_date() != null ? d.getExpiry_date().toString() : "").append("\",")
                   .append("\"item_id\":"    ).append("\"").append(d.getItem_id()).append("\",")
-                  .append("\"item_name\":"  ).append("\"").append(d.getItem_name()).append("\",")
-                  .append("\"spec\":"       ).append(d.getSpec()).append(",")
-                  .append("\"unit\":"       ).append("\"").append(d.getUnit()).append("\",")
+                  .append("\"item_name\":"  ).append("\"").append(d.getItem_name() != null ? d.getItem_name() : "").append("\",")
+                  // ★ 수정: spec 따옴표 추가 + null 처리
+                  .append("\"spec\":"       ).append("\"").append(d.getSpec() != null ? d.getSpec() : "").append("\",")
+                  .append("\"unit\":"       ).append("\"").append(d.getUnit() != null ? d.getUnit() : "").append("\",")
                   .append("\"emp_id\":"     ).append("\"").append(d.getEmp_id()).append("\",")
-                  .append("\"ename\":"      ).append("\"").append(d.getEname()).append("\"")
+                  .append("\"ename\":"      ).append("\"").append(d.getEname() != null ? d.getEname() : "").append("\"")
                   .append("}");
             }
             sb.append("]");
@@ -81,8 +83,8 @@ public class Controller extends HttpServlet {
                 if (i > 0) sb.append(",");
                 sb.append("{")
                   .append("\"emp_id\":\"").append(d.getEmp_id()).append("\",")
-                  .append("\"ename\":\"").append(d.getEname()).append("\",")
-                  .append("\"dept_no\":\"").append(d.getDept_no()).append("\"")
+                  .append("\"ename\":\"").append(d.getEname() != null ? d.getEname() : "").append("\",")
+                  .append("\"dept_no\":\"").append(d.getDept_no() != null ? d.getDept_no() : "").append("\"")
                   .append("}");
             }
             sb.append("]");
@@ -92,7 +94,7 @@ public class Controller extends HttpServlet {
             return;
         }
 
-        // ���� ��� ��ȸ
+        // 목록 페이지 조회
         response.setContentType("text/html; charset=UTF-8;");
 
         int size = 10;
@@ -108,15 +110,14 @@ public class Controller extends HttpServlet {
         String filterKeyword  = request.getParameter("filterKeyword");
         try { if (sSize != null) size = Integer.parseInt(sSize); } catch (Exception e) { e.printStackTrace(); }
         try { if (sPage != null) page = Integer.parseInt(sPage); } catch (Exception e) { e.printStackTrace(); }
-    	if (filterIoType   != null && filterIoType.isEmpty())   filterIoType   = null;
-    	if (filterVendorId != null && filterVendorId.isEmpty()) filterVendorId = null;
-    	if (filterGId      != null && filterGId.isEmpty())      filterGId      = null;
-    	if (filterItemId   != null && filterItemId.isEmpty())   filterItemId   = null;
-    	if (filterDateFrom != null && filterDateFrom.isEmpty()) filterDateFrom = null;
-    	if (filterDateTo   != null && filterDateTo.isEmpty())   filterDateTo   = null;
-    	if (filterKeyword  != null && filterKeyword.isEmpty())  filterKeyword  = null;
-       
-        
+        if (filterIoType   != null && filterIoType.isEmpty())   filterIoType   = null;
+        if (filterVendorId != null && filterVendorId.isEmpty()) filterVendorId = null;
+        if (filterGId      != null && filterGId.isEmpty())      filterGId      = null;
+        if (filterItemId   != null && filterItemId.isEmpty())   filterItemId   = null;
+        if (filterDateFrom != null && filterDateFrom.isEmpty()) filterDateFrom = null;
+        if (filterDateTo   != null && filterDateTo.isEmpty())   filterDateTo   = null;
+        if (filterKeyword  != null && filterKeyword.isEmpty())  filterKeyword  = null;
+
         StockDTO stockDTO = new StockDTO();
         stockDTO.setSize(size);
         stockDTO.setPage(page);
@@ -159,7 +160,7 @@ public class Controller extends HttpServlet {
             dto.setLot_qty(Integer.parseInt(request.getParameter("lot_qty")));
             dto.setIo_time(Date.valueOf(request.getParameter("io_time")));
 
-            // ��� �� ���� lot_id ����
+            // 출고 시 기존 lot_id 사용
             String lotId = request.getParameter("lot_id");
             if (lotId != null && !lotId.isEmpty()) {
                 dto.setLot_id(lotId);
@@ -175,12 +176,11 @@ public class Controller extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (dto.getIo_type() == 1) {  // ����� ����
+        if (dto.getIo_type() == 1) {  // 출고 시 재고 검사
             int currentStock = service.getStockNo(dto.getItem_id());
             if (currentStock - dto.getLot_qty() < 0) {
-                request.setAttribute("errorMsg", 
-                    "��� �����Դϴ�. (���� ���: " + currentStock + ")");
-                // ��� �ٽ� ������
+                request.setAttribute("errorMsg",
+                    "재고 부족입니다. (현재 재고: " + currentStock + ")");
                 request.getRequestDispatcher("WEB-INF/views/P05_stock/io.jsp")
                        .forward(request, response);
                 return;

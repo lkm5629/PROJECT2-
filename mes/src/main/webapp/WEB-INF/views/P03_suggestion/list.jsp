@@ -1,20 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="java.util.*"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>건의사항</title>
-
 <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
 <link rel="stylesheet" href="/mes/static/css/P00_layout/header.css">
 <script src="/mes/static/js/00_layout/header.js"></script>
 <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 <script src="/mes/static/js/00_layout/snb.js"></script>
 <link rel="stylesheet" href="/mes/static/css/P03_suggestion/suggestion.css">
-
 </head>
 <body>
 
@@ -26,21 +25,6 @@
     </div>
     <div class="content">
         <main class="sg">
-
-<%
-    Map  map        = (Map)  request.getAttribute("map");
-    int  total      = (int)  map.get("totalCount");
-    int  size       = (int)  map.get("size");
-    int  pageNum    = (int)  map.get("page");
-
-    int  totalPage  = (int) Math.ceil((double) total / size);
-    if (totalPage < 1) totalPage = 1;
-
-    int  section       = 5;
-    int  end_section   = (int) Math.ceil((double) pageNum / section) * section;
-    int  start_section = end_section - section + 1;
-    if (end_section > totalPage) end_section = totalPage;
-%>
 
   <div id="page-suggest-list">
     <div class="page-header-row">
@@ -69,10 +53,10 @@
       <button class="btn btn-outline btn-sm toolbar-btn">검색</button>
 
       <select id="sizeSelect" class="date-input size-select">
-        <option value="5"  <%= size==5  ? "selected" : "" %>>5건</option>
-        <option value="10" <%= size==10 ? "selected" : "" %>>10건</option>
-        <option value="15" <%= size==15 ? "selected" : "" %>>15건</option>
-        <option value="20" <%= size==20 ? "selected" : "" %>>20건</option>
+        <option value="5"  ${map.size == 5  ? 'selected' : ''}>5건</option>
+        <option value="10" ${map.size == 10 ? 'selected' : ''}>10건</option>
+        <option value="15" ${map.size == 15 ? 'selected' : ''}>15건</option>
+        <option value="20" ${map.size == 20 ? 'selected' : ''}>20건</option>
       </select>
     </div>
 
@@ -124,28 +108,34 @@
 
     <!-- 페이지네이션 -->
     <div class="pagination">
-      <% if (pageNum == 1) { %>
-        <button class="page-btn" disabled>이전</button>
-      <% } else { %>
-        <a class="page-btn" href="${pageContext.request.contextPath}/suggestion/list?page=<%= pageNum-1 %>&size=<%= size %>">이전</a>
-      <% } %>
+      <c:choose>
+        <c:when test="${map.page == 1}">
+          <button class="page-btn" disabled>이전</button>
+        </c:when>
+        <c:otherwise>
+          <a class="page-btn" href="${pageContext.request.contextPath}/suggestion/list?page=${map.page - 1}&size=${map.size}">이전</a>
+        </c:otherwise>
+      </c:choose>
 
-      <c:forEach var="i" begin="<%= start_section %>" end="<%= end_section %>">
+      <c:forEach var="i" begin="${map.groupStartPage}" end="${map.groupEndPage}">
         <c:choose>
-          <c:when test="${map.page eq i}">
+          <c:when test="${map.page == i}">
             <button class="page-btn page-btn-active">${i}</button>
           </c:when>
           <c:otherwise>
-            <a class="page-btn" href="${pageContext.request.contextPath}/suggestion/list?page=${i}&size=<%= size %>">${i}</a>
+            <a class="page-btn" href="${pageContext.request.contextPath}/suggestion/list?page=${i}&size=${map.size}">${i}</a>
           </c:otherwise>
         </c:choose>
       </c:forEach>
 
-      <% if (pageNum >= totalPage) { %>
-        <button class="page-btn" disabled>다음</button>
-      <% } else { %>
-        <a class="page-btn" href="${pageContext.request.contextPath}/suggestion/list?page=<%= pageNum+1 %>&size=<%= size %>">다음</a>
-      <% } %>
+      <c:choose>
+        <c:when test="${map.page >= map.totalPages}">
+          <button class="page-btn" disabled>다음</button>
+        </c:when>
+        <c:otherwise>
+          <a class="page-btn" href="${pageContext.request.contextPath}/suggestion/list?page=${map.page + 1}&size=${map.size}">다음</a>
+        </c:otherwise>
+      </c:choose>
     </div>
 
   </div>

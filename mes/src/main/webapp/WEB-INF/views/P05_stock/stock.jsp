@@ -58,7 +58,7 @@
                             <option value="${g.g_id}" ${map.filterGId == g.g_id ? 'selected' : ''}>
                                 <c:choose>
                                     <c:when test="${g.g_id == '10'}">원자재</c:when>
-                                    <c:when test="${g.g_id == '20'}">반자재</c:when>
+                                    <c:when test="${g.g_id == '20'}">반제품</c:when>
                                     <c:when test="${g.g_id == '30'}">완제품</c:when>
                                     <c:otherwise>${g.g_id}</c:otherwise>
                                 </c:choose>
@@ -92,7 +92,6 @@
                                 <th>단위</th>
                                 <th>재고</th>
                                 <th>안전 재고</th>
-                                <th>수정</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,7 +102,7 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${dto.g_id == '10'}">원자재</c:when>
-                                            <c:when test="${dto.g_id == '20'}">반자재</c:when>
+                                            <c:when test="${dto.g_id == '20'}">반제품</c:when>
                                             <c:when test="${dto.g_id == '30'}">완제품</c:when>
                                             <c:otherwise>${dto.g_id}</c:otherwise>
                                         </c:choose>
@@ -111,15 +110,8 @@
                                     <td>${not empty dto.spec ? dto.spec : '-'}</td>
                                     <td>${not empty dto.unit ? dto.unit : '-'}</td>
                                     <td>${dto.stock_no != null ? dto.stock_no : 0}</td>
-                                    <td>${dto.safe_no != null ? dto.safe_no : 0}</td>
-                                    <td>
-                                        <button class="btn-edit-safe"
-                                            data-stock-id="${dto.stock_id}"
-                                            data-safe-no="${dto.safe_no != null ? dto.safe_no : 0}"
-                                            data-item-name="${dto.item_name}">
-                                            수정
-                                        </button>
-                                    </td>
+                                    <td>${dto.safe_qty != null ? dto.safe_qty : 0}</td><%-- ★ safe_no → safe_qty --%>
+
                                 </tr>
                             </c:forEach>
                         </tbody>
@@ -173,21 +165,7 @@
         </div>
     </div>
 
-    <%-- 안전재고 수정 모달 --%>
-    <dialog id="safeNoModal" class="modal-box">
-        <h2 class="modal-title">안전재고 수정</h2>
-        <div class="modal-grid">
-            <div class="modal-field">
-                <label>안전재고 수량</label>
-                <input type="number" id="modal_safe_no" min="0" placeholder="수량 입력">
-            </div>
-        </div>
-        <input type="hidden" id="modal_stock_id">
-        <div class="modal-footer">
-            <button type="button" class="btn-cancel" id="btnSafeNoCancel">← 취소</button>
-            <button type="button" class="btn-submit" id="btnSafeNoSubmit">저장</button>
-        </div>
-    </dialog>
+
 
 </body>
 </html>

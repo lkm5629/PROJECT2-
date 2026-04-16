@@ -206,9 +206,9 @@
                      required value="${planDto.planEdate}">
             </div>
 
-            <div class="form-group">
+            <div class="form-group dtl-status-group">
               <label class="form-label" for="regStatus">상태 <span class="req">*</span></label>
-              <select class="form-control dtl-status-visible" id="regStatus" name="status" required>
+              <select class="form-control" id="regStatus" name="status" required>
                 <option value="0" <c:if test="${planDto.status == 0}">selected</c:if>>대기</option>
                 <option value="1" <c:if test="${planDto.status == 1}">selected</c:if>>진행중</option>
                 <option value="2" <c:if test="${planDto.status == 2}">selected</c:if>>완료</option>

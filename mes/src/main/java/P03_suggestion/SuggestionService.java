@@ -4,17 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import P03_suggestion.SuggestionDAO;
-import P03_suggestion.SuggestionDTO;
-
 public class SuggestionService {
 
     SuggestionDAO suggestionDAO = new SuggestionDAO();
 
     // 목록 조회 (페이지네이션)
     public Map<String, Object> getList(SuggestionDTO dto) {
-        int size = dto.getSize();
-        int page = dto.getPage();
+        int size  = dto.getSize();
+        int page  = dto.getPage();
         int end   = size * page;
         int start = end - (size - 1);
         dto.setEnd(end);
@@ -50,8 +47,13 @@ public class SuggestionService {
         return suggestionDAO.delete(boardno);
     }
 
-    // 댓글 등록
-    public int insertComment(String boardno, String content) {
-        return suggestionDAO.insertComment(boardno, content);
+    // 댓글 목록 조회 (CONNECT BY 계층)
+    public List<CommentDTO> getCommentList(String boardno) {
+        return suggestionDAO.selectCommentList(boardno);
+    }
+
+    // 댓글 등록 (parentComno 추가 — null이면 원댓글, 값 있으면 대댓글)
+    public int insertComment(String boardno, String content, String parentComno) {
+        return suggestionDAO.insertComment(boardno, content, parentComno);
     }
 }

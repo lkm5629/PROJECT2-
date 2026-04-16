@@ -21,7 +21,6 @@
     <script>alert('${errorMsg}');</script>
 </c:if>
 	<%@ include file="/WEB-INF/views/P00_layout/header.jsp"%>
- 필요한 사항은 io 입고 롯번호 다시 써야하는거(홍세정씨 한테 물어봐야함), 안전재고 컬럼을 품목마스터로 빼야함. 입출고일 내일 안되게 막아야한다. 입고사유,자재대분류,자재소분류,거래처 안 고르면 못고르게 막는다.
 	<div class="layout_snb">
 		<div class="snbContent">
 			<%@ include file="/WEB-INF/views/P00_layout/snb.jsp"%>
@@ -86,7 +85,7 @@
 								${item.item_name}</option>
 						</c:forEach>
 					</select>
-					<%-- 작업자 검색 (추후 모달 연동 예정) --%>
+					<%-- 작업자 검색 --%>
 					<div style="display: flex; gap: 8px;">
 						<input type="text" id="filterEmp" placeholder="작업자 검색" readonly
 							value="${map.filterEmp != null ? map.filterEmp : ''}">
