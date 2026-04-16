@@ -194,5 +194,11 @@ textarea {
 	.form-group.full {
 		grid-column: span 2;
 	}
+	.planSel {
+		width: 180px;
+	}
+	.buttonSub {
+		font-size: 12px;
+	}
 	
 }

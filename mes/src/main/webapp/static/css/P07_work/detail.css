@@ -158,6 +158,8 @@ hr {
     border: none;
     padding: 10px;
     text-align: left;
+     
+    text-align: center;
 }
 
 .bomList th {

@@ -76,7 +76,7 @@
 		    <!-- 요약 카드 -->
 		    <div class="summary">
 		        <div class="card">
-		            <p>금일 총 검사 수량</p>
+		            <p>금일 검사 수량</p>
 		            <strong>${cardDTO.total}</strong>
 		        </div>
 		        <div class="card">
@@ -111,9 +111,11 @@
 		                            <option value="30" ${param.status == '30' ? 'selected' : ''}>검사 완료</option>
 		                            <option value="30" ${param.status == '40' ? 'selected' : ''}>보류</option>
 		                        </select>
-		
-		                        <input type="date" name="startDate" value="${param.startDate}" class="date"> ~
-		                        <input type="date" name="endDate" value="${param.endDate}" min="${param.startDate}" class="date">
+		                        
+								<div>
+									<input type="date" name="startDate" value="${param.startDate}" class="date"> ~
+									<input type="date" name="endDate" value="${param.endDate}" class="date" min="${param.startDate}">
+								</div>
 		                    </div>
 		
 		                    <div class="search-area">
@@ -171,7 +173,7 @@
 		
 		                <c:if test="${ empty qcMap.list }">
 		                    <tr>
-		                        <td colspan="10">내용 없음</td>
+		                        <td colspan="8">내용 없음</td>
 		                    </tr>
 		                </c:if>
 		            </tbody>

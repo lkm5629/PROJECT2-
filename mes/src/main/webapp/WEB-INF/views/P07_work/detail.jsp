@@ -157,7 +157,7 @@
 			        <table class="bomList">
 			            <thead>
 			                <tr>
-			                    <th>자재명 (자재코드)</th>
+			                    <th>자재</th>
 			                    <th>소요량</th>
 			                    <th>단위</th>
 			                </tr>

@@ -270,3 +270,16 @@ table.defList th, table.defList td {
 .defList tbody tr {
 	border-bottom: 1px solid var(--color-border);
 }
+
+
+
+
+@media (max-width: 768px) {
+
+	.graphCard {
+		padding: 20px;
+	}
+	
+	.qcDetail {
+	}
+}

@@ -43,8 +43,5 @@ function defGraph() {
     		}
     	}
     });
-    
-    setTimeout(() => {
-        setLayoutHeight_snb();
-    }, 50);
+
 }

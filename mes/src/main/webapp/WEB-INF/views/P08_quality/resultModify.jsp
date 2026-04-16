@@ -89,7 +89,7 @@
 		            </div>
 		
 		            <!-- 완제품 / 작업일 -->
-		            <div class="form-row">
+		            <div class="form-row formDate">
 		                <div class="form-group">
 		                    <label>제품</label>
 		                    <input type="hidden" value="${qcInfo.itemId}">
@@ -107,7 +107,7 @@
 		                </div>
 		            </div>
 		
-		            <div class="form-row">
+		            <div class="form-row formQty">
 		                <div class="form-group">
 		                    <label>검사 수량</label>
 		                    <input type="number" id="totalQty" value="${qcInfo.qty}" placeholder="검사 수량" readonly>
@@ -122,9 +122,7 @@
 		                    <label>총 불량 수량</label>
 		                    <input type="number" id="defSum" value="${qcInfo.defSum}" placeholder="총 불량 수량" readonly>
 		                </div>
-		            </div>
 
-		            <div class="form-row">
 		                <div class="form-group">
 		                    <label>최종 입고 수량</label>
 		                    <input type="number" name="inQty" id="inQty" value="${qcInfo.qty - dispose.dispose}" placeholder="최종 입고 수량" readonly>
