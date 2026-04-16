@@ -65,6 +65,8 @@ public class ProdController extends HttpServlet {
                     break;
                 }
                 request.setAttribute("planDto", dto);
+                request.setAttribute("groupList", prodService.getGroupList());
+                request.setAttribute("itemList",  prodService.getItemList());
                 request.getRequestDispatcher("/WEB-INF/views/P06_prod/prodDetail.jsp")
                        .forward(request, response);
                 break;

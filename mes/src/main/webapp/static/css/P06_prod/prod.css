@@ -875,7 +875,7 @@
 
 
 .reg-status-hidden { display: none; }
-#regStatus { display: none; }
+.pp .dtl-status-group { display: block !important; }
 
 /* ── prodDetail 전용 ── */
 

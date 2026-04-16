@@ -42,7 +42,7 @@ public class StockService {
         return stockDAO.selectGroupList();
     }
 
-    // ÀÔ°í ¸ñ·Ï (Ãâ°í µî·Ï ½Ã AJAX ÂüÁ¶¿ë)
+    // ï¿½Ô°ï¿½ ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ AJAX ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
     public List<StockDTO> getInList() {
         return stockDAO.selectInList();
     }
@@ -55,5 +55,15 @@ public class StockService {
     }
     public int getStockNo(String itemId) {
         return stockDAO.selectStockNo(itemId);
+    }
+
+    // ìœ í†µê¸°í•œ ìž„ë°• LOT ìˆ˜
+    public int getExpiryWarnCount() {
+        return stockDAO.selectExpiryWarnCount();
+    }
+
+    // ìœ í†µê¸°í•œ ì´ˆê³¼ LOT ìˆ˜
+    public int getExpiryOverCount() {
+        return stockDAO.selectExpiryOverCount();
     }
 }
