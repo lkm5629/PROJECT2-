@@ -154,9 +154,9 @@
 		
 			<div class="procInfo">
 			    <!-- BOM -->
-			    <div class="card">
+			    <div class="card BOM">
 			        <div class="card-header">
-			            <strong>BOM (자재 구성)</strong>
+			            <strong>BOM</strong>
 			        </div>
 			
 			        <table class="bomList">
@@ -181,44 +181,43 @@
 			
 			
 			    <!-- 공정 정보 -->
-			    <div class="card">
+			    <div class="card process">
 			        <div class="card-header">
-			            <strong>공정 정보 (공정번호)</strong>
+			        	<div>
+				            <strong>공정 정보</strong>
+				            <span class="sub">${empty process or empty process[0].procName ? '등록 필요' : process[0].procName}</span>
+			        	</div>
 			        </div>
-			
-			        <div class="process-list">
-			            <div class="process-item">
-			                <div class="step">1</div>
-			                <div>
-			                    <div class="process-title">용액 합침</div>
-			                    <div class="process-desc">재단된 원단을 용액에 합침</div>
-			                </div>
-			            </div>
-			
-			            <div class="process-item">
-			                <div class="step">2</div>
-			                <div>
-			                    <div class="process-title">롤러 프레싱</div>
-			                    <div class="process-desc">롤러로 이동, 과다 용액 제거</div>
-			                </div>
-			            </div>
-			
-			            <div class="process-item">
-			                <div class="step">3</div>
-			                <div>
-			                    <div class="process-title">포장 준비</div>
-			                    <div class="process-desc">포장지 위로 이동</div>
-			                </div>
-			            </div>
-			
-			            <div class="process-item">
-			                <div class="step">4</div>
-			                <div>
-			                    <div class="process-title">포장지 실링</div>
-			                    <div class="process-desc">포장지 4면 heat sealing</div>
-			                </div>
-			            </div>
-			        </div>
+					<div class="processInfo">${process[0].procInfo}</div>
+						
+			        <table class="processList">
+			        	<thead>
+			        		<tr>
+			        			<th>순서</th>
+			        			<th>내용</th>
+			        		</tr>
+			        	</thead>
+			        	<tbody>
+			        		<c:choose>
+			        			<c:when test="${empty process}">
+			        				<tr>
+			        					<td colspan="2">내용 없음</td>
+			        				</tr>
+			        			</c:when>
+			        			
+			        			<c:otherwise>
+			        				<c:forEach var="p" items="${process}">
+			        					<tr>
+			        						<td class="step">${p.stepSeq}</td>
+			        						<td>${p.stepName}</td>
+			        					</tr>
+			        				</c:forEach>
+			        			</c:otherwise>
+			        		</c:choose>
+			        	</tbody>
+			        	
+			        </table>
+			        
 			    </div>
 			    
 			</div>

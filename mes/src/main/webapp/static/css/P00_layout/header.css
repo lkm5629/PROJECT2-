@@ -119,6 +119,10 @@
 
 .profile_header {
 	font-weight: 700;
+	font-size: 14px;
+}
+.profile_header:hover {
+	text-decoration: underline;
 }
 
 @media (max-width: 768px) {

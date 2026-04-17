@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import P01_auth.LoginDTO;
 import P01_auth.LoginService;
 
 @WebServlet("/dashboard")
@@ -89,11 +90,48 @@ public class DashboardController extends HttpServlet {
 		// 함수 소환 후 결과(전체 사원수)를 인트에 저장.
 		int scount = s.sread();
 		System.out.println("scount : " + scount);
-
-		
-
 		
 		int spage_no = (int) Math.ceil((double)scount / scountPage);
+		
+		
+		// 1. 세션 가져오기
+	    HttpSession session = request.getSession();
+
+	    // 2. 세션에서 값 꺼내기 (로그인 시 저장했던 이름으로)
+	    
+	    // getAttribute는 Object를 반환하므로 적절하게 형변환(Casting)이 필요합니다.
+	    LoginDTO l = (LoginDTO) session.getAttribute("dto");
+	    String empid = l.getEmpid();
+	    
+	    if (empid != null) {
+	        System.out.println("현재 로그인된 아이디: " + empid);
+	    }
+		
+		
+		// Paging 페이징(alarms)
+		String apage = request.getParameter("a_btn");
+		System.out.println("apage : " + apage);
+		
+		// 처음은 1로 스타트되게
+		if (apage == null) {
+			apage = "1";
+		}
+		// 한 페이지당 보여줄 개수
+		int acountPage = 5;
+		
+		// 시작 번호 1이면 0. 2면 5. 3이면 10.
+		int astart_no = (Integer.parseInt(apage) - 1) * acountPage;
+		
+		System.out.println("astart_no : " + astart_no);
+		
+		int acountPageNo = astart_no + acountPage;
+		System.out.println(" acountPageNo : " + acountPageNo);
+		
+		// 함수 소환 후 결과(전체 사원수)를 인트에 저장.
+		int acount = s.aread(empid);
+		System.out.println("acount : " + acount);
+		
+		int apage_no = (int) Math.ceil((double)acount / scountPage);
 		
 		
 		System.out.println("spage_no : "+spage_no);
@@ -102,18 +140,24 @@ public class DashboardController extends HttpServlet {
 
 		List<DashDTO> list = s.defect();
 		List<DashDTO> work_order = s.work_order();
-		List<DashDTO> i = s.i();
+		List<DashDTO> a = s.a(empid, astart_no, acountPageNo);
 		List<DashDTO> notice = s.notice(nstart_no, ncountPageNo);
 		List<DashDTO> suggestion = s.suggestion(sstart_no, scountPageNo);
 
-		// 세션 소환
-		HttpSession session = request.getSession();
+	
 
 		// 세션으로 보내기
 		session.setAttribute("list", list);
 		
 		session.setAttribute("npage_no", npage_no);
 		session.setAttribute("notice", notice);
+		
+		session.setAttribute("work", work_order);
+		
+		session.setAttribute("apage_no", apage_no);
+		session.setAttribute("alarms", a);
+		
+		System.out.println("work : "+work_order);
 		
 		session.setAttribute("spage_no", spage_no);
 		session.setAttribute("suggestion", suggestion);

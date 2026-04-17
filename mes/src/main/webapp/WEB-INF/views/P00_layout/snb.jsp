@@ -55,6 +55,9 @@
 
         <li class="snb-item" <c:if test="${(empty dto.auth) || dto.auth < 3}">style="display: none;"</c:if> >
         	<span class="menu-label_snb hover" id="userManage_snb">사용자 관리</span>
+        	<ul class="snb-sub">
+                <li class="snb-sub-item"><span class="menu-label_snb hover" id="join_snb">회원 추가</span></li>
+            </ul>
         </li>
 
     </ul>
@@ -82,25 +85,30 @@
             <li><a href="/mes/io">입출고관리</a></li>
             <li>
 <!--                 <span>리포팅</span> -->
-                <a href="/mes/io">리포팅</a>
+                <a href="/mes/reporting">리포팅</a>
                 <ul>
-                    <li><a href="/mes/report/defect">부적합 보고서</a></li>
+                    <li><a href="/mes/defectreporting">부적합 보고서</a></li>
                 </ul>
             </li>
             <li>
             	<span>기준정보</span>
             	<ul>
-                    <li><a href="/mes/report/process">공정관리</a></li>
-                    <li><a href="/mes/report/itemMaster">품목마스터</a></li>
-                    <li><a href="/mes/report/BOM">BOM 관리</a></li>
-                    <li><a href="/mes/report/vendor">거래처관리</a></li>
+                    <li><a href="/mes/process">공정관리</a></li>
+                    <li><a href="/mes/itemmaster">품목마스터</a></li>
+                    <li><a href="/mes/bom">BOM 관리</a></li>
+                    <li><a href="/mes/vendor">거래처관리</a></li>
                 </ul>
             </li>
             <li><a href="/mes/notice">공지사항</a></li>
             <li><a href="/mes/suggestion">건의사항</a></li>
             <li><a href="/mes/mypage">마이페이지</a></li>
             <c:if test="${!(empty dto.auth) || dto.auth >= 3}">
-            	<li><a href="/mes/userManage">사용자 관리</a></li>
+            	<li>
+            		<a href="/mes/permission">사용자 관리</a>
+            		<ul>
+	                    <li><a href="/mes/join">회원 추가</a></li>
+	                </ul>
+            	</li>
             </c:if> 
         </ul>
     </div>

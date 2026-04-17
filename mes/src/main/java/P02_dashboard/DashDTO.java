@@ -15,7 +15,62 @@ public class DashDTO {
 	Date iotime;
 	String itemid;
 	
+	
 	int wo_qty;
+	int prev_qty;
+	
+	String atitle;
+	String acontent;
+	String alink_url;
+	
+	
+	
+	
+	
+	
+
+	@Override
+	public String toString() {
+		return "DashDTO [dtype_name=" + dtype_name + ", nboardno=" + nboardno + ", ntitle=" + ntitle + ", sboardno="
+				+ sboardno + ", stitle=" + stitle + ", ioreason=" + ioreason + ", iotime=" + iotime + ", itemid="
+				+ itemid + ", wo_qty=" + wo_qty + ", prev_qty=" + prev_qty + ", atitle=" + atitle + ", acontent="
+				+ acontent + ", alink_url=" + alink_url + ", workdate=" + workdate + ", wostatusno=" + wostatusno
+				+ ", qcsdate=" + qcsdate + ", qcedate=" + qcedate + ", qcstatusno=" + qcstatusno + ", complete="
+				+ complete + "]";
+	}
+
+	public String getAtitle() {
+		return atitle;
+	}
+
+	public void setAtitle(String atitle) {
+		this.atitle = atitle;
+	}
+
+	public String getAcontent() {
+		return acontent;
+	}
+
+	public void setAcontent(String acontent) {
+		this.acontent = acontent;
+	}
+
+	public String getAlink_url() {
+		return alink_url;
+	}
+
+	public void setAlink_url(String alink_url) {
+		this.alink_url = alink_url;
+	}
+
+	public int getPrev_qty() {
+		return prev_qty;
+	}
+
+	public void setPrev_qty(int prev_qty) {
+		this.prev_qty = prev_qty;
+	}
+
 	Date workdate;
 	int wostatusno;
 	String qcsdate;

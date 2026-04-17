@@ -112,6 +112,11 @@ public class WoService {
 	    return dao.setBOM(dto);
 	}
 	
+	public List<ProcessDTO> setProcess(ProcessDTO dto) {
+		WoDAO dao = new WoDAO();
+		return dao.setProcess(dto);
+	}
+	
 //	public int insertOut(Connection conn, LotDTO dto, String worker) {
 //		WoDAO dao = new WoDAO();
 //		return dao.insertOut(dto, worker);

@@ -74,7 +74,7 @@
 						<br>
 					</div>
 				</form>
-				<a href="/mes/mypage">직원 등록? (관리자 마이페이지)</a>
+				<a class="a" href="/mes/mypage">직원 등록? (관리자 마이페이지)</a>
 			</div>
 
 

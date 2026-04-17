@@ -107,7 +107,7 @@ public class MypageController extends HttpServlet {
 			} else {
 				System.out.println("정보수정에 실패 했습니다.");
 			}
-			response.sendRedirect(request.getContextPath() + "/mes/WEB-INF/view/P01_auth/mypage.jsp");
+			request.getRequestDispatcher("/mypage").forward(request, response);
 			return;
 
 		}

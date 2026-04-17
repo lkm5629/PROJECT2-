@@ -186,40 +186,49 @@ hr {
 
 
 .procInfo {
-	display: grid;
-	grid-template-columns : repeat(2, 1fr);
-	column-gap : 20px;
+	display: flex;
+	gap : 20px;
 }
+
+.procInfo>div {
+	flex: 1;
+}
+
+
 
 /* 공정 */
-.process-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+
+.processList {
+	width: 100%;
+	margin-top : 20px;
+	border-collapse: collapse;
 }
 
-.process-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
+.processList th {
+	background-color: var(--color-main-blue);
+	color: white;
 }
 
-.step {
-    width: 30px;
-    height: 30px;
-    background: #777;
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.processList th, .processList td {
+	padding: 5px;
 }
 
-.process-title {
-    font-weight: bold;
+.processList td {
+	border-bottom: 1px solid #ddd;
 }
 
-.process-desc {
-    font-size: 14px;
-    color: #666;
+td.step {
+	text-align: center;
+}
+
+
+@media (max-width: 768px) {
+
+	.procInfo {
+	display: flex;
+	flex-direction: column;
+	gap : 20px;
+	
+	}
+	
 }
