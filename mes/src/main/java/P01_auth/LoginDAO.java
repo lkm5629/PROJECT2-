@@ -398,12 +398,12 @@ public class LoginDAO {
 			String query = " update user_info ";
 			query += " set password = ? ";
 			query += " where emp_id = ? ";
-			query += " and phone = ? ";
+			//query += " and phone = ? ";
 			
 			ps = conn.prepareStatement(query);
 			ps.setString(1, d.getPassword());
 			ps.setString(2, d.getEmpid());
-			ps.setLong(3, d.getPhone());
+			//ps.setLong(3, d.getPhone());
 			
 			// SQL 실행 및 결과 확보
 			count = ps.executeUpdate();
