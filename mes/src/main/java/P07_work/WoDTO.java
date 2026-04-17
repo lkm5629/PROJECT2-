@@ -13,6 +13,7 @@ public class WoDTO {
 	String wName;
 	String content;
 	String deleted;
+	String lotId;
 	
 	// plan
 	String planId;
@@ -88,6 +89,13 @@ public class WoDTO {
 	}
 	public void setDeleted(String deleted) {
 		this.deleted = deleted;
+	}
+	
+	public String getLotId() {
+		return lotId;
+	}
+	public void setLotId(String lotId) {
+		this.lotId = lotId;
 	}
 	public String getPlanId() {
 		return planId;
@@ -185,15 +193,14 @@ public class WoDTO {
 	}
 	
 	
-	
 	@Override
 	public String toString() {
 		return "WoDTO [woId=" + woId + ", workDate=" + workDate + ", woStatus=" + woStatus + ", woQty=" + woQty
 				+ ", prevQty=" + prevQty + ", worker=" + worker + ", wName=" + wName + ", content=" + content
-				+ ", deleted=" + deleted + ", planId=" + planId + ", sDate=" + sDate + ", eDate=" + eDate
-				+ ", planStatus=" + planStatus + ", planQty=" + planQty + ", planPrev=" + planPrev + ", director="
-				+ director + ", dName=" + dName + ", itemId=" + itemId + ", itemName=" + itemName + ", uni=" + uni
-				+ ", spec=" + spec + ", group=" + group + "]";
+				+ ", deleted=" + deleted + ", lotId=" + lotId + ", planId=" + planId + ", sDate=" + sDate + ", eDate="
+				+ eDate + ", planStatus=" + planStatus + ", planQty=" + planQty + ", planPrev=" + planPrev
+				+ ", director=" + director + ", dName=" + dName + ", itemId=" + itemId + ", itemName=" + itemName
+				+ ", uni=" + uni + ", spec=" + spec + ", group=" + group + ", size=" + size + ", page=" + page + "]";
 	}
 	
 }

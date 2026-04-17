@@ -1,5 +1,6 @@
 .content{
-	width: 1160px;
+	width: 100%x;
+	height : 800px;
     display: flex;
     justify-content : center;
     align-items: center;
@@ -7,24 +8,25 @@
 }
 
 .input-1 {
-    width : 350px;
+    width : 96%;
     height : 40px;
     padding-left : 15px;
     box-sizing : border-box;    
 }
 .input-2 {
-    width : 100px;
+    width : 100%;
     height : 35px;
     padding-left : 10px;
-    box-sizing : border-box;    
+    box-sizing : border-box;  
+    margin : 0px 10px;   
 }
 .btn-1 {
-    width : 350px;
+    width : 100%;
     height : 50px;
     
 }
 h2 {
-    width : 370px;
+    width : 100%;
     height : 50px;
     margin : 0px;
     margin-left : 10px;
@@ -35,7 +37,7 @@ h7 {
     margin-bottom: 1px;    
 }
 .center {
-    width : 350px;
+    width : 100%;
     height : 400px;
     display: flex;
     flex-direction: column;
@@ -44,7 +46,7 @@ h7 {
     box-sizing: border-box; 
 }
 .model-body {
-    width : 450px;
+    width : 70%;
     height : 600px;
     border: 1px solid black;
     background-color: white;
@@ -54,27 +56,24 @@ h7 {
     align-items: center;
     box-sizing: border-box;    
     border-radius: 10px;
+    padding : 0px 50px;
 }
 .radius {
     border-radius: 10px;
 }
-.logo {
-    width : 100px;
-    height : 100px;
 
-}
 .close-btn {
 	width : 25px;
 	height : 25px;
 }
 .model-high {
 	margin-bottom : 25px;
-	width : 370px;
+	width : 100%;
 	height : 60px;
 	display: flex;
 }
 .chain {
-	width : 350px;
+	width : 100%;
     height : 40px;
 	display : flex;
 	flex-direction : row;
@@ -88,16 +87,19 @@ a {
 	text-decoration : none;
 }
 [name='join_btn'] {
-	width : 320px;
+	width : 93%;
     height : 40px;
     display : flex;
     justify-content : center;
     align-items : center;
 }
 [name='clean_status'] {
-	width : 180px;
+	width : 100%;
     height : 30px;
     
+}
+.up {
+	height : 30px;
 }
 
 

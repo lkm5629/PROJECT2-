@@ -84,6 +84,11 @@
 	background-color : gray;
 }
 
+.finIo {
+	display: flex;
+	gap: 10px;
+}
+
 
 /* 정보 영역 */
 .info-grid {
@@ -269,4 +274,17 @@ table.defList th, table.defList td {
 
 .defList tbody tr {
 	border-bottom: 1px solid var(--color-border);
+}
+
+
+
+
+@media (max-width: 768px) {
+
+	.graphCard {
+		padding: 20px;
+	}
+	
+	.qcDetail {
+	}
 }

@@ -13,6 +13,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>작업 상세 페이지</title>
 
 <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
@@ -49,12 +51,14 @@
 			        <a href="/mes/worklist">
 			            <button type="button" class="buttonWhite">목록으로</button>
 			        </a>
-			        <a href="/mes/womodify?woId=${woInfo.woId}">
-			            <button type="button" class="buttonMain">지시 수정</button>
-			        </a>
-			        <a href="/mes/contentmodify?woId=${woInfo.woId}">
-			            <button type="button" class="buttonSub">내용 수정</button>
-			        </a>
+			        <c:if test="${woInfo.woStatus != 60}">
+				        <a href="/mes/womodify?woId=${woInfo.woId}">
+				            <button type="button" class="buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 2}">style="display: none;"</c:if> >지시 수정</button>
+				        </a>
+				        <a href="/mes/contentmodify?woId=${woInfo.woId}">
+				            <button type="button" class="buttonSub">내용 수정</button>
+				        </a>
+				    </c:if>
 		        </div>
 		    </div>
 		
@@ -77,6 +81,9 @@
 	            	</c:if>
 	            	<c:if test="${ woInfo.woStatus == 40 }">
 	            		<span class="status qcFin">검사 완료</span>
+	            	</c:if>
+	            	<c:if test="${ woInfo.woStatus == 60 }">
+	            		<span class="status hold">입고 완료</span>
 	            	</c:if>
 	            	<c:if test="${ woInfo.woStatus == 50 }">
 	            		<span class="status hold">보류</span>
@@ -104,7 +111,7 @@
 		
 		            <div class="info-box">
 		                <span class="label">완제품 LOT</span>
-		                <span class="value"> - </span>
+		                <span class="value"> ${woInfo.lotId != null ? woInfo.lotId : ' - '} </span>
 		            </div>
 		        </div>
 		        
@@ -155,17 +162,19 @@
 			        <table class="bomList">
 			            <thead>
 			                <tr>
-			                    <th>자재명 (자재코드)</th>
-			                    <th>소요량</th>
-			                    <th>단위</th>
+			                    <th>자재</th>
+			                    <th>규격</th>
+			                    <th>소요량 (단위)</th>
 			                </tr>
 			            </thead>
 			            <tbody>
-			                <tr>
-			                    <td>자재명 (자재코드)</td>
-			                    <td>1</td>
-			                    <td>장</td>
-			                </tr>
+			            	<c:forEach var="bom" items="${ bom }">
+				                <tr>
+				                    <td>${bom.cName}</td>
+				                    <td>${bom.spec}</td>
+				                    <td>${bom.ea} (${bom.unit})</td>
+				                </tr>
+			                </c:forEach>
 			            </tbody>
 			        </table>
 			    </div>
@@ -211,6 +220,7 @@
 			            </div>
 			        </div>
 			    </div>
+			    
 			</div>
 		    
 		</div>

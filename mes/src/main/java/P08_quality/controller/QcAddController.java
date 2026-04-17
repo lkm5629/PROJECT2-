@@ -77,6 +77,8 @@ public class QcAddController extends HttpServlet {
 		QcService service = new QcService();
 		woDTO = service.setWo(woDTO);
 		
+		System.out.println(woDTO);
+		
 		response.setContentType("application/json; charset=UTF-8");
 
 		String json = "{"

@@ -55,7 +55,9 @@ public class PermissionController extends HttpServlet {
 		// 함수 소환 후 결과(전체 사원수)를 인트에 저장.
 		int count = s.readEmp();
 		
-		int page_no = (int)Math.ceil(count/countPage);
+		int page_no = (int)Math.ceil((double)count/countPage);
+		System.out.println("page_no : "+page_no);
+		
 		
 		// 함수 소환 후 결과를 리스트에 저장.
 		List<LoginDTO> list = s.paging(start_no, countPageNo);
@@ -69,7 +71,7 @@ public class PermissionController extends HttpServlet {
 		session.setAttribute("list", list);
 
 		// 세션이니 그냥 주소 바뀌게 ㄱㄱ.
-		request.getRequestDispatcher("/permission.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/P01_auth/permission.jsp").forward(request, response);
 
 	}
 

@@ -165,3 +165,33 @@
     margin: 15px 0;
     font-size: 14px;
 }
+
+
+
+@media (max-width: 768px) {
+
+	.search-tools {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+	
+	.qc-table td:nth-child(1),
+    .qc-table th:nth-child(1),
+    .qc-table td:nth-child(4),
+    .qc-table th:nth-child(4),
+    .qc-table td:nth-child(7),
+    .qc-table th:nth-child(7) {
+        display: none;
+    }
+    
+    .qc-table td:nth-child(8) {
+	    white-space: nowrap;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    max-width: 120px;
+	}
+
+	
+}

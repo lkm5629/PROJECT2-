@@ -180,3 +180,25 @@ textarea {
 .woId {
 	font-size: 14px;
 }
+
+
+
+
+
+
+@media (max-width: 768px) {
+
+	.form-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.form-group.full {
+		grid-column: span 2;
+	}
+	.planSel {
+		width: 180px;
+	}
+	.buttonSub {
+		font-size: 12px;
+	}
+	
+}

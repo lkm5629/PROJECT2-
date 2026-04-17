@@ -23,7 +23,7 @@
 
 <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 <script src="/mes/static/js/00_layout/snb.js"></script>
-<link rel="stylesheet" href="static/css/mypage.css">
+<link rel="stylesheet" href="/mes/static/css/P01_auth/mypage.css">
 </head>
 
 <body>
@@ -51,7 +51,7 @@
 								<span style="color: red;"> ${ error } </span>
 							</c:if>
 						</div>
-						<form method="get" action="login">
+						<form method="post" action="/mes/mypage">
 							<input type="hidden" name="mp_empid" value="${dto.empid}">
 							<div class="mp-tool">
 								<div class="mp-chain">
@@ -64,7 +64,7 @@
 								</div>
 								<div class="mp-chain">
 									<span>부서</span>
-									<div class="input-3 radius">부서명 : ${ dto.deptname }
+									<div class="input-3 radius gray">부서명 : ${ dto.deptname }
 										&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 부서번호: ${ dto.deptno }</div>
 								</div>
 								<div class="mp-chain">
@@ -77,7 +77,7 @@
 								</div>
 								<div class="mp-chain">
 									<span>입사일</span>
-									<div class="input-3 radius">${ dto.hiredate }</div>
+									<div class="input-3 radius gray">${ dto.hiredate }</div>
 								</div>
 								<div class="mp-chain">
 									<span> </span>

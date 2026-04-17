@@ -1,48 +1,45 @@
 @charset "EUC-KR";
 
 header {
-	width: 1440px;
-	height: 100px;
-}
-
-.snb {
-	width: 280px;
-	height: 1000px;
+	width: 100%;
+	height: 100%;
 }
 
 .snb-bro {
-	width: 1160px;
-	height: 1000px;
+	width: 90%;
+	height: 90%;
 }
 
 .title-box {
-	width: 1160px;
+	width: 100%;
 	height: 120px;
 	padding-left: 25px;
 }
 
 .board-box {
-	width: 1160px;
+	width: 100%;
 	height: 880px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
+	margin :  10px 30px;
 }
 
 .dash-body {
-	width: 1440px;
+	width: 100%;
 	height: 1100px;
 	display: flex;
 	justify-content: space-between;
 }
 
 .box-type4 {
-	width: 540px;
+	width: 100%;
 	height: 800px;
 	padding: 0px 10px;
 	margin: 0px 15px;
 	flex-shirink: 0;
 	padding: 0px 60px;
+	margin : 30px 20px;
 }
 
 .radius {
@@ -56,7 +53,7 @@ header {
 }
 
 .mp-tool {
-	width: 440px;
+	width: 100%;
 	height: 600px;
 	display: flex;
 	flex-direction: column;
@@ -64,14 +61,14 @@ header {
 }
 
 .mp-chain {
-	width: 400px;
+	width: 100%;
 	height: 70px;
 	display: flex;
 	flex-direction: column;
 }
 
 .mp-title {
-	width: 400px;
+	width: 100%;
 	height: 100px;
 	display: flex;
 	flex-direction: column;
@@ -80,11 +77,15 @@ header {
 }
 
 [name=mp_btn] {
-	height: 40px;
+	height: 100%;
+	height : 40px;
 	display: flex;
 	justify-content: center; /* 가로 가운데 */
 	align-items: center;
 }
 .hidden {
 	display : none;
+}
+.gray {
+	background-color : lightgrey;
 }

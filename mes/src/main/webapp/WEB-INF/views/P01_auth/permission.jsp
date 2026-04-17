@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
     <script src="/mes/static/js/00_layout/snb.js"></script>
     
-    <link rel="stylesheet" href="static/css/permission.css">
+    <link rel="stylesheet" href="/mes/static/css/P01_auth/permission.css">
 </head>
 
 <body>
@@ -40,8 +40,8 @@
 				<div class="box-type4 radius">
 					<div class="mp-title">
 						<div class="model-close">
-                            <h2>권한</h2>
-		                    <span class="close-btn" >&times;</span>
+                            <h2>권한 관리</h2>
+		                    
 	                    </div>
 						<span>권한 부여 및 수정</span>
 					</div>
@@ -54,6 +54,7 @@
 							<li>사번 : ${ l.empid }</li> 
 							<li>이름 : ${ l.ename }</li> 
 							<li>부서 : ${ l.deptname }</li> 							
+							<li>권한레벨 : ${ l.auth }</li> 							
 						</div>						
 						</a>
 						</div>

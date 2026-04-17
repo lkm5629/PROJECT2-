@@ -20,7 +20,7 @@
 
 <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 <script src="/mes/static/js/00_layout/snb.js"></script>
-<link rel="stylesheet" href="static/css/dashboard.css">
+<link rel="stylesheet" href="/mes/static/css/P02_dashboard/dashboard.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -77,9 +77,9 @@
 					</div>
 
 					<div class="box-type1 radius">
-						<div style="width: 100%; display : flex; justify-content : center;">						
+						<div style="width: 100%; display : flex; justify-content : space-between; ">						
 						<h3 class="semi">불량 유형별 분포 (공정별)</h3>
-						<div style="width : 680px;">
+						<div style="width : 100%;">
 							<canvas id="defect-type-chart"></canvas>
 						</div>
 						</div>
@@ -100,8 +100,8 @@
 					       
 						</div>
 	                       <div class="next">
-					         <c:forEach var="m" begin="0" end="${ npage_no }">
-						          <button name="n_btn" value="${ m == 0 ? 1 : m }" class="buttonMain">${ m == 0 ? 1 : m }</button>
+					         <c:forEach var="m" begin="1" end="${ npage_no }">
+						          <button name="n_btn" value="${ m }" class="buttonMain">${ m }</button>
 					         </c:forEach>
 					       </div>
 					</div>
@@ -109,7 +109,12 @@
 						<h3>건의사항</h3>
 						<div class="short-box">
 						<c:forEach var="s" items="${ suggestion }" >
-	                         <div><a>${ s.sboardno }  :  ${ s.stitle }</a></div>
+	                         <div>
+	                         <a>${ s.sboardno }  :  ${ s.stitle }  </a>
+	                         <div class='buttonMain small'>
+	                         ${ s.complete == 0 ? '검토중' : ( s.complete == 1 ? '검토완료' : '답변달림' ) }
+	                         </div>
+	                         </div>
 	                    </c:forEach>
 	                    
 	                    
@@ -117,8 +122,8 @@
 	                    
 						</div>
 	                     <div class="next">
-					         <c:forEach var="m" begin="0" end="${ spage_no }">
-						          <button name="s_btn" value="${ m == 0 ? 1 : m }" class="buttonMain">${ m == 0 ? 1 : m }</button>
+					         <c:forEach var="m" begin="1" end="${ spage_no }">
+						          <button name="s_btn" value="${ m  }" class="buttonMain">${ m }</button>
 					         </c:forEach>
 					       </div>
 					</div>

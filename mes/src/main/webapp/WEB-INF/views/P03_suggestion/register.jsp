@@ -14,6 +14,10 @@
 <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 <script src="/mes/static/js/00_layout/snb.js"></script>
 <link rel="stylesheet" href="/mes/static/css/P03_suggestion/suggestion.css">
+
+<%-- TinyMCE CDN: suggestion.js보다 먼저 로드 --%>
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="/mes/static/js/03_suggestion/suggestion.js"></script>
 </head>
 <body>
 
@@ -36,7 +40,9 @@
             <div class="card-title">건의사항 작성</div>
             <form id="suggestRegisterForm"
                   action="${pageContext.request.contextPath}/suggestion/insert"
-                  method="post">
+                  method="post"
+                  enctype="multipart/form-data"
+                  accept-charset="UTF-8">
 
                 <div class="form-group">
                     <label class="form-label" for="suggestRegTitle">
@@ -48,13 +54,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="suggestRegContent">
-                        내용 <span class="req">*</span>
-                    </label>
-                    <textarea class="form-control"
-                              id="suggestRegContent" name="content"
-                              placeholder="건의사항 내용을 입력하세요"
-                              rows="7" required></textarea>
+                    <label class="form-label">내용 <span class="req">*</span></label>
+                    <%-- TinyMCE가 붙을 textarea, name=content으로 서버 전송 --%>
+                    <textarea id="suggestRegContent" name="content"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">첨부파일</label>
+                    <input type="file" name="file1" class="form-control">
                 </div>
 
                 <div class="form-actions">
@@ -62,7 +69,7 @@
                             onclick="location.href='${pageContext.request.contextPath}/suggestion/list?page=1'">
                         취소
                     </button>
-                    <button type="submit" class="btn btn-primary">등록</button>
+                    <button type="button" class="btn btn-primary" id="suggestSubmitBtn">등록</button>
                 </div>
             </form>
         </div>

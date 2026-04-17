@@ -5,6 +5,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
+<%@page import="P01_auth.LoginDTO"%>
+<%@page import="java.util.*"%>
+
 
 <!DOCTYPE html>
 <html lang="kr">
@@ -21,7 +24,7 @@
 	<link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 	<script src="/mes/static/js/00_layout/snb.js"></script>
     
-    <link rel="stylesheet" href="static/css/changepw.css">
+    <link rel="stylesheet" href="/mes/static/css/P01_auth/joinResult.css">
 </head>
 
 <body>
@@ -30,24 +33,57 @@
     <h7>제조 실행 시스템</h7>
 	<div class="model-body">
 	<div class="model-high">
-        <h2>비밀번호 변경</h2>
+        <h2>회원가입 결과확인</h2>
 		<span class="close-btn" >&times;</span>
 	</div>
 		<form method="get" action="login">
 			<div class="center">
-				<input type="text" class="input-1 radius" name="change_empid" placeholder="사원번호를 입력해주세요."><br>
-				<input type="text" class="input-1 radius" name="change_phone" placeholder="연락처를 입력해주세요."><br>
-				<input type="password" class="input-1 radius" name="change_pw" placeholder=" 새로 사용할 비밀번호를 입력해주세요."><br>
-				<input type="password" class="input-1 radius" name="change_pw2" placeholder="비밀번호 확인"><br>
-				<button type="submit" class="buttonMain"  name="changepw_btn">로그인</button><br>
+				
+				<table>
+				<tr>
+				<td>이름</td>
+				<td> &nbsp; &nbsp; ${ list.ename } &nbsp;</td>
+				</tr>
+				<tr>
+				<td>사원번호</td>
+				<td> &nbsp; &nbsp; ${ list.empid } &nbsp;</td>
+				</tr>
+				<tr>
+				<td>비밀번호</td>
+				<td> &nbsp; &nbsp; ${ list.password } &nbsp;</td>
+				</tr>
+				<tr>
+				<td>부서명</td>
+				<td> &nbsp; &nbsp; ${ list.deptname } &nbsp; </td>
+				</tr>
+				<tr>
+				<td>부서번호</td>
+				<td> &nbsp; &nbsp; ${ list.deptno } &nbsp; </td>
+				</tr>
+				<tr>
+				<td>입사일</td>
+				<td> &nbsp; &nbsp; ${ list.hiredate } &nbsp;</td>
+				</tr>
+				
+				</table>
+				
+		
+				<div></div>
+				
 			</div>
 		</form>
 		<c:if test=" ${not empty error} ">
 		<div style="color: red; ">${error}</div>
 		</c:if>
-		<a href="http://localhost:8080/mes/login.jsp">비밀번호가 기억나셨나요? (로그인)</a>
-		<div></div>
+		<div>http://localhost:8080/mes/joinResult.jsp</div>
+		<div>http://localhost:8080/mes/join.jsp</div>
 	</div>
+	<script>
+	  const close_btn = document.querySelector(".close-btn");
+	  close_btn.addEventListener('click', function (evt) {
+		  window.location.href = "/mes/join"
+	  })
+	</script>
 
 
 </body>

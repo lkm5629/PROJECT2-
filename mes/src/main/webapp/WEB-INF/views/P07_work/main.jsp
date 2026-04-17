@@ -12,6 +12,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>작업관리</title>
 
 <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
@@ -46,7 +48,7 @@
 			endSection = totalPage;
 		}
 	%>
-	
+
 	<div class="layout_snb">
 		<div class="snbContent">
 			<%@ include file="/WEB-INF/views/P00_layout/snb.jsp" %>
@@ -57,7 +59,7 @@
 			        <h2>작업 관리</h2>
 			        <p>작업 지시서 관리 및 작업 상태 변경</p>
 			    </div>
-    			<button class="addBtn buttonMain">
+    			<button class="addBtn buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 2}">style="display: none;"</c:if> >
     				작업지시 등록
     			</button>
 			</div>
@@ -77,11 +79,14 @@
 								    <option value="20" ${param.status == '20' ? 'selected' : ''}>작업 중</option>
 								    <option value="30" ${param.status == '30' ? 'selected' : ''}>작업 완료</option>
 								    <option value="40" ${param.status == '40' ? 'selected' : ''}>검사 완료</option>
+								    <option value="60" ${param.status == '60' ? 'selected' : ''}>입고 완료</option>
 								    <option value="50" ${param.status == '50' ? 'selected' : ''}>보류</option>
 								</select>
 								
-								<input type="date" name="startDate" value="${param.startDate}" class="date"> ~
-								<input type="date" name="endDate" value="${param.endDate}" class="date" min="${param.startDate}">
+								<div>
+									<input type="date" name="startDate" value="${param.startDate}" class="date"> ~
+									<input type="date" name="endDate" value="${param.endDate}" class="date" min="${param.startDate}">
+								</div>
 							</div>
 							
 					        <div class="search-area">
@@ -127,6 +132,9 @@
 			                		<c:if test="${ i.woStatus == 40 }">
 			                			<span class="status qcFin">검사 완료</span>
 			                		</c:if>
+			                		<c:if test="${ i.woStatus == 60 }">
+			                			<span class="status hold">입고 완료</span>
+			                		</c:if>
 			                		<c:if test="${ i.woStatus == 50 }">
 			                			<span class="status hold">보류</span>
 			                		</c:if>
@@ -136,7 +144,7 @@
 			        	
 			        	<c:if var="i" test="${ empty woMap.list }">
 			        		<tr>
-			        			<td colspan="7">내용 없음</td>
+			        			<td colspan="6">내용 없음</td>
 			        		</tr>
 			        	</c:if>
 			            <!-- 반복 -->

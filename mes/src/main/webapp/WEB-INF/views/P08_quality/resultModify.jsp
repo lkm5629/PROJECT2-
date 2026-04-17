@@ -11,6 +11,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>작업기록 수정</title>
 
 <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
@@ -45,7 +47,7 @@
 			        <a href="/mes/qcdetail?qcId=${qcInfo.qcId}">
 			            <button type="button" class="buttonWhite">취소</button>
 			        </a>
-			        <button type="button" class="buttonMain" onclick="document.getElementById('resultModify').submit()">수정 완료</button>
+			        <button type="button" class="buttonMain"  onclick="validateAndSubmitResult()">수정 완료</button>
 		        </div>
 		    </div>
 		
@@ -87,7 +89,7 @@
 		            </div>
 		
 		            <!-- 완제품 / 작업일 -->
-		            <div class="form-row">
+		            <div class="form-row formDate">
 		                <div class="form-group">
 		                    <label>제품</label>
 		                    <input type="hidden" value="${qcInfo.itemId}">
@@ -105,7 +107,7 @@
 		                </div>
 		            </div>
 		
-		            <div class="form-row">
+		            <div class="form-row formQty">
 		                <div class="form-group">
 		                    <label>검사 수량</label>
 		                    <input type="number" id="totalQty" value="${qcInfo.qty}" placeholder="검사 수량" readonly>
@@ -120,9 +122,7 @@
 		                    <label>총 불량 수량</label>
 		                    <input type="number" id="defSum" value="${qcInfo.defSum}" placeholder="총 불량 수량" readonly>
 		                </div>
-		            </div>
 
-		            <div class="form-row">
 		                <div class="form-group">
 		                    <label>최종 입고 수량</label>
 		                    <input type="number" name="inQty" id="inQty" value="${qcInfo.qty - dispose.dispose}" placeholder="최종 입고 수량" readonly>
@@ -193,7 +193,7 @@
 			        <h2 class="modal-title">불량 내역 관리</h2>
 			
 			        <form method="post" action="/mes/qcresultmodify" id="defect">
-			            <input type="hidden" name="cmd" value="defectAdd">
+			            <input type="hidden" name="cmd" id="cmd" value="defectAdd">
 			            <input type="hidden" name="qcId" value="${qcInfo.qcId}">
 			
 			            <div class="modal-row">

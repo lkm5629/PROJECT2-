@@ -18,7 +18,7 @@
     </div>
 
     <div class="headerRight headerContent">
-        <button type="button" class="userBtn_header buttonMain">
+        <a href="" class="userBtn_header buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 3}">style="display: none;"</c:if> >
             <svg width="18" height="29" viewBox="0 0 31 29" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -40,7 +40,7 @@
             </svg>
 
             사용자 관리
-        </button>
+        </a>
 
         <button type="button" class="alarmBtn_header">
             <svg width="20" height="20" viewBox="0 0 47 47" fill="none"
@@ -119,5 +119,8 @@
         <button type="button" class="profile_header">
             ${ dto.ename } (${ dto.empid })
         </button>
+        
+        <a href="/mes/logout" class="buttonSub">로그아웃</a>
+        
     </div>
 </div>

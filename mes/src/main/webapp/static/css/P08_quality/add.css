@@ -184,3 +184,30 @@ textarea {
 .qcId {
 	font-size: 14px;
 }
+
+
+
+@media (max-width: 768px) {
+    .form-group > div,
+    .inline-group {
+        flex-direction: row;
+    }
+
+    .form-group > div input,
+    .form-group > div select,
+    .inline-group input {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .form-group > div button,
+    .inline-group button {
+        flex-shrink: 0;
+        width: auto;
+    }
+
+    .workSel,
+    .inline-group input {
+        width: auto;
+    }
+}

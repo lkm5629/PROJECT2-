@@ -2,24 +2,24 @@ package P05_stock;
 
 public class Stock2DTO {
 
-    // stock Å×ÀÌºí
+    // stock í…Œì´ë¸”
     private String stock_id;
     private String item_id;
     private Integer stock_no;
-    private Integer safe_no;
     private String deleted;
 
-    // item Å×ÀÌºí (JOIN)
+    // item í…Œì´ë¸” (JOIN)
+    private Integer safe_qty;
     private String item_name;
     private String g_id;
     private String spec;
     private String unit;
 
-    // ÇÊÅÍ
+    // í•„í„°
     private String filterGId;
     private String filterKeyword;
 
-    // ÆäÀÌÂ¡
+    // í˜ì´ì§•
     private int page;
     private int size;
     private int start;
@@ -34,11 +34,11 @@ public class Stock2DTO {
     public Integer getStock_no() { return stock_no; }
     public void setStock_no(Integer stock_no) { this.stock_no = stock_no; }
 
-    public Integer getSafe_no() { return safe_no; }
-    public void setSafe_no(Integer safe_no) { this.safe_no = safe_no; }
-
     public String getDeleted() { return deleted; }
     public void setDeleted(String deleted) { this.deleted = deleted; }
+
+    public Integer getSafe_qty() { return safe_qty; }
+    public void setSafe_qty(Integer safe_qty) { this.safe_qty = safe_qty; }
 
     public String getItem_name() { return item_name; }
     public void setItem_name(String item_name) { this.item_name = item_name; }

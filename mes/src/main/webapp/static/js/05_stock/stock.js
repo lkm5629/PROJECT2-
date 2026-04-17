@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ── 페이지당 건수 변경 → 목록 재조회 ────────────────────
     document.getElementById('size').addEventListener('change', function () {
-        location.href = '/mes/iocontroller?page=1&size=' + this.value;
+        location.href = '/mes/io?page=1&size=' + this.value;
     });
 
 
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // LOT 목록 AJAX 조회
     function fetchLotList(keyword) {
-        fetch('/mes/iocontroller?action=getLotList&keyword=' + encodeURIComponent(keyword))
+        fetch('/mes/io?action=getLotList&keyword=' + encodeURIComponent(keyword))
             .then(res => res.json())
             .then(data => {
                 if (data.length === 0) {
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 작업자 목록 AJAX 조회
     function fetchUserList(keyword) {
-        fetch('/mes/iocontroller?action=getUserList&keyword=' + encodeURIComponent(keyword))
+        fetch('/mes/io?action=getUserList&keyword=' + encodeURIComponent(keyword))
             .then(res => res.json())
             .then(data => {
                 if (data.length === 0) {
@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (keyword)  params.set('filterKeyword',  keyword);
         if (empId)    params.set('filterEmpId',    empId);
 
-        location.href = '/mes/iocontroller?' + params.toString();
+        location.href = '/mes/io?' + params.toString();
     });
 
 

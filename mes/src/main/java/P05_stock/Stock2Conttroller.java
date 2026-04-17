@@ -55,15 +55,13 @@ public class Stock2Conttroller extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        // ¡Ú ¾ÈÀüÀç°í ¼öÁ¤ Ã³¸®
-        String action  = request.getParameter("action");
+        String action = request.getParameter("action");
         if ("updateSafeNo".equals(action)) {
-            String stockId = request.getParameter("stock_id");
+            String itemId = request.getParameter("item_id");  // â˜… stock_id â†’ item_id
             int safeNo = 0;
             try { safeNo = Integer.parseInt(request.getParameter("safe_no")); } catch (Exception e) {}
-            service.updateSafeNo(stockId, safeNo);
+            service.updateSafeNo(itemId, safeNo);  // â˜… stockId â†’ itemId
 
-            // AJAX ¿äÃ»ÀÌ¹Ç·Î JSONÀ¸·Î ÀÀ´ä
             response.setContentType("application/json; charset=UTF-8");
             response.getWriter().write("{\"result\":\"ok\"}");
             return;

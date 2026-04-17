@@ -1,4 +1,4 @@
-package P01_auth;
+package P02_dashboard;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import P01_auth.LoginService;
 
 @WebServlet("/dashboard")
 public class DashboardController extends HttpServlet {
@@ -54,10 +56,12 @@ public class DashboardController extends HttpServlet {
 
 		// 함수 소환 후 결과(전체 사원수)를 인트에 저장.
 		int ncount = s.nread();
+		System.out.println("ncount : " + ncount);
 
-		int npage_no = (int) Math.ceil(ncount / ncountPage);
+		int npage_no = (int) Math.ceil((double)ncount / ncountPage);
+		System.out.println("npage_no : " + npage_no);
 		
-		System.out.println("npage_no : "+npage_no);
+		
 		
 		
 		
@@ -84,14 +88,21 @@ public class DashboardController extends HttpServlet {
 		
 		// 함수 소환 후 결과(전체 사원수)를 인트에 저장.
 		int scount = s.sread();
+		System.out.println("scount : " + scount);
+
 		
-		int spage_no = (int) Math.ceil(scount / scountPage);
+
+		
+		int spage_no = (int) Math.ceil((double)scount / scountPage);
+		
 		
 		System.out.println("spage_no : "+spage_no);
 		
 		
 
 		List<DashDTO> list = s.defect();
+		List<DashDTO> work_order = s.work_order();
+		List<DashDTO> i = s.i();
 		List<DashDTO> notice = s.notice(nstart_no, ncountPageNo);
 		List<DashDTO> suggestion = s.suggestion(sstart_no, scountPageNo);
 
@@ -108,13 +119,15 @@ public class DashboardController extends HttpServlet {
 		session.setAttribute("suggestion", suggestion);
 
 		// 세션이니 그냥 주소 바뀌게 ㄱㄱ.
-		request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/P02_dashboard/dashboard.jsp").forward(request, response);
 
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("dashboard의 dopost 실행");
+
 
 	}
 

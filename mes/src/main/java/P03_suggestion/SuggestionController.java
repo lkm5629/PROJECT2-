@@ -1,6 +1,11 @@
 package P03_suggestion;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -9,9 +14,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import P01_auth.LoginDTO;
+
 @WebServlet("/suggestion/*")
 public class SuggestionController extends HttpServlet {
     private static final long serialVersionUID = 1L;
+
+    private static final String UPLOAD_PATH =
+        "C:\\workspace_proj2\\mes\\src\\main\\webapp\\static\\upload\\suggestion";
 
     SuggestionService suggestionService = new SuggestionService();
 
@@ -19,15 +33,15 @@ public class SuggestionController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) pathInfo = "/list";
 
         switch (pathInfo) {
 
-            case "/list":
+            case "/list": {
                 int size = 10;
                 int page = 1;
                 try { size = Integer.parseInt(request.getParameter("size")); } catch (Exception e) {}
@@ -41,31 +55,85 @@ public class SuggestionController extends HttpServlet {
                 map.put("size", size);
                 map.put("page", page);
 
+                int totalCount    = (int) map.get("totalCount");
+                int totalPages    = (int) Math.ceil((double) totalCount / size);
+                if (totalPages < 1) totalPages = 1;
+
+                int pageGroupSize  = 5;
+                int currentGroup   = (int) Math.ceil((double) page / pageGroupSize);
+                int groupStartPage = (currentGroup - 1) * pageGroupSize + 1;
+                int groupEndPage   = Math.min(groupStartPage + pageGroupSize - 1, totalPages);
+
+                map.put("totalPages",     totalPages);
+                map.put("groupStartPage", groupStartPage);
+                map.put("groupEndPage",   groupEndPage);
+
                 request.setAttribute("map", map);
                 request.getRequestDispatcher(
                     "/WEB-INF/views/P03_suggestion/list.jsp"
                 ).forward(request, response);
                 break;
+            }
 
-            case "/detail":
-                int boardno = 0;
-                try { boardno = Integer.parseInt(request.getParameter("boardno")); } catch (Exception e) {}
+            case "/detail": {
+                String boardno = request.getParameter("boardno");
 
                 SuggestionDTO detail = suggestionService.getDetail(boardno);
-                request.setAttribute("detail", detail);
-                request.setAttribute("page", request.getParameter("page"));
-                request.setAttribute("size", request.getParameter("size"));
+
+                // CONNECT BY 계층 정렬된 댓글 목록 조회
+                List<CommentDTO> commentList = suggestionService.getCommentList(boardno);
+
+                request.setAttribute("detail",      detail);
+                request.setAttribute("commentList", commentList); // 추가
+                request.setAttribute("page",        request.getParameter("page"));
+                request.setAttribute("size",        request.getParameter("size"));
 
                 request.getRequestDispatcher(
                     "/WEB-INF/views/P03_suggestion/detail.jsp"
                 ).forward(request, response);
                 break;
+            }
 
             case "/register":
                 request.getRequestDispatcher(
                     "/WEB-INF/views/P03_suggestion/register.jsp"
                 ).forward(request, response);
                 break;
+
+            // 파일 다운로드
+            case "/download": {
+                String saveName   = request.getParameter("save");
+                String originName = request.getParameter("origin");
+
+                if (saveName == null || saveName.trim().isEmpty()) {
+                    response.sendRedirect(request.getContextPath() + "/suggestion/list");
+                    return;
+                }
+
+                File file = new File(UPLOAD_PATH + "\\" + saveName);
+
+                if (!file.exists()) {
+                    response.setContentType("text/html;charset=UTF-8");
+                    response.getWriter().write("<script>alert('파일을 찾을 수 없습니다.'); history.back();</script>");
+                    return;
+                }
+
+                response.setHeader("Cache-Control", "no-cache");
+                String encodedName = new String(originName.getBytes("UTF-8"), "ISO-8859-1");
+                response.addHeader("Content-Disposition", "attachment; filename=\"" + encodedName + "\"");
+                response.setContentLengthLong(file.length());
+
+                byte[] buf = new byte[1024 * 8];
+                try (InputStream is = new FileInputStream(file);
+                     OutputStream os = response.getOutputStream()) {
+                    int count;
+                    while ((count = is.read(buf)) != -1) {
+                        os.write(buf, 0, count);
+                    }
+                    os.flush();
+                }
+                break;
+            }
 
             default:
                 response.sendRedirect(request.getContextPath() + "/suggestion/list");
@@ -76,36 +144,97 @@ public class SuggestionController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) pathInfo = "";
 
         switch (pathInfo) {
 
-            case "/insert":
-                // TODO: String empId = (String) request.getSession().getAttribute("userId");
-                String empId = "user_1001"; // �ϵ��ڵ� (���� ���� �� �ӽð�)
+            case "/insert": {
+                LoginDTO loginDto = (LoginDTO) request.getSession().getAttribute("dto");
+                if (loginDto == null) {
+                    response.sendRedirect(request.getContextPath() + "/login.jsp");
+                    return;
+                }
+                String empId = loginDto.getEmpid();
 
                 SuggestionDTO insertDto = new SuggestionDTO();
-                insertDto.setTitle(request.getParameter("title"));
-                insertDto.setContent(request.getParameter("content"));
                 insertDto.setEmpId(empId);
 
+                try {
+                    File uploadDir = new File(UPLOAD_PATH);
+                    if (!uploadDir.exists()) uploadDir.mkdirs();
+
+                    DiskFileItemFactory factory = new DiskFileItemFactory();
+                    factory.setRepository(uploadDir);
+                    factory.setSizeThreshold(1024 * 1024);
+
+                    ServletFileUpload upload = new ServletFileUpload(factory);
+                    upload.setFileSizeMax(1024 * 1024 * 10);
+
+                    List<FileItem> items = upload.parseRequest(request);
+
+                    for (FileItem fileItem : items) {
+                        if (fileItem.isFormField()) {
+                            String fieldName = fileItem.getFieldName();
+                            String value     = fileItem.getString("UTF-8");
+                            if ("title".equals(fieldName))   insertDto.setTitle(value);
+                            if ("content".equals(fieldName)) insertDto.setContent(value);
+                        } else {
+                            if (fileItem.getSize() > 0) {
+                                String originName = fileItem.getName();
+                                String saveName   = System.currentTimeMillis() + "_" + originName;
+                                fileItem.write(new File(uploadDir + "\\" + saveName));
+                                insertDto.setOriginName(originName);
+                                insertDto.setSaveName(saveName);
+                            }
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 suggestionService.insert(insertDto);
-
                 response.sendRedirect(request.getContextPath() + "/suggestion/list?page=1");
                 break;
+            }
 
-            case "/delete":
-                int boardno = 0;
-                try { boardno = Integer.parseInt(request.getParameter("boardno")); } catch (Exception e) {}
+            case "/detail": {
+                String action        = request.getParameter("action");
+                String detailBoardno = request.getParameter("boardno");
 
-                suggestionService.delete(boardno);
+                if ("complete".equals(action)) {
+                    suggestionService.updateComplete(detailBoardno);
+                }
+                response.sendRedirect(request.getContextPath() + "/suggestion/detail?boardno=" + detailBoardno);
+                break;
+            }
 
+            case "/comment": {
+                String commentBoardno = request.getParameter("boardno");
+                String commentContent = request.getParameter("commentContent");
+                // 답글 버튼으로 세팅된 부모 comno (원댓글이면 null)
+                String parentComno    = request.getParameter("parentComno");
+
+                // 빈 문자열이면 null로 처리 (DB의 START WITH parent_comno IS NULL 조건 맞춤)
+                if (parentComno != null && parentComno.trim().isEmpty()) {
+                    parentComno = null;
+                }
+
+                suggestionService.insertComment(commentBoardno, commentContent, parentComno);
+                response.sendRedirect(request.getContextPath() + "/suggestion/detail?boardno=" + commentBoardno);
+                break;
+            }
+
+            case "/delete": {
+                String deleteBoardno = request.getParameter("boardno");
+                suggestionService.delete(deleteBoardno);
                 response.sendRedirect(request.getContextPath() + "/suggestion/list?page=1");
                 break;
+            }
 
             default:
                 response.sendRedirect(request.getContextPath() + "/suggestion/list");

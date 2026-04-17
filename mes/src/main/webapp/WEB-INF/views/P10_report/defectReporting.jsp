@@ -20,7 +20,7 @@
 
 <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 <script src="/mes/static/js/00_layout/snb.js"></script>
-<link rel="stylesheet" href="static/css/defectReporting.css">
+<link rel="stylesheet" href="/mes/static/css/P10_report/defectReporting.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -128,9 +128,9 @@
 				    
 				
 				<div class="box-type2-1 radius">
-						<div style="width: 100%; display : flex; flex-direction : column; justify-content : space-evenly;">						
+						<div  style="width: 100%; display : flex; flex-direction : column; justify-content : space-evenly;">						
 						<h3 >불량 유형별 분포</h3>
-						<div style="width : 430px;">
+						<div style="width : 100%;">
 							<canvas id="defect-type-chart"></canvas>
 						</div>
 						</div>
@@ -139,7 +139,7 @@
 					<div class="box-type2-1 radius">
 						<div style="width: 100%; display : flex; flex-direction : column; justify-content : space-evenly;">							
 						<h3>월간 부적합 개수</h3>
-						<div style="width : 430px;">
+						<div>
 							<canvas id="month-defect-chart"></canvas>
 						</div>
 						</div>

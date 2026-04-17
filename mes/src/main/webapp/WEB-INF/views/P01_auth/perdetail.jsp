@@ -20,7 +20,7 @@
 
 <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 <script src="/mes/static/js/00_layout/snb.js"></script>
-<link rel="stylesheet" href="static/css/perdetail.css">
+<link rel="stylesheet" href="/mes/static/css/P01_auth/perdetail.css">
 </head>
 
 <body>
@@ -49,44 +49,55 @@
 	             <strong>${ messege }</strong>
 	             </c:if>
 	             </div>
+			<div class="form-parent">
 			
-			<form method="get" action="login">
+			
+			<form method="post" action="/mes/pdetail">
 					<div class="center">
 				           <div class="pd-box">
-							사번 : <input type="text"
-							class="input-1 radius" name="pd-empid" value="${ d.empid }">
+							사번 : 
+							<li class="input-1 radius">
+							${ d.empid }
+							</li>
 				           </div>
 				           <br>
 				           <div class="pd-box">
-						    부서 : <input type="text" class="input-1 radius"
-							name="pd-deptname" value="${ d.deptname }"> 
+						    부서 : 
+						    <li class="input-1 radius">
+							${ d.deptname }
+							</li>
 				           </div>
 				           <br>
 				           <div class="pd-box">
-						    이름 : <input type="text" class="input-1 radius" name="pd_ename"
-							value="${ d.ename }">
+						    이름 : 
+						    <li class="input-1 radius">
+							${ d.ename }
+							</li>
 				           </div>
 				           <br>
 				           <div class="pd-box">
 						    권한 : <select name="permission" class="input-1 radius">
-							<option>작업자</option>
-							<option>관리자</option>
-							<option>슈퍼바이저</option>
+							<option>작업자 [1]</option>
+							<option>관리자 [2]</option>
+							<option>슈퍼바이저 [3]</option>
 							</select>
 				           </div>
 							<br>
 						<button type="submit" class="buttonMain" name="pd_btn">권한등록</button>
 						<br>
+				        <a class="pd-box1" href="/mes/permission">목록으로</a>
+						
 					</div>
 				</form>
 				
-	           
-				
-				<a href="mypage.jsp">직원 등록? (관리자 마이페이지)</a>
 				<br>
 				<br>
 				
 			</div>
+			
+			
+			</div>
+			
 			<script>
 	            const close_btn = document.querySelector(".close-btn");
 	            close_btn.addEventListener('click', function (evt) {

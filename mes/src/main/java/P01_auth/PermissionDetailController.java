@@ -45,7 +45,7 @@ public class PermissionDetailController extends HttpServlet {
 		session.setAttribute("d", d);
 
 		// 세션이니 그냥 주소 바뀌게 ㄱㄱ.
-		request.getRequestDispatcher("/perdetail.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/P01_auth/perdetail.jsp").forward(request, response);
 
 	}
 

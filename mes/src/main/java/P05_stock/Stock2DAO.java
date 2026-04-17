@@ -23,7 +23,7 @@ public class Stock2DAO {
         return conn;
     }
 
-    // ÀüÃ¼ °Ç¼ö
+    // ì „ì²´ ê±´ìˆ˜
     public int selectTotal(Stock2DTO dto) {
         int totalCount = 0;
 
@@ -63,7 +63,7 @@ public class Stock2DAO {
         return totalCount;
     }
 
-    // ¸ñ·Ï Á¶È¸ (ÆäÀÌÂ¡)
+    // ëª©ë¡ ì¡°íšŒ (í˜ì´ì§•)
     public List<Stock2DTO> select(Stock2DTO dto) {
         List<Stock2DTO> list = new ArrayList<>();
 
@@ -72,7 +72,7 @@ public class Stock2DAO {
         String kwLike  = (keyword != null && !keyword.isEmpty()) ? "%" + keyword + "%" : null;
 
         StringBuilder innerSql = new StringBuilder(
-            "SELECT s.stock_id, s.stock_no, s.safe_no, s.deleted, " +
+            "SELECT s.stock_id, s.stock_no, it.safe_qty, s.deleted, " +
             "it.item_id, it.item_name, it.g_id, it.spec, it.unit " +
             "FROM stock s " +
             "JOIN item it ON s.item_id = it.item_id " +
@@ -109,7 +109,7 @@ public class Stock2DAO {
                     Stock2DTO d = new Stock2DTO();
                     d.setStock_id(rs.getString("stock_id"));
                     d.setStock_no(rs.getInt("stock_no"));
-                    d.setSafe_no(rs.getInt("safe_no"));
+                    d.setSafe_qty(rs.getInt("safe_qty"));
                     d.setDeleted(rs.getString("deleted"));
                     d.setItem_id(rs.getString("item_id"));
                     d.setItem_name(rs.getString("item_name"));
@@ -125,7 +125,7 @@ public class Stock2DAO {
         return list;
     }
 
-    // ºĞ·ùº° ¸ñ·Ï
+    // ë¶„ë¥˜ë³„ ëª©ë¡
     public List<Stock2DTO> selectGroupList() {
         List<Stock2DTO> list = new ArrayList<>();
         try (
@@ -146,7 +146,7 @@ public class Stock2DAO {
         return list;
     }
 
-    // ¿ä¾à Ä«µå: ÀüÃ¼ Ç°¸ñ ¼ö
+    // ìš”ì•½ ì¹´ë“œ: ì „ì²´ í’ˆëª© ìˆ˜
     public int selectTotalCount() {
         int cnt = 0;
         try (
@@ -163,13 +163,16 @@ public class Stock2DAO {
         return cnt;
     }
 
-    // ¿ä¾à Ä«µå: Á¤»óÀç°í (stock_no >= safe_no)
+    // ìš”ì•½ ì¹´ë“œ: ì •ìƒì¬ê³  (stock_no >= safe_qty)
     public int selectNormalCount() {
         int cnt = 0;
         try (
             Connection conn = getConn();
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(*) cnt FROM stock WHERE deleted = 'N' AND stock_no >= safe_no"
+                "SELECT COUNT(*) cnt " +
+                "FROM stock s " +
+                "JOIN item it ON s.item_id = it.item_id " +
+                "WHERE s.deleted = 'N' AND s.stock_no >= it.safe_qty"
             );
             ResultSet rs = ps.executeQuery();
         ) {
@@ -180,13 +183,16 @@ public class Stock2DAO {
         return cnt;
     }
 
-    // ¿ä¾à Ä«µå: ºÎÁ·Àç°í (stock_no < safe_no)
+    // ìš”ì•½ ì¹´ë“œ: ë¶€ì¡±ì¬ê³  (stock_no < safe_qty)
     public int selectLackCount() {
         int cnt = 0;
         try (
             Connection conn = getConn();
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT COUNT(*) cnt FROM stock WHERE deleted = 'N' AND stock_no < safe_no"
+                "SELECT COUNT(*) cnt " +
+                "FROM stock s " +
+                "JOIN item it ON s.item_id = it.item_id " +
+                "WHERE s.deleted = 'N' AND s.stock_no < it.safe_qty"
             );
             ResultSet rs = ps.executeQuery();
         ) {
@@ -197,16 +203,16 @@ public class Stock2DAO {
         return cnt;
     }
 
-    // ¡Ú ¾ÈÀüÀç°í ¼öÁ¤
-    public void updateSafeNo(String stockId, int safeNo) {
+    // ì•ˆì „ì¬ê³  ìˆ˜ì •
+    public void updateSafeNo(String itemId, int safeQty) {
         try (
             Connection conn = getConn();
             PreparedStatement ps = conn.prepareStatement(
-                "UPDATE stock SET safe_no = ? WHERE stock_id = ? AND deleted = 'N'"
+                "UPDATE item SET safe_qty = ? WHERE item_id = ?"
             );
         ) {
-            ps.setInt(1, safeNo);
-            ps.setString(2, stockId);
+            ps.setInt(1, safeQty);
+            ps.setString(2, itemId);
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

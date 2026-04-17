@@ -36,13 +36,13 @@
     <div class="card">
       <div class="card-title">공지 작성</div>
       <form id="noticeEditForm"
-            action="${ctx}/board/notice/update" method="post">
-        <input type="hidden" name="boardno" value="${dto.boardno}">
+            action="${ctx}/notice/update" method="post">
+        <input type="hidden" name="boardno" value="${noticeDTO.boardno}">
 
         <div class="form-group">
           <label class="form-label" for="editNoticeTitle">제목</label>
           <input type="text" class="form-control" id="editNoticeTitle" name="title"
-                 placeholder="공지 제목을 입력하세요" value="${dto.title}">
+                 placeholder="공지 제목을 입력하세요" value="${noticeDTO.title}">
         </div>
 
         <div class="form-group">
@@ -59,7 +59,7 @@
             <button type="button" class="editor-btn">T</button>
             <button type="button" class="editor-btn">A</button>
           </div>
-          <textarea class="editor-area" name="content" rows="8">${dto.content}</textarea>
+          <textarea class="editor-area" name="content" rows="8">${noticeDTO.content}</textarea>
         </div>
 
         <div class="form-actions">
