@@ -7,6 +7,10 @@ public class ProcessDTO {
 	private int seq;
 	private String item_id;
 	private String process_info;
+	private int page;
+	private int size;
+	private int start;
+	private int end;
 
 	private String process_step_id;
 	private String step_name;
@@ -86,6 +90,38 @@ public class ProcessDTO {
 
 	public void setProcess_info(String process_info) {
 		this.process_info = process_info;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
 	}
 
 	public String getProcess_step_id() {
