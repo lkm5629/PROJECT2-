@@ -98,7 +98,7 @@
 								<c:choose>
 									<c:when test="${empty list}">
 										<tr>
-											<td colspan="7" class="empty-row">조회된 거래처가 없습니다.</td>
+											<td colspan="6" class="empty-row">조회된 거래처가 없습니다.</td>
 										</tr>
 									</c:when>
 									<c:otherwise>
@@ -119,7 +119,8 @@
 															data-vendor-name="${fn:escapeXml(vendor.vendor_name)}"
 															data-vendor-type="${fn:escapeXml(vendor.vendor_type)}"
 															data-phone-no="${vendor.phone_no}"
-															data-addr="${fn:escapeXml(vendor.addr)}">
+															data-addr="${fn:escapeXml(vendor.addr)}"
+															data-emp-id="${fn:escapeXml(vendor.emp_id)}">
 															수정</button>
 													</div>
 												</td>
@@ -132,7 +133,9 @@
 
 						<div class="pagination">
 							<c:forEach var="i" begin="1" end="${totalPage}">
-								<a href="${pageContext.request.contextPath}/vendor?page=${i}"</a>
+								<a
+									href="${pageContext.request.contextPath}/vendor?page=${i}&size=${size}&vendorType=${vendorType}&keyword=${keyword}"
+									class="${page == i ? 'active' : ''}">${i}</a>
 							</c:forEach>
 						</div>
 					</div>
@@ -144,6 +147,8 @@
 				<div class="edit_vendor_modal_popup">
 					<form action="${pageContext.request.contextPath}/vendorUpdate"
 						method="post">
+						<input type="hidden" id="edit_emp_id" name="emp_id"
+							value="${not empty currentEmpId ? currentEmpId : (not empty sessionScope.dto.empid ? sessionScope.dto.empid : sessionScope.dto.empId)}">
 
 						<h3 class="edit_vendor_modal_title">거래처 수정</h3>
 
@@ -161,10 +166,6 @@
 								</select>
 							</div>
 
-							<div class="edit_vendor_form_group small">
-								<label>담당자</label> <input type="text" id="edit_emp_id"
-									name="emp_id" class="edit_vendor_info">
-							</div>
 						</div>
 
 						<div class="edit_vendor_form_row second">
@@ -203,13 +204,16 @@
 		<div class="add_vendor_modal_popup">
 			<form action="${pageContext.request.contextPath}/vendorAdd"
 				method="post">
+				<input type="hidden" id="add_emp_id" name="emp_id"
+					value="${not empty currentEmpId ? currentEmpId : (not empty sessionScope.dto.empid ? sessionScope.dto.empid : sessionScope.dto.empId)}">
 
 				<h3 class="add_vendor_modal_title">거래처 등록</h3>
 
 				<div class="add_vendor_form_row">
 					<div class="add_vendor_form_group code">
 						<label>거래처코드</label> <input type="text" id="add_vendor_id"
-							class="add_vendor_info readonly" name="vendor_id" readonly>
+							class="add_vendor_info readonly" name="vendor_id"
+							value="${nextVendorId}" readonly>
 					</div>
 
 					<div class="add_vendor_form_group group">
@@ -218,11 +222,6 @@
 							<option value="공급업체">공급업체</option>
 							<option value="고객사">고객사</option>
 						</select>
-					</div>
-
-					<div class="add_vendor_form_group small">
-						<label>담당자</label> <input type="text" id="add_emp_id"
-							class="add_vendor_info" name="emp_id" placeholder="담당자 ID">
 					</div>
 				</div>
 
@@ -257,16 +256,6 @@
 			</form>
 		</div>
 	</div>
-
-	<script>
-		window.vendorListForCode = [
-			<c:forEach var="vendor" items="${allvendorList}" varStatus="status">
-				{
-					vendorId: "${fn:escapeXml(vendor.vendor_id)}"
-				}<c:if test="${not status.last}">,</c:if>
-			</c:forEach>
-		];
-	</script>
 
 	<script
 		src="${pageContext.request.contextPath}/static/js/11_masterdata/vendor.js"></script>

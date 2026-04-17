@@ -1,77 +1,71 @@
-//공통코드 목록
-const vendorList = document.querySelectorAll('.vendor_list')
-//모달창
-const modal = document.querySelector('.modal')
-//모달 닫기
-const closeBtn = document.querySelector('.close_btn')
+document.addEventListener('DOMContentLoaded', function() {
+    const btnAdd = document.querySelector('.btn-add');
+    const addVendorModal = document.getElementById('addVendorModal');
+    const addVendorCloseBtn = document.getElementById('cancelAddVendorModal');
 
-//거래처 목록 클릭 시
-vendorList.forEach(function (vendor) {
-    vendor.addEventListener('click', function () {
-        console.log("클릭됨")
-        //모달 블럭으로 화면에 띄움
-        modal.style.display = 'flex'
+    const editButtons = document.querySelectorAll('.icon-btn.edit');
+    const editVendorModal = document.querySelector('.edit_vendor_modal');
+    const editVendorCloseBtn = document.querySelector('.edit_vendor_close_btn');
+
+    const editVendorId = document.getElementById('edit_vendor_id');
+    const editVendorType = document.getElementById('edit_vendor_type');
+    const editVendorName = document.getElementById('edit_vendor_name');
+    const editPhoneNo = document.getElementById('edit_phone_no');
+    const editAddr = document.getElementById('edit_addr');
+    const editEmpId = document.getElementById('edit_emp_id');
+
+    if (btnAdd && addVendorModal) {
+        btnAdd.addEventListener('click', function() {
+            addVendorModal.style.display = 'flex';
+        });
+    }
+
+    if (addVendorCloseBtn && addVendorModal) {
+        addVendorCloseBtn.addEventListener('click', function() {
+            addVendorModal.style.display = 'none';
+        });
+    }
+
+    editButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (editVendorId) {
+                editVendorId.value = btn.dataset.vendorId || '';
+            }
+            if (editVendorType) {
+                editVendorType.value = btn.dataset.vendorType || '';
+            }
+            if (editVendorName) {
+                editVendorName.value = btn.dataset.vendorName || '';
+            }
+            if (editPhoneNo) {
+                editPhoneNo.value = btn.dataset.phoneNo || '';
+            }
+            if (editAddr) {
+                editAddr.value = btn.dataset.addr || '';
+            }
+            if (editEmpId) {
+                editEmpId.value = btn.dataset.empId || '';
+            }
+
+            if (editVendorModal) {
+                editVendorModal.style.display = 'flex';
+            }
+        });
+    });
+
+    if (editVendorCloseBtn && editVendorModal) {
+        editVendorCloseBtn.addEventListener('click', function() {
+            editVendorModal.style.display = 'none';
+        });
+    }
+
+    window.addEventListener('click', function(event) {
+        if (addVendorModal && event.target === addVendorModal) {
+            addVendorModal.style.display = 'none';
+        }
+
+        if (editVendorModal && event.target === editVendorModal) {
+            editVendorModal.style.display = 'none';
+        }
     });
 });
-
-//닫기 버튼 클릭 시
-closeBtn.addEventListener('click', function () {
-    //디스플레이 none처리
-    modal.style.display = 'none'
-});
-
-//모달 창 검정 배경 클릭 시
-modal.addEventListener('click', function (event) {
-    // 만약 모달 검정배경을 클릭 할 시
-    if (event.target === modal) {
-        modal.style.display = 'none';
-    }
-});
-
-//거래처 등록
-const add_btn = document.querySelector('.add-btn')//거래처 등록 버튼
-const add_vendor_modal = document.querySelector('.add_vendor_modal')//모달창 전체
-const add_vendor_close_btn = document.querySelector('.add_vendor_close_btn')//닫기
-const add_vendor_save_btn = document.querySelector('.add_vendor_save_btn')//등록
-//거래처 등록 버튼 누르면
-add_btn.addEventListener('click', function(){
-    add_vendor_modal.style.display = 'flex';
-})
-
-//닫기 버튼 눌렀을 시
-add_vendor_close_btn.addEventListener('click', function(){
-    add_vendor_modal.style.display = 'none'
-})
-
-//등록 버튼 눌렀을 시
-add_vendor_save_btn.addEventListener('click', function(){
-    add_vendor_modal.style.display = 'none'
-})
-
-//모달 창 검정 배경 클릭 시
-add_vendor_modal.addEventListener('click', function (event) {
-    // 만약 모달 검정배경을 클릭 할 시
-    if (event.target === add_vendor_modal) {
-        add_vendor_modal.style.display = 'none';
-    }
-});
-
-const detailEditBtn = document.getElementById('detailEditBtn');
-const editVendorModal = document.getElementById('editVendorModal');
-const editVendorCloseBtn = document.getElementById('editVendorCloseBtn');
-const editVendorSaveBtn = document.getElementById('editVendorSaveBtn');
-//수정 버튼 클릭 시
-detailEditBtn.addEventListener('click',function(){
-    editVendorModal.style.display='flex'
-	modal.style.display = 'none'
-})
-
-//수정 모달 안 수정 버튼 클릭 시
-editVendorSaveBtn.addEventListener('click', function(){
-    editVendorModal.style.display = 'none'
-})
-
-//수정 모달 안 닫기 버튼 클릭 시
-editVendorCloseBtn.addEventListener('click', function(){
-    editVendorModal.style.display = 'none'
-})

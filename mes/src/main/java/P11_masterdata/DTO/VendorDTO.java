@@ -7,6 +7,22 @@ public class VendorDTO {
 	String phone_no;
 	String addr;
 	String emp_id;
+	
+	int size;
+	int page;
+	
+	public int getSize() {
+		return size;
+	}
+	public void setSize(int size) {
+		this.size = size;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
 	public String getVendor_id() {
 		return vendor_id;
 	}
