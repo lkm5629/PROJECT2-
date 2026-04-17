@@ -67,13 +67,16 @@ public class JoinController extends HttpServlet {
 		// 회원가입 로직
 		if (join_name != null && join_pw != null && join_pw2 != null && join_mgr != null) {
 			System.out.println("/login doget.join 실행");
+			
+			//비밀번호 SHA-256 암호화
+			System.out.println("암호화 비밀번호 확인 : "+s.encrypt(join_pw));
 
 			d.setEname(join_name);
 			d.setPhone(phone);
 			d.setDeptno(join_dept);
 			d.setMgr(join_mgr);
 			d.setLicense(join_license);
-			d.setPassword(join_pw);
+			d.setPassword(s.encrypt(join_pw));
 			d.setPassword2(join_pw2);
 
 			List list = s.join(d);

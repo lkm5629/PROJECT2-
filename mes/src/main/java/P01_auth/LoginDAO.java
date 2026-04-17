@@ -58,6 +58,7 @@ public class LoginDAO {
 				dto.setPhone(rs.getInt("phone"));
 				dto.setDeptname(rs.getString("DEPT_NAME"));
 				dto.setDeptno(rs.getString("DEPT_NO"));
+				dto.setAuth(rs.getInt("auth"));
 
 				dto.setHiredate(rs.getDate("hiredate"));
 
