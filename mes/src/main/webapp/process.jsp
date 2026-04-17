@@ -42,7 +42,7 @@
 				<div class="process-top">
 					<div class="process-header">
 						<h1>공정 관리</h1>
-						<p>생산 공정 정보를 관리합니다.</p>
+						<p>생산 공정 정보를 관리</p>
 					</div>
 
 					<button type="button" class="process-primary-btn"
@@ -55,7 +55,7 @@
 						action="${pageContext.request.contextPath}/process">
 						<select name="processId" class="process-select"
 							onchange="this.form.submit()">
-							<c:forEach var="p" items="${processList}">
+							<c:forEach var="p" items="${allProcessList}">
 								<option value="${p.process_id}"
 									<c:if test="${selectedProcessId eq p.process_id}">selected</c:if>>
 									${p.process_name}</option>
@@ -156,7 +156,21 @@
 					</div>
 
 					<div class="process-pagination">
-						<a href="#">&lt;</a> <a href="#" class="active">1</a> <a href="#">&gt;</a>
+						<c:if test="${page > 1}">
+							<a
+								href="${pageContext.request.contextPath}/process?page=${page - 1}&size=${size}&processId=${selectedProcessId}">&lt;</a>
+						</c:if>
+
+						<c:forEach var="i" begin="1" end="${totalPage}">
+							<a
+								href="${pageContext.request.contextPath}/process?page=${i}&size=${size}&processId=${selectedProcessId}"
+								class="${page == i ? 'active' : ''}">${i}</a>
+						</c:forEach>
+
+						<c:if test="${page < totalPage}">
+							<a
+								href="${pageContext.request.contextPath}/process?page=${page + 1}&size=${size}&processId=${selectedProcessId}">&gt;</a>
+						</c:if>
 					</div>
 				</section>
 			</div>
