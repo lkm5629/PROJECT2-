@@ -1299,6 +1299,101 @@ public class WoDAO {
 	
 	
 	
+	public List<ProcessDTO> setProcess(ProcessDTO dto) {
+		
+		List<ProcessDTO> list = new ArrayList();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			conn = dataFactory.getConnection();
+			
+			String query = "SELECT w.wo_Id, p.PLAN_ID, i.item_id, proc.PROCESS_ID, proc.PROCESS_NAME, proc.PROCESS_INFO, ps.PROCESS_step_id step_id , ps.STEP_NAME, ps.SEQ stepSeq "
+					+ "FROM work_order w "
+					+ "	LEFT OUTER JOIN PRODUCTION_PLAN p "
+					+ "		ON w.plan_id = p.PLAN_ID "
+					+ "	LEFT OUTER JOIN item i "
+					+ "		ON p.ITEM_ID = i.ITEM_ID "
+					+ "	FULL OUTER JOIN process proc "
+					+ "		ON i.ITEM_ID = proc.item_id "
+					+ "	FULL OUTER JOIN process_step ps "
+					+ "		ON proc.PROCESS_ID = ps.PROCESS_ID "
+					+ "WHERE w.WO_ID = ? AND proc.process_type = 'wo' "
+					+ "ORDER BY proc.process_id, ps.SEQ";
+			
+			ps = conn.prepareStatement(query);
+			ps.setString(1, dto.getWoId());
+			
+			System.out.println("dto.getWoId() = [" + dto.getWoId() + "]");
+			System.out.println("query = " + query);
+			
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				
+				String woId = rs.getString("wo_Id");
+				String planId = rs.getString("plan_id");
+				String procId = rs.getString("process_id");
+				String procName = rs.getString("process_name");
+				String procInfo = rs.getString("process_info");
+				String stepId = rs.getString("step_id");
+				String stepName = rs.getString("step_name");
+				int stepSeq = rs.getInt("stepSeq");
+				
+				ProcessDTO process = new ProcessDTO();
+				
+				process.setWoId(woId);
+				process.setPlanId(planId);
+				process.setProcId(procId);
+				process.setProcName(procName);
+				process.setProcInfo(procInfo);
+				process.setStepId(stepId);
+				process.setStepName(stepName);
+				process.setStepSeq(stepSeq);
+				
+				list.add(process);
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return list;
+	} // setProcess
+	
+	
+	
 
 	public LotDTO getLot (String itemId) {
 		Connection conn = null;

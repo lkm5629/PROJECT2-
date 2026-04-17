@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import P07_work.ProcessDTO;
 import P07_work.WoBOMDTO;
 import P07_work.WoDTO;
 import P07_work.WoService;
@@ -25,6 +26,7 @@ public class WoDetailController extends HttpServlet {
 		
 		setting(request, response);
 		setBOM(request, response);
+		setProcess(request, response);
 		
 		request.getRequestDispatcher("/WEB-INF/views/P07_work/detail.jsp").forward(request, response);
 	}
@@ -67,6 +69,25 @@ public class WoDetailController extends HttpServlet {
 		
 		// forward
 		request.setAttribute("bom", bom);
+	}
+	
+	protected void setProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/workorder setProcess 실행");
+		
+		String woId = request.getParameter("woId");
+		System.out.println(woId);
+		
+		ProcessDTO dto = new ProcessDTO();
+		
+		dto.setWoId(woId);
+		
+		WoService service = new WoService();
+		List<ProcessDTO> process = service.setProcess(dto);
+		
+		System.out.println(process);
+		
+		// forward
+		request.setAttribute("process", process);
 	}
 
 }
