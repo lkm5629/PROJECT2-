@@ -1,185 +1,236 @@
-console.log(window.itemListForCode);//DB목록
+console.log(window.itemListForCode);
 
-const edit = document.querySelectorAll('.icon-btn.edit'); // 수정 아이콘
-const edit_item_modal = document.querySelector('.edit_item_modal');
-const edit_item_close_btn = document.querySelector('.edit_item_close_btn'); // 닫기 버튼
-const edit_item_save_btn = document.querySelector('.edit_item_save_btn'); // 수정 버튼
+document.addEventListener('DOMContentLoaded', function() {
 
-const edit_item_id = document.getElementById("edit_item_id");
-const edit_item_name = document.getElementById("edit_item_name");
-const edit_g_id = document.getElementById("edit_g_id");
-const edit_spec = document.getElementById("edit_spec");
-const edit_unit = document.getElementById("edit_unit");
+    // 품목 그룹 번호에 따라 이름 매핑
+    const groupMap = {
+        '30': '완제품',
+        '20': '반제품',
+        '10': '원자재'
+    };
 
-//   수정 아이콘(여러 개) 클릭 시 수정 모달 띄움
-edit.forEach(function(btn){
-    btn.addEventListener('click', function(){
-        edit_item_id.value = btn.dataset.itemId;
-        edit_item_name.value = btn.dataset.itemName;
-        edit_g_id.value = btn.dataset.gId;
-        edit_spec.value = btn.dataset.spec;
-        edit_unit.value = btn.dataset.unit;
-        
-        edit_item_modal.style.display = 'flex';
-    });
-});
+    // 수정 모달 관련 요소
+    const editButtons = document.querySelectorAll('.icon-btn.edit');
+    const editItemModal = document.querySelector('.edit_item_modal');
+    const editItemCloseBtn = document.querySelector('.edit_item_close_btn');
 
+    const editItemId = document.getElementById('edit_item_id');
+    const editItemName = document.getElementById('edit_item_name');
+    const editGId = document.getElementById('edit_g_id');
+    const editSafeQty = document.getElementById('edit_safe_qty');
+    const editPay = document.getElementById('edit_pay');
+    const editSpec = document.getElementById('edit_spec');
+    const editUnit = document.getElementById('edit_unit');
 
-// 수정 모달 안 수정 버튼 클릭 시
-edit_item_save_btn.addEventListener('click', function () {
-    console.log("수정 클릭됨");
-    edit_item_modal.style.display = 'none';
-});
+    // 수정 버튼 클릭 시 모달에 값 넣기
+    for (let i = 0; i < editButtons.length; i++) {
+        editButtons[i].addEventListener('click', function() {
 
-// 수정 모달 안 닫기 버튼 클릭 시
-edit_item_close_btn.addEventListener('click', function(){
-    console.log("닫기 클릭됨");
-    edit_item_modal.style.display = 'none';
-});
+            let itemId = editButtons[i].dataset.itemId;
+            let itemName = editButtons[i].dataset.itemName;
+            let gId = editButtons[i].dataset.gId;
+            let safeQty = editButtons[i].dataset.safeQty;
+            let pay = editButtons[i].dataset.pay;
+            let spec = editButtons[i].dataset.spec;
+            let unit = editButtons[i].dataset.unit;
 
-const edit_item_info = document.getElementById("edit_item_name");
-const edit_item_search_btn = document.querySelector('#edit_item_search_btn');
+            if (itemId == null) {
+                itemId = '';
+            }
+            if (itemName == null) {
+                itemName = '';
+            }
+            if (gId == null) {
+                gId = '';
+            }
+            if (safeQty == null || safeQty === '') {
+                safeQty = '0';
+            }
+            if (pay == null || pay === '') {
+                pay = '0';
+            }
+            if (spec == null) {
+                spec = '';
+            }
+            if (unit == null) {
+                unit = '';
+            }
 
-// 품목 데이터 배열
-const items = [
-    "알콜솝 소(3X3) - 에탄올",
-    "알콜솝 대(5X5) - 에탄올",
-    "알콜솝 소(3X3) - 이소프로판올",
-    "알콜솝 대(5X5) - 이소프로판올"
-];
+            if (editItemId != null) {
+                editItemId.value = itemId;
+            }
+            if (editItemName != null) {
+                editItemName.value = itemName;
+            }
+            if (editGId != null) {
+                editGId.value = gId;
+            }
+            if (editSafeQty != null) {
+                editSafeQty.value = safeQty;
+            }
+            if (editPay != null) {
+                editPay.value = pay;
+            }
+            if (editSpec != null) {
+                editSpec.value = spec;
+            }
+            if (editUnit != null) {
+                editUnit.value = unit;
+            }
 
-if (edit_item_search_btn) {
-    edit_item_search_btn.addEventListener('click', function(){
-        const keyword = edit_item_info.value.trim();
-        const filtered = items.filter(function(item){
-            return item.includes(keyword);
+            if (editItemModal != null) {
+                editItemModal.style.display = 'flex';
+            }
         });
-        console.log(filtered);
+    }
+
+    // 수정 모달 닫기 버튼
+    if (editItemCloseBtn != null && editItemModal != null) {
+        editItemCloseBtn.addEventListener('click', function() {
+            editItemModal.style.display = 'none';
+        });
+    }
+
+    // 등록 모달 관련 요소
+    const btnAdd = document.querySelector('.btn-add');
+    const addItemModal = document.getElementById('addItemModal');
+    const addItemCloseBtn = document.getElementById('cancelAddItemModal');
+
+    if (btnAdd != null && addItemModal != null) {
+        btnAdd.addEventListener('click', function() {
+            addItemModal.style.display = 'flex';
+            syncAddItemGroupName();
+            updateItemCode();
+        });
+    }
+
+    if (addItemCloseBtn != null && addItemModal != null) {
+        addItemCloseBtn.addEventListener('click', function() {
+            addItemModal.style.display = 'none';
+        });
+    }
+
+    // 등록 폼 요소
+    const addItemId = document.getElementById('add_item_id');
+    const addItemName = document.getElementById('add_item_name');
+    const addGId = document.getElementById('add_g_id');
+    const addItemGroupName = document.getElementById('add_itemgroup_name');
+
+    let codeItems = window.itemListForCode;
+    if (codeItems == null) {
+        codeItems = [];
+    }
+
+    // 품목 그룹명 hidden 값 세팅
+    function syncAddItemGroupName() {
+        if (addGId == null || addItemGroupName == null) {
+            return;
+        }
+
+        const selectedGroup = addGId.value;
+
+        if (groupMap[selectedGroup] != null) {
+            addItemGroupName.value = groupMap[selectedGroup];
+        } else {
+            addItemGroupName.value = '';
+        }
+    }
+
+    // 그룹별 접두어 정하기
+    function changePrefixByGroup(gId) {
+        if (gId === '30') {
+            return 'fin';
+        } else if (gId === '20') {
+            return 'semi';
+        } else if (gId === '10') {
+            return 'raw';
+        } else {
+            return '';
+        }
+    }
+
+    // 품목코드 자동 생성
+    function updateItemCode() {
+        if (addItemId == null || addItemName == null || addGId == null) {
+            return;
+        }
+
+        const itemName = addItemName.value.trim();
+        const gId = addGId.value;
+
+        if (itemName === '' || gId === '') {
+            addItemId.value = '';
+            return;
+        }
+
+        let sameGroupItems = [];
+
+        for (let i = 0; i < codeItems.length; i++) {
+            if (String(codeItems[i].gId) === String(gId)) {
+                sameGroupItems.push(codeItems[i]);
+            }
+        }
+
+        let maxNumber = 1000;
+
+        for (let i = 0; i < sameGroupItems.length; i++) {
+            let itemId = String(sameGroupItems[i].itemId);
+            let parts = itemId.split('_');
+
+            if (parts.length > 1) {
+                let number = parseInt(parts[1], 10);
+
+                if (isNaN(number) === false) {
+                    if (number > maxNumber) {
+                        maxNumber = number;
+                    }
+                }
+            }
+        }
+
+        const nextNumber = maxNumber + 1;
+        const prefix = changePrefixByGroup(gId);
+
+        if (prefix === '') {
+            addItemId.value = '';
+            return;
+        }
+
+        addItemId.value = prefix + '_' + nextNumber;
+    }
+
+    // 품목명 입력 시 품목코드 다시 만들기
+    if (addItemName != null) {
+        addItemName.addEventListener('input', function() {
+            updateItemCode();
+        });
+    }
+
+    // 품목그룹 변경 시 hidden 값, 품목코드 다시 만들기
+    if (addGId != null) {
+        addGId.addEventListener('change', function() {
+            syncAddItemGroupName();
+            updateItemCode();
+        });
+    }
+
+    // 페이지 처음 열릴 때 1번 실행
+    syncAddItemGroupName();
+    updateItemCode();
+
+    // 모달 바깥 클릭 시 닫기
+    window.addEventListener('click', function(e) {
+        if (editItemModal != null) {
+            if (e.target === editItemModal) {
+                editItemModal.style.display = 'none';
+            }
+        }
+
+        if (addItemModal != null) {
+            if (e.target === addItemModal) {
+                addItemModal.style.display = 'none';
+            }
+        }
     });
-}
 
-
-const btn_add = document.querySelector('.btn-add');//품목등록 버튼
-const add_item_modal = document.querySelector('.add_item_modal');//품목등록 모달창
-//품목등록 버튼을 클릭 했을 때
-btn_add.addEventListener('click',function(){
-	add_item_modal.style.display = 'flex';
 });
-
-//사용자가 등록 모달에서 품목 그룹을 선택하고
-//품목명을 입력하면
-//품목코드 input에 자동으로 값이 들어가게 만들기
-const add_item_id = document.getElementById('add_item_id');//품목코드
-const add_item_name = document.getElementById('add_item_name');//품목명
-const add_g_id = document.getElementById('add_g_id');//품목그룹
-const codeItems = window.itemListForCode || []; //DB 배열 저장해둘 곳
-
-//DB 그룹숫자를 받아서 문자열 하나를 돌려주는 함수
-//매개변수: 함수가 작업할 재료를 담는 변수
-function gId_change(gId){
-	if(gId === '30'){
-		return "fin";
-	}
-	if(gId === '20'){
-		return "semi";
-	}
-	if(gId === '10'){
-		return "raw";
-	}
-	
-};
-
-//자동으로 코드 생성 됨 함수(브라우저에서)
-//품목명 읽기
-//품목 그룹 읽기
-//둘 중 하나 비어 있으면 코드칸 비우고 끝
-//같은 그룹 찾기
-//숫자 뽑기
-//다음 번호 계산
-//prefix 구하기
-//코드 결합
-//add_item_id.value에 넣기
-function updateItemCode() {
-	const itemName = add_item_name.value.trim();
-	const gId = add_g_id.value;
-
-	if (itemName == "") {
-		add_item_id.value = "";
-		return;
-	}
-	if (gId == "") {
-		add_item_id.value = "";
-		return;
-	}
-
-	const sameGroupItems = codeItems.filter(function(item){
-		return String(item.gId) === String(gId);
-	});
-
-	const numbers = sameGroupItems.map(function(item){
-		return parseInt(item.itemId.split('_')[1], 10);
-	});
-
-	const maxNumber = Math.max(...numbers) + 1;
-	const prefix = gId_change(gId);
-	const newItemId = prefix + "_" + maxNumber;
-
-	add_item_id.value = newItemId;
-}
-
-add_item_name.addEventListener("input", updateItemCode);
-add_g_id.addEventListener("change", updateItemCode);
-
-//품목 등록 닫기
-const add_item_close_btn = document.querySelector('.add_item_close_btn');//닫기
-const add_item_save_btn = document.querySelector('.add_item_save_btn');
-add_item_close_btn.addEventListener('click', function(){
-	add_item_modal.style.display = 'none';
-});
-add_item_save_btn.addEventListener('click', function(){
-	add_item_modal.style.display = 'none';
-});
-
-//선택, 완제품, 반제품, 원자재 카테고리
-const itemGroup = document.getElementById('itemGroup');
-const itemRows = document.querySelectorAll('tbody tr[data-g-id]');//품목 목록의 품목 그룹
-
-//품목 그룹 필터 함수 및 품목명 검색
-function filterItems() {
-    const selectedGroup = itemGroup.value;
-    const keyword = searchKeyword.value.trim();//품목명 검색까지 함께
-    let targetGId = "";
-
-    if (selectedGroup === "완제품") {
-        targetGId = "30";
-    } else if (selectedGroup === "반자재") {
-        targetGId = "20";
-    } else if (selectedGroup === "원자재") {
-        targetGId = "10";
-    }
-	//반복하기
-    itemRows.forEach(function(row) {
-    const rowGId = row.dataset.gId;
-    const itemNameCell = row.querySelector('td:nth-child(3)');//품목명의 td
-    const itemNameText = itemNameCell.textContent.trim();//인풋 창에 쓴 품목명
-
-    const groupMatch = (targetGId === "" || rowGId === targetGId);
-    const nameMatch = (keyword === "" || itemNameText.includes(keyword));
-
-    if (groupMatch && nameMatch) {
-        row.style.display = "";
-    } else {
-        row.style.display = "none";
-    }
-});
-
-}
-//선택~원자재 선택 시 변경
-itemGroup.addEventListener('change', filterItems);
-
-const searchKeyword = document.getElementById('searchKeyword');//검색창 인풋
-const searchBtn = document.getElementById('searchBtn');//검색 버튼
-
-//품목명 검색 기능
-searchBtn.addEventListener('click', filterItems);
-

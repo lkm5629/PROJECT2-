@@ -26,45 +26,50 @@ public class Item_masterUpdateController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// 한글 처리
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8;");
 
-		// 파라메타 확보
 		String item_id = request.getParameter("item_id");
-		int g_id = Integer.parseInt(request.getParameter("g_id"));
+		int g_id = parseIntOrZero(request.getParameter("g_id"));
 		String unit = request.getParameter("unit");
-		int spec = Integer.parseInt(request.getParameter("spec"));
+		String spec = request.getParameter("spec");
 		String item_name = request.getParameter("item_name");
+		int safe_qty = parseIntOrZero(request.getParameter("safe_qty"));
+		int pay = parseIntOrZero(request.getParameter("pay"));
 
-
-		// DTO 담기
 		Item_masterDTO item_masterDTO = new Item_masterDTO();
 
-		// 바구니 안에 넣기
 		item_masterDTO.setItem_id(item_id);
 		item_masterDTO.setG_id(g_id);
 		item_masterDTO.setUnit(unit);
 		item_masterDTO.setSpec(spec);
 		item_masterDTO.setItem_name(item_name);
+		item_masterDTO.setSafe_qty(safe_qty);
+		item_masterDTO.setPay(pay);
 
-		// update 실행
 		int result = updateItem(item_masterDTO);
 
-		// update후 다시 페이지 복귀
 		if (result == 0) {
-			response.sendRedirect(request.getContextPath() + "/itemMaster");
+			response.sendRedirect(request.getContextPath() + "/itemmaster");
 		} else {
-			response.sendRedirect(request.getContextPath() + "/itemMaster");
+			response.sendRedirect(request.getContextPath() + "/itemmaster");
 		}
 	}
 
-	// 서비스
 	public int updateItem(Item_masterDTO item_masterDTO) {
-		// DAO로 전달하기
 		Item_masterDAO item_masterDAO = new Item_masterDAO();
 		int update = item_masterDAO.updateItem(item_masterDTO);
-
 		return update;
+	}
+
+	private int parseIntOrZero(String value) {
+		try {
+			if (value == null || value.trim().equals("")) {
+				return 0;
+			}
+			return Integer.parseInt(value.trim().replace(",", ""));
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 }
