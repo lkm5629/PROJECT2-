@@ -108,6 +108,7 @@ public class Controller extends HttpServlet {
         String filterDateFrom = request.getParameter("filterDateFrom");
         String filterDateTo   = request.getParameter("filterDateTo");
         String filterKeyword  = request.getParameter("filterKeyword");
+        String filterExpiry   = request.getParameter("filterExpiry");
         try { if (sSize != null) size = Integer.parseInt(sSize); } catch (Exception e) { e.printStackTrace(); }
         try { if (sPage != null) page = Integer.parseInt(sPage); } catch (Exception e) { e.printStackTrace(); }
         if (filterIoType   != null && filterIoType.isEmpty())   filterIoType   = null;
@@ -117,6 +118,7 @@ public class Controller extends HttpServlet {
         if (filterDateFrom != null && filterDateFrom.isEmpty()) filterDateFrom = null;
         if (filterDateTo   != null && filterDateTo.isEmpty())   filterDateTo   = null;
         if (filterKeyword  != null && filterKeyword.isEmpty())  filterKeyword  = null;
+        if (filterExpiry   != null && filterExpiry.isEmpty())   filterExpiry   = null;
 
         StockDTO stockDTO = new StockDTO();
         stockDTO.setSize(size);
@@ -128,6 +130,7 @@ public class Controller extends HttpServlet {
         stockDTO.setFilterDateFrom(filterDateFrom);
         stockDTO.setFilterDateTo(filterDateTo);
         stockDTO.setFilterKeyword(filterKeyword);
+        stockDTO.setFilterExpiry(filterExpiry);
 
         Map map = service.getListStock(stockDTO);
         map.put("size",       size);
@@ -142,6 +145,9 @@ public class Controller extends HttpServlet {
         map.put("filterDateFrom", filterDateFrom);
         map.put("filterDateTo",   filterDateTo);
         map.put("filterKeyword",  filterKeyword);
+        map.put("filterExpiry",   filterExpiry);
+        map.put("expiryWarnCount", service.getExpiryWarnCount());
+        map.put("expiryOverCount", service.getExpiryOverCount());
 
         request.setAttribute("map", map);
         request.getRequestDispatcher("WEB-INF/views/P05_stock/io.jsp").forward(request, response);

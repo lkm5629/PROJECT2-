@@ -34,17 +34,17 @@
                 </div>
 
                 <div class="inv-summary-cards">
-                    <div class="inv-card">
+                    <div class="inv-card ${map.filterStock == null ? 'inv-card-active' : ''}">
                         <div class="inv-card-label">수량</div>
                         <div class="inv-card-value">${map.totalStock != null ? map.totalStock : 0}</div>
                         <div class="inv-card-title">품목</div>
                     </div>
-                    <div class="inv-card inv-card-normal">
+                    <div class="inv-card inv-card-normal ${map.filterStock == 'normal' ? 'inv-card-active' : ''}">
                         <div class="inv-card-label">수량</div>
                         <div class="inv-card-value">${map.normalStock != null ? map.normalStock : 0}</div>
                         <div class="inv-card-title">정상재고</div>
                     </div>
-                    <div class="inv-card inv-card-lack">
+                    <div class="inv-card inv-card-lack ${map.filterStock == 'lack' ? 'inv-card-active' : ''}">
                         <div class="inv-card-label">수량</div>
                         <div class="inv-card-value">${map.lackStock != null ? map.lackStock : 0}</div>
                         <div class="inv-card-title">부족 재고</div>
@@ -133,6 +133,7 @@
                     String filterParams = "";
                     if (map.get("filterGId")     != null) filterParams += "&filterGId="     + map.get("filterGId");
                     if (map.get("filterKeyword") != null) filterParams += "&filterKeyword=" + map.get("filterKeyword");
+                    if (map.get("filterStock")   != null) filterParams += "&filterStock="   + map.get("filterStock");
                     %>
 
                     <div class="pagination">
