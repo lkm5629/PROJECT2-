@@ -18,28 +18,9 @@
     </div>
 
     <div class="headerRight headerContent">
-        <a href="/mes/permission" class="userBtn_header buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 3}">style="display: none;"</c:if> >
-            <svg width="18" height="29" viewBox="0 0 31 29" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M10.8654 10.8654C13.5897 10.8654 15.7981 8.65694 15.7981 5.93269C15.7981 3.20844 13.5897 1 10.8654 1C8.14118 1 5.93274 3.20844 5.93274 5.93269C5.93274 8.65694 8.14118 10.8654 10.8654 10.8654Z"
-                    stroke="white" stroke-width="3" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                <path
-                    d="M20.7308 27.3077H1V25.1154C1 22.4989 2.03939 19.9896 3.8895 18.1395C5.73962 16.2894 8.24892 15.25 10.8654 15.25C13.4818 15.25 15.9911 16.2894 17.8413 18.1395C19.6914 19.9896 20.7308 22.4989 20.7308 25.1154V27.3077Z"
-                    stroke="white" stroke-width="3" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                <path
-                    d="M19.6346 1C20.9429 1 22.1975 1.51969 23.1226 2.44475C24.0476 3.36981 24.5673 4.62446 24.5673 5.93269C24.5673 7.24092 24.0476 8.49557 23.1226 9.42063C22.1975 10.3457 20.9429 10.8654 19.6346 10.8654"
-                    stroke="white" stroke-width="3" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                <path
-                    d="M23.1426 15.666C25.0101 16.3764 26.6178 17.6371 27.7531 19.2813C28.8884 20.9255 29.4976 22.8757 29.5003 24.8737V27.3072H26.2118"
-                    stroke="white" stroke-width="3" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </svg>
-
-            사용자 관리
+        
+        <a href="/mes/mypage" class="profile_header" title="마이페이지로 이동" >
+            ${ dto.ename } (${ dto.empid })
         </a>
 
         <button type="button" class="alarmBtn_header">
@@ -116,11 +97,33 @@
             </ul>
         </div>
 
-        <button type="button" class="profile_header">
-            ${ dto.ename } (${ dto.empid })
-        </button>
         
         <a href="/mes/logout" class="buttonSub">로그아웃</a>
+        
+        <a href="/mes/permission" class="userBtn_header buttonMain" title="사용자 관리로 이동" <c:if test="${(empty dto.auth) || dto.auth < 3}">style="display: none;"</c:if> >
+            <svg width="18" height="29" viewBox="0 0 31 29" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M10.8654 10.8654C13.5897 10.8654 15.7981 8.65694 15.7981 5.93269C15.7981 3.20844 13.5897 1 10.8654 1C8.14118 1 5.93274 3.20844 5.93274 5.93269C5.93274 8.65694 8.14118 10.8654 10.8654 10.8654Z"
+                    stroke="white" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path
+                    d="M20.7308 27.3077H1V25.1154C1 22.4989 2.03939 19.9896 3.8895 18.1395C5.73962 16.2894 8.24892 15.25 10.8654 15.25C13.4818 15.25 15.9911 16.2894 17.8413 18.1395C19.6914 19.9896 20.7308 22.4989 20.7308 25.1154V27.3077Z"
+                    stroke="white" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path
+                    d="M19.6346 1C20.9429 1 22.1975 1.51969 23.1226 2.44475C24.0476 3.36981 24.5673 4.62446 24.5673 5.93269C24.5673 7.24092 24.0476 8.49557 23.1226 9.42063C22.1975 10.3457 20.9429 10.8654 19.6346 10.8654"
+                    stroke="white" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path
+                    d="M23.1426 15.666C25.0101 16.3764 26.6178 17.6371 27.7531 19.2813C28.8884 20.9255 29.4976 22.8757 29.5003 24.8737V27.3072H26.2118"
+                    stroke="white" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+
+            사용자 관리
+        </a>
+        
         
     </div>
 </div>

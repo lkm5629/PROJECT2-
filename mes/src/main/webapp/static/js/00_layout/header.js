@@ -32,24 +32,9 @@ function logoMainMove_header() {
 
 
 /* =========================
-   2. 사용자 버튼 권한 처리
+   2. 사용자관리 페이지 이동
 ========================= */
-function controlUserBtn_header() {
-    const userBtn = document.querySelector(".userBtn_header");
 
-    if (!userBtn) return;
-
-    const auth = document.body.dataset.auth;
-
-    if (Number(auth) <= 2) {
-        userBtn.style.display = "none";
-    }
-}
-
-
-/* =========================
-   2-1. 사용자관리 페이지 이동
-========================= */
 function moveUserPage_header() {
     const userBtn = document.querySelector(".userBtn_header");
 
@@ -109,15 +94,3 @@ function deleteAlarm_header() {
 }
 
 
-/* =========================
-   6. 마이페이지 이동
-========================= */
-function moveMyPage_header() {
-    const profileBtn = document.querySelector(".profile_header");
-
-    if (!profileBtn) return;
-
-    profileBtn.addEventListener("click", () => {
-        location.href = "/mes/mypage";
-    });
-}
