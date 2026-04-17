@@ -26,7 +26,7 @@ function logoMainMove_header() {
     if (!logo) return;
 
     logo.addEventListener("click", () => {
-        location.href = "/mes"; // 필요 시 수정
+        location.href = "/mes/dashboard";
     });
 }
 
@@ -56,7 +56,7 @@ function moveUserPage_header() {
     if (!userBtn) return;
 
     userBtn.addEventListener("click", () => {
-        location.href = "/mes/user/mypage"; // 필요 시 수정
+        location.href = "/mes/permission";
     });
 }
 
@@ -118,6 +118,6 @@ function moveMyPage_header() {
     if (!profileBtn) return;
 
     profileBtn.addEventListener("click", () => {
-        location.href = "/mes/user/mypage"; // 필요 시 수정
+        location.href = "/mes/mypage";
     });
 }

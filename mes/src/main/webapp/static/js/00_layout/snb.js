@@ -28,7 +28,6 @@ function moveMenu_snb() {
                     location.href = "/mes/dashboard";
                     break;
 				
-				
 				// 생산관리
                 case "plan_snb":
                     location.href = "/mes/prod";
@@ -61,12 +60,12 @@ function moveMenu_snb() {
 
                 // 리포팅
                 case "report_snb":
-                    location.href = "/mes/report";
+                    location.href = "/mes/reporting";
                     break;
 
                 // 부적합 보고서
                 case "defReport_snb":
-                    location.href = "/mes/report/defect";
+                    location.href = "/mes/defectreporting";
                     break;
 
                 // 기준정보
@@ -77,12 +76,12 @@ function moveMenu_snb() {
 
                 // 품목 마스터
                 case "itemMaster_snb":
-                    location.href = "/mes/itemMaster";
+                    location.href = "/mes/itemmaster";
                     break;
 	
 				// BOM 관리
                 case "BOM_snb":
-                    location.href = "/mes/BOM";
+                    location.href = "/mes/bom";
                     break;
 				
 				// 거래처 관리
@@ -103,12 +102,17 @@ function moveMenu_snb() {
 
 				// 마이페이지
                 case "mypage_snb":
-                    location.href = "/mes/user/mypage";
+                    location.href = "/mes/mypage";
                     break;
                     
 				// 사용자 관리
                 case "userManage_snb":
-                	location.href = "/mes/user/userManage";
+                	location.href = "/mes/permission";
+                	break;
+                    
+				// 회원가입
+                case "join_snb":
+                	location.href = "/mes/join";
                 	break;
             }
         });

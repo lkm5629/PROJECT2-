@@ -18,7 +18,7 @@
     </div>
 
     <div class="headerRight headerContent">
-        <a href="" class="userBtn_header buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 3}">style="display: none;"</c:if> >
+        <a href="/mes/permission" class="userBtn_header buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 3}">style="display: none;"</c:if> >
             <svg width="18" height="29" viewBox="0 0 31 29" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path
