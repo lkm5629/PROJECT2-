@@ -81,9 +81,9 @@ document.addEventListener('DOMContentLoaded', function () {
         expiryInput.removeAttribute('style');
         expiryInput.value = '';
 
-        // 작업자: 로그인 유저 자동입력 (추후 세션값으로 교체)
-        document.getElementById('empName').value       = 'Super';
-        document.getElementById('emp_id_hidden').value = 'user_1001';
+        // 작업자: 세션값 자동입력
+        document.getElementById('empName').value       = SESSION_ENAME;
+        document.getElementById('emp_id_hidden').value = SESSION_EMP_ID;
 
         clearItemFields();
         document.getElementById('myModal').showModal();
@@ -131,9 +131,9 @@ document.addEventListener('DOMContentLoaded', function () {
         lotQtyInput.placeholder      = '자동 입력';
         lotQtyInput.value            = '';
 
-        // 작업자: 로그인 유저 자동입력 (추후 세션값으로 교체)
-        document.getElementById('empName').value       = 'Super';
-        document.getElementById('emp_id_hidden').value = 'user_1001';
+        // 작업자: 세션값 자동입력
+        document.getElementById('empName').value       = SESSION_ENAME;
+        document.getElementById('emp_id_hidden').value = SESSION_EMP_ID;
 
         clearItemFields();
         document.getElementById('myModal').showModal();
@@ -373,14 +373,47 @@ document.addEventListener('DOMContentLoaded', function () {
         if (dateTo)   params.set('filterDateTo',   dateTo);
         if (keyword)  params.set('filterKeyword',  keyword);
         if (empId)    params.set('filterEmpId',    empId);
+        // filterExpiry는 검색 버튼 클릭 시 초기화 (카드 필터 해제)
 
         location.href = '/mes/io?' + params.toString();
     });
 
+    // ── 유통기한 카드 클릭 → 필터 적용 ─────────────────────
+    const warnCard = document.querySelector('.inv-card-warn');
+    const overCard = document.querySelector('.inv-card-over');
+    if (warnCard) {
+        warnCard.style.cursor = 'pointer';
+        warnCard.addEventListener('click', function () {
+            location.href = '/mes/io?page=1&size=' + document.getElementById('size').value + '&filterExpiry=warn';
+        });
+    }
+    if (overCard) {
+        overCard.style.cursor = 'pointer';
+        overCard.addEventListener('click', function () {
+            location.href = '/mes/io?page=1&size=' + document.getElementById('size').value + '&filterExpiry=over';
+        });
+    }
 
-    // ── 필터바 대분류 변경 → 소분류 필터링 ──────────────────
+
+    // ── 기간 날짜 유효성 ─────────────────────────────────────
+    document.getElementById('filterDateFrom').addEventListener('change', function () {
+        document.getElementById('filterDateTo').min = this.value;
+        if (document.getElementById('filterDateTo').value &&
+            document.getElementById('filterDateTo').value < this.value) {
+            document.getElementById('filterDateTo').value = '';
+        }
+    });
     const filterItemSelect     = document.getElementById('filterItemId');
     const allFilterItemOptions = Array.from(filterItemSelect.options).slice(1);
+
+    // ── 기간 날짜 유효성: filterDateFrom → filterDateTo min 세팅 ──
+    document.getElementById('filterDateFrom').addEventListener('change', function () {
+        const dateTo = document.getElementById('filterDateTo');
+        dateTo.min = this.value;
+        if (dateTo.value && dateTo.value < this.value) {
+            dateTo.value = '';
+        }
+    });
 
     document.getElementById('filterGId').addEventListener('change', function () {
         const selectedGid = this.value;

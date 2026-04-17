@@ -48,6 +48,12 @@ public class Stock2DAO {
             params.add(kwLike);
             params.add(kwLike);
         }
+        String filterStock = dto.getFilterStock();
+        if ("normal".equals(filterStock)) {
+            sql.append("AND s.stock_no >= it.safe_qty ");
+        } else if ("lack".equals(filterStock)) {
+            sql.append("AND s.stock_no < it.safe_qty ");
+        }
 
         try (
             Connection conn = getConn();
@@ -88,6 +94,12 @@ public class Stock2DAO {
             innerSql.append("AND (it.item_name LIKE ? OR it.item_id LIKE ?) ");
             params.add(kwLike);
             params.add(kwLike);
+        }
+        String filterStock = dto.getFilterStock();
+        if ("normal".equals(filterStock)) {
+            innerSql.append("AND s.stock_no >= it.safe_qty ");
+        } else if ("lack".equals(filterStock)) {
+            innerSql.append("AND s.stock_no < it.safe_qty ");
         }
         innerSql.append("ORDER BY s.stock_id ");
 

@@ -32,9 +32,19 @@ public class SuggestionService {
         return suggestionDAO.selectOne(boardno);
     }
 
-    // 답변완료 처리
+    // 단건 조회 (조회수 증가 없음 - 삭제 권한 체크 용도)
+    public SuggestionDTO selectOne(String boardno) {
+        return suggestionDAO.selectOne(boardno);
+    }
+
+    // 검토완료 처리 (2 → 1)
     public int updateComplete(String boardno) {
         return suggestionDAO.updateComplete(boardno);
+    }
+
+    // 댓글 등록 시 complete 0 → 2 자동 변경
+    public void updateCompleteToAnswered(String boardno) {
+        suggestionDAO.updateCompleteToAnswered(boardno);
     }
 
     // 등록
@@ -52,7 +62,7 @@ public class SuggestionService {
         return suggestionDAO.selectCommentList(boardno);
     }
 
-    // 댓글 등록 (parentComno 추가 — null이면 원댓글, 값 있으면 대댓글)
+    // 댓글 등록
     public int insertComment(String boardno, String content, String parentComno) {
         return suggestionDAO.insertComment(boardno, content, parentComno);
     }

@@ -41,7 +41,13 @@ public class StockDAO {
                 "AND (? IS NULL OR it.item_id = ?) " +
                 "AND (? IS NULL OR i.io_time >= TO_DATE(?, 'YYYY-MM-DD')) " +
                 "AND (? IS NULL OR i.io_time <= TO_DATE(?, 'YYYY-MM-DD') + 1) " +
-                "AND (? IS NULL OR it.item_name LIKE ? OR it.item_id LIKE ?)"
+                "AND (? IS NULL OR it.item_name LIKE ? OR it.item_id LIKE ?) " +
+                "AND (? IS NULL OR " +
+                "    (? = 'warn' AND l.expiry_date >= TRUNC(SYSDATE) AND l.expiry_date <= TRUNC(SYSDATE) + 10 " +
+                "     AND NVL((SELECT SUM(CASE WHEN io_type = 0 THEN lot_qty ELSE -lot_qty END) FROM io WHERE lot_id = l.lot_id), 0) > 0) OR " +
+                "    (? = 'over' AND l.expiry_date < TRUNC(SYSDATE) " +
+                "     AND NVL((SELECT SUM(CASE WHEN io_type = 0 THEN lot_qty ELSE -lot_qty END) FROM io WHERE lot_id = l.lot_id), 0) > 0) " +
+                ")"
             );
         ) {
             String ioType   = stockDTO.getFilterIoType();
@@ -52,6 +58,7 @@ public class StockDAO {
             String dateTo   = stockDTO.getFilterDateTo();
             String keyword  = stockDTO.getFilterKeyword();
             String kwLike   = (keyword != null && !keyword.isEmpty()) ? "%" + keyword + "%" : null;
+            String expiry   = stockDTO.getFilterExpiry();
 
             int idx = 1;
             ps.setString(idx++, ioType);   ps.setString(idx++, ioType);
@@ -61,6 +68,7 @@ public class StockDAO {
             ps.setString(idx++, dateFrom); ps.setString(idx++, dateFrom);
             ps.setString(idx++, dateTo);   ps.setString(idx++, dateTo);
             ps.setString(idx++, kwLike);   ps.setString(idx++, kwLike); ps.setString(idx++, kwLike);
+            ps.setString(idx++, expiry);   ps.setString(idx++, expiry); ps.setString(idx++, expiry);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) totalCount = rs.getInt("cnt");
@@ -111,12 +119,18 @@ public class StockDAO {
                 "        AND (? IS NULL OR i.io_time >= TO_DATE(?, 'YYYY-MM-DD')) " +
                 "        AND (? IS NULL OR i.io_time <= TO_DATE(?, 'YYYY-MM-DD') + 1) " +
                 "        AND (? IS NULL OR it.item_name LIKE ? OR it.item_id LIKE ?) " +
+                "        AND (? IS NULL OR " +
+                "            (? = 'warn' AND l.expiry_date >= TRUNC(SYSDATE) AND l.expiry_date <= TRUNC(SYSDATE) + 10 " +
+                "             AND NVL((SELECT SUM(CASE WHEN io_type = 0 THEN lot_qty ELSE -lot_qty END) FROM io WHERE lot_id = l.lot_id), 0) > 0) OR " +
+                "            (? = 'over' AND l.expiry_date < TRUNC(SYSDATE) " +
+                "             AND NVL((SELECT SUM(CASE WHEN io_type = 0 THEN lot_qty ELSE -lot_qty END) FROM io WHERE lot_id = l.lot_id), 0) > 0) " +
+                "        ) " +
                 "        ORDER BY i.io_time DESC " +
                 "    ) e " +
                 ") WHERE rnum >= ? AND rnum <= ?"
             );
         ) {
-            // ���� �Ķ���� ���ε�
+            // 필터 파라미터 바인딩
             String ioType   = stockDTO.getFilterIoType();
             String vendorId = stockDTO.getFilterVendorId();
             String gId      = stockDTO.getFilterGId();
@@ -125,6 +139,7 @@ public class StockDAO {
             String dateTo   = stockDTO.getFilterDateTo();
             String keyword  = stockDTO.getFilterKeyword();
             String kwLike   = (keyword != null && !keyword.isEmpty()) ? "%" + keyword + "%" : null;
+            String expiry   = stockDTO.getFilterExpiry();
 
             int idx = 1;
             ps.setString(idx++, ioType);   ps.setString(idx++, ioType);
@@ -134,8 +149,9 @@ public class StockDAO {
             ps.setString(idx++, dateFrom); ps.setString(idx++, dateFrom);
             ps.setString(idx++, dateTo);   ps.setString(idx++, dateTo);
             ps.setString(idx++, kwLike);   ps.setString(idx++, kwLike); ps.setString(idx++, kwLike);
+            ps.setString(idx++, expiry);   ps.setString(idx++, expiry); ps.setString(idx++, expiry);
 
-            // ����¡
+            // 페이징
             ps.setInt(idx++, stockDTO.getStart());
             ps.setInt(idx++, stockDTO.getEnd());
 

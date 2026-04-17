@@ -144,6 +144,39 @@ public class ProdDAO {
         return dto;
     }
 
+    /* ── 수정 (진행률 100% 시 status → 2 자동처리) ────────── */
+    public int updatePlan(ProdDTO dto) {
+        // prev_qty >= plan_qty 이면 status=2(완료), 아니면 폼에서 넘어온 status 사용
+        String sql =
+            "UPDATE production_plan " +
+            "SET    item_id    = ?, " +
+            "       emp_id     = ?, " +
+            "       plan_qty   = ?, " +
+            "       plan_sdate = TO_DATE(?, 'YYYY-MM-DD'), " +
+            "       plan_edate = TO_DATE(?, 'YYYY-MM-DD'), " +
+            "       status     = CASE WHEN prev_qty >= ? THEN 2 ELSE ? END " +
+            "WHERE  plan_id    = ?";
+
+        int result = 0;
+        try (Connection conn = getConn();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, dto.getItemId());
+            ps.setString(2, dto.getEmpId());
+            ps.setInt   (3, dto.getPlanQty());
+            ps.setString(4, dto.getPlanSdate() != null ? dto.getPlanSdate().toString() : "");
+            ps.setString(5, dto.getPlanEdate() != null ? dto.getPlanEdate().toString() : "");
+            ps.setInt   (6, dto.getPlanQty());   // CASE 비교용 plan_qty
+            ps.setInt   (7, dto.getStatus());    // 진행률 미만일 때 사용할 status
+            ps.setString(8, dto.getPlanId());
+
+            result = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     /* ── 대분류 목록 (GROUP_INFO JOIN) ───────────────────── */
     public List<Map<String, String>> selectGroupList() {
         List<Map<String, String>> list = new ArrayList<>();
@@ -259,5 +292,54 @@ public class ProdDAO {
             e.printStackTrace();
         }
         return total;
+    }
+
+    /* ── item_id로 process_id 조회 (공정 흐름도용) ───────── */
+    public String selectProcessIdByItemId(String itemId) {
+        String processId = null;
+
+        String sql =
+            "SELECT process_id " +
+            "FROM   process " +
+            "WHERE  item_id = ? " +
+            "AND    ROWNUM = 1";
+
+        try (Connection conn = getConn();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, itemId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) processId = rs.getString("process_id");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return processId;
+    }
+
+    /* ── process_id로 공정 단계 목록 조회 (공정 흐름도용) ── */
+    public List<Map<String, Object>> selectProcessStepList(String processId) {
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        String sql =
+            "SELECT seq, step_name " +
+            "FROM   process_step " +
+            "WHERE  process_id = ? " +
+            "ORDER  BY seq, process_step_id";
+
+        try (Connection conn = getConn();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, processId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("seq",      rs.getInt("seq"));
+                    map.put("stepName", rs.getString("step_name"));
+                    list.add(map);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

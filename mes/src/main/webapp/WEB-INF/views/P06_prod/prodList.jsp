@@ -33,13 +33,19 @@
         <p class="page-header-desc">주간 생산 계획을 조회하고 관리합니다</p>
       </div>
       <div class="header-actions">
-        <button class="btn btn-danger-outline btn-sm" id="btnBulkDelete">선택 삭제</button>
-        <button class="btn btn-primary" onclick="openRegisterModal()">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-          생산계획 등록
-        </button>
+        <%-- auth 2이상만 선택삭제 표시 --%>
+        <c:if test="${dto.auth >= 2}">
+          <button class="btn btn-danger-outline btn-sm" id="btnBulkDelete">선택 삭제</button>
+        </c:if>
+        <%-- auth 2이상만 등록 버튼 표시 --%>
+        <c:if test="${dto.auth >= 2}">
+          <button class="btn btn-primary btn-sm" onclick="openRegisterModal()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            생산계획 등록
+          </button>
+        </c:if>
       </div>
     </div>
 
@@ -54,6 +60,7 @@
         <option value="20" <c:if test="${map.size == 20}">selected</c:if>>20건</option>
       </select>
 
+      <%-- 검색 인풋 + 버튼 한 줄 --%>
       <div class="toolbar-right">
         <div class="search-wrap">
           <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -74,51 +81,56 @@
             <th class="checkbox-col"><input type="checkbox" id="chkAll"></th>
             <th>계획ID</th>
             <th>제품명</th>
+            <th>담당자</th>
             <th>목표수량</th>
             <th>기간</th>
             <th>진행률</th>
             <th>상태</th>
+
           </tr>
         </thead>
         <tbody id="planListBody">
-          <c:forEach var="dto" items="${map.list}">
+          <c:forEach var="row" items="${map.list}">
             <tr>
-              <td><input type="checkbox" name="chk" value="${dto.planId}"></td>
-              <td><span class="plan-id-text">${dto.planId}</span></td>
+              <td><input type="checkbox" name="chk" value="${row.planId}"></td>
+              <td><span class="plan-id-text">${row.planId}</span></td>
               <td class="item-name-col">
-                <a href="/mes/prod/detail?planId=${dto.planId}" class="item-name-link">
-                  ${dto.itemName}
+                <a href="/mes/prod/detail?planId=${row.planId}" class="item-name-link">
+                  ${row.itemName}
                 </a>
               </td>
-              <td><fmt:formatNumber value="${dto.planQty}" pattern="#,###"/> EA</td>
+              <td>${row.ename}</td>
+              <td><fmt:formatNumber value="${row.planQty}" pattern="#,###"/> EA</td>
               <td>
                 <span class="date-range-text">
-                  <fmt:formatDate value="${dto.planSdate}" pattern="MM-dd"/>
+                  <fmt:formatDate value="${row.planSdate}" pattern="MM-dd"/>
                   &nbsp;~&nbsp;
-                  <fmt:formatDate value="${dto.planEdate}" pattern="MM-dd"/>
+                  <fmt:formatDate value="${row.planEdate}" pattern="MM-dd"/>
                 </span>
               </td>
               <td>
                 <div class="list-progress-wrap">
                   <div class="list-progress-bg">
-                    <div class="list-progress-fill" style="width:${dto.progressPct}%"></div>
+                    <div class="list-progress-fill" style="width:${row.progressPct}%"></div>
                   </div>
-                  <span class="list-progress-pct">${dto.progressPct}%</span>
+                  <span class="list-progress-pct">${row.progressPct}%</span>
                 </div>
               </td>
               <td>
                 <c:choose>
-                  <c:when test="${dto.status == 0}"><span class="badge badge-gray">대기</span></c:when>
-                  <c:when test="${dto.status == 1}"><span class="badge badge-blue">진행중</span></c:when>
-                  <c:when test="${dto.status == 2}"><span class="badge badge-green">완료</span></c:when>
-                  <c:when test="${dto.status == 3}"><span class="badge badge-yellow">보류</span></c:when>
+                  <c:when test="${row.status == 0}"><span class="badge badge-gray">대기</span></c:when>
+                  <c:when test="${row.status == 1}"><span class="badge badge-blue">진행중</span></c:when>
+                  <c:when test="${row.status == 2}"><span class="badge badge-green">완료</span></c:when>
+                  <c:when test="${row.status == 3}"><span class="badge badge-yellow">보류</span></c:when>
+                  <c:when test="${row.status == 4}"><span class="badge badge-red">취소</span></c:when>
                 </c:choose>
               </td>
+
             </tr>
           </c:forEach>
           <c:if test="${empty map.list}">
             <tr>
-              <td colspan="7" class="empty-row">등록된 생산계획이 없습니다.</td>
+              <td colspan="8" class="empty-row">등록된 생산계획이 없습니다.</td>
             </tr>
           </c:if>
         </tbody>
@@ -165,7 +177,7 @@
   </div>
 
 
-  <!-- 등록 모달 -->
+  <!-- 등록 모달 — regStatus 제거 -->
   <div id="modalRegister" class="pp-modal-overlay" style="display:none;">
     <div class="pp-modal">
       <div class="pp-modal-header">
@@ -180,8 +192,19 @@
               <label class="form-label" for="regGroup">대분류 <span class="req">*</span></label>
               <select class="form-control" id="regGroup" name="gId" required>
                 <option value="">대분류 선택</option>
-                <option value="fin">완제품</option>
-                <option value="semi">반제품</option>
+                <c:forEach var="g" items="${groupList}">
+                  <c:choose>
+                    <c:when test="${g.gId == 'fin'}">
+                      <option value="${g.gId}">완제품</option>
+                    </c:when>
+                    <c:when test="${g.gId == 'semi'}">
+                      <option value="${g.gId}">반제품</option>
+                    </c:when>
+                    <c:when test="${g.gId != 'raw'}">
+                      <option value="${g.gId}">${g.itemgroupName}</option>
+                    </c:when>
+                  </c:choose>
+                </c:forEach>
               </select>
             </div>
 
@@ -235,16 +258,10 @@
               <input type="date" class="form-control" id="regEndDate" name="planEdate" required>
             </div>
 
-            <div class="form-group reg-status-hidden">
-              <select class="form-control" id="regStatus" name="status" required>
-                <option value="0" selected>대기</option>
-              </select>
-            </div>
-
           </div>
           <div class="form-actions">
             <button type="button" class="btn btn-outline" onclick="closeRegisterModal()">취소</button>
-            <button type="submit" class="btn btn-primary">등록</button>
+            <button type="submit" class="btn btn-primary btn-sm">등록</button>
           </div>
         </form>
       </div>
@@ -260,26 +277,47 @@
         <button class="pp-modal-close" onclick="closeEditModal()">&#x2715;</button>
       </div>
       <div class="pp-modal-body">
-        <form id="editForm" action="/production/plan/update" method="post">
+        <form id="editForm" action="/mes/prod/update" method="post">
           <input type="hidden" id="editPlanId" name="planId">
           <div class="form-grid">
             <div class="form-group">
-              <label class="form-label" for="editProduct">제품 <span class="req">*</span></label>
-              <select class="form-control" id="editProduct" name="itemId" required>
-                <option value="">제품 선택</option>
-                <c:forEach var="item" items="${itemList}">
-                  <option value="${item.itemId}">${item.itemName}</option>
+              <label class="form-label" for="editGroup">대분류 <span class="req">*</span></label>
+              <select class="form-control" id="editGroup" name="gId" required>
+                <option value="">대분류 선택</option>
+                <c:forEach var="g" items="${groupList}">
+                  <c:choose>
+                    <c:when test="${g.gId == 'fin'}">
+                      <option value="${g.gId}">완제품</option>
+                    </c:when>
+                    <c:when test="${g.gId == 'semi'}">
+                      <option value="${g.gId}">반제품</option>
+                    </c:when>
+                    <c:when test="${g.gId != 'raw'}">
+                      <option value="${g.gId}">${g.itemgroupName}</option>
+                    </c:when>
+                  </c:choose>
                 </c:forEach>
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label" for="editEmp">담당자 <span class="req">*</span></label>
-              <select class="form-control" id="editEmp" name="empId" required>
-                <option value="">담당자 선택</option>
-                <c:forEach var="emp" items="${empList}">
-                  <option value="${emp.empId}">${emp.ename}</option>
-                </c:forEach>
+              <label class="form-label" for="editSubItem">소분류 <span class="req">*</span></label>
+              <select class="form-control" id="editSubItem" name="itemId" required>
+                <option value="">소분류 선택</option>
               </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regEmpName">담당자 <span class="req">*</span></label>
+              <div class="emp-search-wrap">
+                <input type="text" class="form-control" id="regEmpName"
+                       placeholder="돋보기를 눌러 검색" readonly tabindex="-1">
+                <input type="hidden" id="regEmpId" name="empId">
+                <button type="button" class="emp-search-btn" onclick="openEmpPopup()" title="담당자 검색">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="7" cy="7" r="5" stroke="#64748b" stroke-width="1.6"/>
+                    <path d="M11 11L14 14" stroke="#64748b" stroke-width="1.6" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label" for="editQty">목표수량 <span class="req">*</span></label>
@@ -292,6 +330,7 @@
                 <option value="1">진행중</option>
                 <option value="2">완료</option>
                 <option value="3">보류</option>
+                <option value="4">취소</option>
               </select>
             </div>
             <div class="form-group">
@@ -305,7 +344,7 @@
           </div>
           <div class="form-actions">
             <button type="button" class="btn btn-outline" onclick="closeEditModal()">취소</button>
-            <button type="submit" class="btn btn-primary">수정</button>
+            <button type="submit" class="btn btn-primary btn-sm">수정</button>
           </div>
         </form>
       </div>

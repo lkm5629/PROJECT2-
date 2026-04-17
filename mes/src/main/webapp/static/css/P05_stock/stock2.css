@@ -60,6 +60,20 @@
     margin-top: 4px;
 }
 
+/* 카드 클릭 인터랙션 */
+.inv-card {
+    cursor: pointer;
+    transition: box-shadow 0.15s, transform 0.15s;
+}
+.inv-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+    transform: translateY(-1px);
+}
+.inv-card-active {
+    outline: 3px solid #333;
+    outline-offset: -3px;
+}
+
 /* ── 필터바 ─────────────────────────────────────── */
 .filter-bar {
     display: flex;
