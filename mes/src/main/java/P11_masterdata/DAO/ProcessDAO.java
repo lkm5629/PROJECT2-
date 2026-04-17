@@ -13,7 +13,6 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import P11_masterdata.DTO.ProcessDTO;
-import P11_masterdata.DTO.ProcessDTO;
 
 public class ProcessDAO {
 
@@ -42,7 +41,7 @@ public class ProcessDAO {
 			query += "       item_id, ";
 			query += "       process_info ";
 			query += "FROM process ";
-			query += "ORDER BY seq, process_id";
+			query += "ORDER BY process_id";
 
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
@@ -88,6 +87,128 @@ public class ProcessDAO {
 	}
 
 	// 공정 흐름도용: process_step 읽기
+	public int selectProcessTotalCount() {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int totalCount = 0;
+
+		try {
+			conn = getConnection();
+
+			String query = "";
+			query += "SELECT COUNT(*) cnt ";
+			query += "FROM process";
+
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				totalCount = rs.getInt("cnt");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return totalCount;
+	}
+
+	public List<ProcessDTO> selectProcessPageList(ProcessDTO processDTO) {
+		List<ProcessDTO> list = new ArrayList<ProcessDTO>();
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			conn = getConnection();
+
+			String query = "";
+			query += "SELECT * ";
+			query += "FROM ( ";
+			query += "    SELECT ROWNUM rnum, t.* ";
+			query += "    FROM ( ";
+			query += "        SELECT process_id, ";
+			query += "               process_name, ";
+			query += "               seq, ";
+			query += "               item_id, ";
+			query += "               process_info ";
+			query += "        FROM process ";
+			query += "        ORDER BY process_id ";
+			query += "    ) t ";
+			query += "    WHERE ROWNUM <= ? ";
+			query += ") ";
+			query += "WHERE rnum >= ?";
+
+			ps = conn.prepareStatement(query);
+			ps.setInt(1, processDTO.getEnd());
+			ps.setInt(2, processDTO.getStart());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProcessDTO dto = new ProcessDTO();
+				dto.setProcess_id(rs.getString("process_id"));
+				dto.setProcess_name(rs.getString("process_name"));
+				dto.setSeq(rs.getInt("seq"));
+				dto.setItem_id(rs.getString("item_id"));
+				dto.setProcess_info(rs.getString("process_info"));
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return list;
+	}
+
 	public List<ProcessDTO> selectProcessStepList(String processId) {
 
 		List<ProcessDTO> list = new ArrayList<ProcessDTO>();

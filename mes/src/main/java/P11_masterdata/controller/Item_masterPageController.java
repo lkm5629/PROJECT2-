@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import P11_masterdata.DAO.Item_masterDAO;
 import P11_masterdata.DTO.Item_masterDTO;
 
-@WebServlet("/Item_masterPageController")
+@WebServlet("/itemmaster")
 public class Item_masterPageController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -34,6 +34,8 @@ public class Item_masterPageController extends HttpServlet {
 
 		String sSize = request.getParameter("size");
 		String sPage = request.getParameter("page");
+		String itemGroup = request.getParameter("itemGroup");
+		String keyword = request.getParameter("keyword");
 
 		if (sSize != null && !sSize.trim().equals("")) {
 			try {
@@ -51,18 +53,39 @@ public class Item_masterPageController extends HttpServlet {
 			}
 		}
 
+		if (size < 1) {
+			size = 5;
+		}
+
+		if (page < 1) {
+			page = 1;
+		}
+
 		Item_masterDTO item_masterDTO = new Item_masterDTO();
 		item_masterDTO.setSize(size);
 		item_masterDTO.setPage(page);
+		item_masterDTO.setGroupKeyword(itemGroup);
+		item_masterDTO.setKeyword(keyword);
 
 		itemService service = new itemService();
 		Map<String, Object> map = service.itemSelect(item_masterDTO);
 
 		request.setAttribute("list", map.get("list"));
+		request.setAttribute("allItemList", map.get("allItemList"));
+
 		request.setAttribute("page", map.get("page"));
 		request.setAttribute("size", map.get("size"));
 		request.setAttribute("totalPage", map.get("totalPage"));
+
 		request.setAttribute("totalCount", map.get("totalCount"));
+		request.setAttribute("filteredCount", map.get("filteredCount"));
+
+		request.setAttribute("finCount", map.get("finCount"));
+		request.setAttribute("semiCount", map.get("semiCount"));
+		request.setAttribute("rawCount", map.get("rawCount"));
+
+		request.setAttribute("itemGroup", itemGroup);
+		request.setAttribute("keyword", keyword);
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/item_master.jsp");
 		dispatcher.forward(request, response);
@@ -87,11 +110,8 @@ public class Item_masterPageController extends HttpServlet {
 				page = 1;
 			}
 
-			int start = 0;
-			int end = 0;
-
-			end = page * size;
-			start = end - (size - 1);
+			int end = page * size;
+			int start = end - (size - 1);
 
 			item_masterDTO.setStart(start);
 			item_masterDTO.setEnd(end);
@@ -100,20 +120,48 @@ public class Item_masterPageController extends HttpServlet {
 
 			Item_masterDAO item_masterDAO = new Item_masterDAO();
 
-			List<Item_masterDTO> list = item_masterDAO.selectItemPageList(item_masterDTO);
-			int totalCount = item_masterDAO.selectItemTotalCount();
+			int totalCount = item_masterDAO.selectItemTotalCountAll();
+			int filteredCount = item_masterDAO.selectItemTotalCount(item_masterDTO);
 
-			int totalPage = totalCount / size;
-			if (totalCount % size != 0) {
+			int finCount = item_masterDAO.selectItemGroupCount(30);
+			int semiCount = item_masterDAO.selectItemGroupCount(20);
+			int rawCount = item_masterDAO.selectItemGroupCount(10);
+
+			int totalPage = filteredCount / size;
+			if (filteredCount % size != 0) {
 				totalPage++;
 			}
+			if (totalPage == 0) {
+				totalPage = 1;
+			}
+
+			if (page > totalPage) {
+				page = totalPage;
+				end = page * size;
+				start = end - (size - 1);
+
+				item_masterDTO.setPage(page);
+				item_masterDTO.setStart(start);
+				item_masterDTO.setEnd(end);
+			}
+
+			List<Item_masterDTO> list = item_masterDAO.selectItemPageList(item_masterDTO);
+			List<Item_masterDTO> allItemList = item_masterDAO.selectItemList();
 
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("list", list);
+			map.put("allItemList", allItemList);
+
 			map.put("totalCount", totalCount);
+			map.put("filteredCount", filteredCount);
+
 			map.put("totalPage", totalPage);
 			map.put("page", page);
 			map.put("size", size);
+
+			map.put("finCount", finCount);
+			map.put("semiCount", semiCount);
+			map.put("rawCount", rawCount);
 
 			return map;
 		}
