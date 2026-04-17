@@ -41,10 +41,12 @@ public class SuggestionDAO {
         List<SuggestionDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM ("
                    + "  SELECT rownum AS rnum, s.* FROM ("
-                   + "    SELECT s.boardno, s.title, s.ctime, s.emp_id, s.complete, s.views, u.ename"
+                   + "    SELECT s.boardno, s.title, s.ctime,"
+                   + "           TO_CHAR(FROM_TZ(CAST(s.ctime AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul', 'YYYY-MM-DD HH24:MI') AS ctime_str,"
+                   + "           s.emp_id, s.complete, s.views, u.ename"
                    + "    FROM suggestion s"
                    + "    LEFT JOIN user_info u ON s.emp_id = u.emp_id"
-                   + "    ORDER BY s.boardno DESC"
+                   + "    ORDER BY TO_NUMBER(SUBSTR(s.boardno, 6)) DESC"
                    + "  ) s"
                    + ") WHERE rnum >= ? AND rnum <= ?";
         try (Connection conn = getConn();
@@ -56,7 +58,8 @@ public class SuggestionDAO {
                     SuggestionDTO row = new SuggestionDTO();
                     row.setBoardno(rs.getString("boardno"));
                     row.setTitle(rs.getString("title"));
-                    row.setCtime(rs.getDate("ctime"));
+                    row.setCtime(rs.getTimestamp("ctime"));
+                    row.setCtimeStr(rs.getString("ctime_str"));
                     row.setEmpId(rs.getString("emp_id"));
                     row.setComplete(rs.getInt("complete"));
                     row.setViews(rs.getInt("views"));
@@ -73,6 +76,8 @@ public class SuggestionDAO {
     public SuggestionDTO selectOne(String boardno) {
         SuggestionDTO dto = null;
         String sql = "SELECT s.boardno, s.title, s.content, s.ctime, s.mtime,"
+                   + "       TO_CHAR(FROM_TZ(CAST(s.ctime AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul', 'YYYY-MM-DD HH24:MI') AS ctime_str,"
+                   + "       TO_CHAR(FROM_TZ(CAST(s.mtime AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul', 'YYYY-MM-DD HH24:MI') AS mtime_str,"
                    + "       s.views, s.emp_id, s.complete, s.origin_name, s.save_name, u.ename"
                    + " FROM suggestion s"
                    + " LEFT JOIN user_info u ON s.emp_id = u.emp_id"
@@ -86,8 +91,10 @@ public class SuggestionDAO {
                     dto.setBoardno(rs.getString("boardno"));
                     dto.setTitle(rs.getString("title"));
                     dto.setContent(rs.getString("content"));
-                    dto.setCtime(rs.getDate("ctime"));
-                    dto.setMtime(rs.getDate("mtime"));
+                    dto.setCtime(rs.getTimestamp("ctime"));
+                    dto.setMtime(rs.getTimestamp("mtime"));
+                    dto.setCtimeStr(rs.getString("ctime_str"));
+                    dto.setMtimeStr(rs.getString("mtime_str"));
                     dto.setViews(rs.getInt("views"));
                     dto.setEmpId(rs.getString("emp_id"));
                     dto.setComplete(rs.getInt("complete"));
@@ -115,7 +122,8 @@ public class SuggestionDAO {
 
     public int updateComplete(String boardno) {
         int result = 0;
-        String sql = "UPDATE suggestion SET complete = 1, mtime = SYSDATE WHERE boardno = ?";
+        // complete 2(답변달림) 상태일 때만 1(검토완료)로 변경
+        String sql = "UPDATE suggestion SET complete = 1, mtime = SYSDATE WHERE boardno = ? AND complete = 2";
         try (Connection conn = getConn();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, boardno);
@@ -124,6 +132,18 @@ public class SuggestionDAO {
             e.printStackTrace();
         }
         return result;
+    }
+
+    // 댓글 등록 시 complete 0 → 2 자동 변경 (작성자 본인 제외)
+    public void updateCompleteToAnswered(String boardno) {
+        String sql = "UPDATE suggestion SET complete = 2, mtime = SYSDATE WHERE boardno = ? AND complete = 0";
+        try (Connection conn = getConn();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, boardno);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public int insert(SuggestionDTO dto) {
@@ -135,9 +155,7 @@ public class SuggestionDAO {
             conn = getConn();
             conn.setAutoCommit(false);
 
-            ps = conn.prepareStatement(
-                "SELECT 'sugg_' || sugg_seq.nextval AS boardno FROM dual"
-            );
+            ps = conn.prepareStatement("SELECT 'sugg_' || sugg_seq.nextval AS boardno FROM dual");
             rs = ps.executeQuery();
             String boardno = null;
             if (rs.next()) boardno = rs.getString("boardno");
@@ -155,7 +173,6 @@ public class SuggestionDAO {
             ps.setString(4, dto.getEmpId());
             ps.setString(5, dto.getOriginName());
             ps.setString(6, dto.getSaveName());
-
             result = ps.executeUpdate();
             conn.commit();
 
@@ -183,22 +200,12 @@ public class SuggestionDAO {
         return result;
     }
 
-    // ── 댓글 목록 조회 (CONNECT BY 계층 순서) ──────────────────────────────
     public List<CommentDTO> selectCommentList(String boardno) {
         List<CommentDTO> list = new ArrayList<>();
-
-        // START WITH parent_comno IS NULL  → 루트 댓글(원댓글)부터 시작
-        // CONNECT BY PRIOR comno = parent_comno  → 부모→자식 방향으로 재귀
-        // ORDER SIBLINGS BY ctime  → 같은 부모를 가진 형제 댓글끼리 시간순 정렬
-        // LEVEL - 1  → Oracle 의사컬럼 LEVEL은 1부터 시작하므로 -1 해서 depth로 사용
         String sql =
-            "SELECT " +
-            "    comno, " +
-            "    parent_comno, " +
-            "    content, " +
-            "    ctime, " +
-            "    boardno, " +
-            "    LEVEL - 1 AS depth " +
+            "SELECT comno, parent_comno, content, ctime," +
+            "       TO_CHAR(FROM_TZ(CAST(ctime AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul', 'YYYY-MM-DD HH24:MI') AS ctime_str," +
+            "       boardno, LEVEL - 1 AS depth " +
             "FROM comment_info " +
             "WHERE boardno = ? " +
             "START WITH parent_comno IS NULL " +
@@ -214,7 +221,8 @@ public class SuggestionDAO {
                     dto.setComno(rs.getString("comno"));
                     dto.setParentComno(rs.getString("parent_comno"));
                     dto.setContent(rs.getString("content"));
-                    dto.setCtime(rs.getDate("ctime"));
+                    dto.setCtime(rs.getTimestamp("ctime"));
+                    dto.setCtimeStr(rs.getString("ctime_str"));
                     dto.setBoardno(rs.getString("boardno"));
                     dto.setDepth(rs.getInt("depth"));
                     list.add(dto);
@@ -226,7 +234,6 @@ public class SuggestionDAO {
         return list;
     }
 
-    // ── 댓글 등록 (parentComno 추가) ──────────────────────────────────────
     public int insertComment(String boardno, String content, String parentComno) {
         int result = 0;
         Connection conn = null;
@@ -236,9 +243,7 @@ public class SuggestionDAO {
             conn = getConn();
             conn.setAutoCommit(false);
 
-            ps = conn.prepareStatement(
-                "SELECT 'cmt_' || comment_seq.nextval AS comno FROM dual"
-            );
+            ps = conn.prepareStatement("SELECT 'cmt_' || comment_seq.nextval AS comno FROM dual");
             rs = ps.executeQuery();
             String comno = null;
             if (rs.next()) comno = rs.getString("comno");
@@ -246,15 +251,13 @@ public class SuggestionDAO {
             ps.close();
 
             ps = conn.prepareStatement(
-                "INSERT INTO comment_info " +
-                "    (comno, content, ctime, mtime, boardno, parent_comno) " +
+                "INSERT INTO comment_info (comno, content, ctime, mtime, boardno, parent_comno) " +
                 "VALUES (?, ?, SYSDATE, SYSDATE, ?, ?)"
             );
             ps.setString(1, comno);
             ps.setString(2, content);
             ps.setString(3, boardno);
-            ps.setString(4, parentComno); // 원댓글이면 null, 대댓글이면 부모 comno
-
+            ps.setString(4, parentComno);
             result = ps.executeUpdate();
             conn.commit();
 

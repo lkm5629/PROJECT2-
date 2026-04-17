@@ -27,7 +27,6 @@
   <c:set var="size"           value="${map.size}" />
   <c:set var="page"           value="${map.page}" />
   <c:set var="keyword"        value="${map.keyword}" />
-  <c:set var="auth"           value="${map.auth}" />
   <c:set var="totalPages"     value="${map.totalPages}" />
   <c:set var="groupStartPage" value="${map.groupStartPage}" />
   <c:set var="groupEndPage"   value="${map.groupEndPage}" />
@@ -38,7 +37,8 @@
         <h1>공지사항</h1>
         <p>공장 운영 관련 공지사항을 확인하세요</p>
       </div>
-      <c:if test="${auth == 3}">
+      <%-- auth 2 이상만 등록 버튼 표시 --%>
+      <c:if test="${dto.auth >= 2}">
         <button class="btn btn-primary btn-sm"
           onclick="location.href='${ctx}/notice/register'">+ 공지사항 등록</button>
       </c:if>

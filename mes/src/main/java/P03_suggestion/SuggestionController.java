@@ -36,6 +36,11 @@ public class SuggestionController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
+        // 세션에서 로그인 정보 읽기
+        LoginDTO loginDto = (LoginDTO) request.getSession().getAttribute("dto");
+        String loginId = loginDto.getEmpid();
+        int    auth    = loginDto.getAuth();
+
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) pathInfo = "/list";
 
@@ -80,11 +85,31 @@ public class SuggestionController extends HttpServlet {
 
                 SuggestionDTO detail = suggestionService.getDetail(boardno);
 
-                // CONNECT BY 계층 정렬된 댓글 목록 조회
+                if (detail == null) {
+                    response.sendRedirect(request.getContextPath() + "/suggestion/list");
+                    return;
+                }
+
+                // 상세 접근 제한: 작성자 본인 또는 auth >= 2만 접근 가능
+                boolean isOwner = loginId.equals(detail.getEmpId());
+                if (!isOwner && auth < 2) {
+                    response.setContentType("text/html;charset=UTF-8");
+                    response.getWriter().write("<script>alert('조회 권한이 없습니다.'); location.href='" + request.getContextPath() + "/suggestion/list';</script>");
+                    return;
+                }
+                // 댓글 입력 가능 여부: 작성자 본인 OR auth >= 2
+                boolean canComment = isOwner || auth >= 2;
+
+                // ctime 밀리초: JS에서 10분 체크용
+                long ctimeMs = (detail.getCtime() != null) ? detail.getCtime().getTime() : 0;
+
                 List<CommentDTO> commentList = suggestionService.getCommentList(boardno);
 
                 request.setAttribute("detail",      detail);
-                request.setAttribute("commentList", commentList); // 추가
+                request.setAttribute("commentList", commentList);
+                request.setAttribute("isOwner",     isOwner);   // 작성자 여부 → 삭제 버튼 표시
+                request.setAttribute("ctimeMs",     ctimeMs);   // ctime 밀리초 → JS 10분 체크
+                request.setAttribute("canComment",  canComment);
                 request.setAttribute("page",        request.getParameter("page"));
                 request.setAttribute("size",        request.getParameter("size"));
 
@@ -100,7 +125,6 @@ public class SuggestionController extends HttpServlet {
                 ).forward(request, response);
                 break;
 
-            // 파일 다운로드
             case "/download": {
                 String saveName   = request.getParameter("save");
                 String originName = request.getParameter("origin");
@@ -147,21 +171,17 @@ public class SuggestionController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
+        LoginDTO loginDto = (LoginDTO) request.getSession().getAttribute("dto");
+        String loginId = loginDto.getEmpid();
+
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) pathInfo = "";
 
         switch (pathInfo) {
 
             case "/insert": {
-                LoginDTO loginDto = (LoginDTO) request.getSession().getAttribute("dto");
-                if (loginDto == null) {
-                    response.sendRedirect(request.getContextPath() + "/login.jsp");
-                    return;
-                }
-                String empId = loginDto.getEmpid();
-
                 SuggestionDTO insertDto = new SuggestionDTO();
-                insertDto.setEmpId(empId);
+                insertDto.setEmpId(loginId);
 
                 try {
                     File uploadDir = new File(UPLOAD_PATH);
@@ -216,21 +236,36 @@ public class SuggestionController extends HttpServlet {
             case "/comment": {
                 String commentBoardno = request.getParameter("boardno");
                 String commentContent = request.getParameter("commentContent");
-                // 답글 버튼으로 세팅된 부모 comno (원댓글이면 null)
                 String parentComno    = request.getParameter("parentComno");
 
-                // 빈 문자열이면 null로 처리 (DB의 START WITH parent_comno IS NULL 조건 맞춤)
                 if (parentComno != null && parentComno.trim().isEmpty()) {
                     parentComno = null;
                 }
 
                 suggestionService.insertComment(commentBoardno, commentContent, parentComno);
+
+                // 작성자 본인 외의 사람이 댓글 달면 complete 0 → 2(답변달림) 자동 변경
+                SuggestionDTO commentTarget = suggestionService.getDetail(commentBoardno);
+                if (commentTarget != null && !loginId.equals(commentTarget.getEmpId())) {
+                    suggestionService.updateCompleteToAnswered(commentBoardno);
+                }
+
                 response.sendRedirect(request.getContextPath() + "/suggestion/detail?boardno=" + commentBoardno);
                 break;
             }
 
             case "/delete": {
                 String deleteBoardno = request.getParameter("boardno");
+
+                // 삭제 권한 체크: 작성자 본인인지만 확인 (10분 체크는 JS에서 처리)
+                SuggestionDTO deleteTarget = suggestionService.selectOne(deleteBoardno);
+                boolean isOwner = deleteTarget != null && loginId.equals(deleteTarget.getEmpId());
+
+                if (!isOwner) {
+                    response.sendRedirect(request.getContextPath() + "/suggestion/detail?boardno=" + deleteBoardno);
+                    return;
+                }
+
                 suggestionService.delete(deleteBoardno);
                 response.sendRedirect(request.getContextPath() + "/suggestion/list?page=1");
                 break;

@@ -36,10 +36,16 @@ public class NoticeController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
-        // TODO: String loginId = (String) request.getSession().getAttribute("loginId");
-        // TODO: int auth = (int) request.getSession().getAttribute("auth");
-        String loginId = "user_1001";
-        int auth = 3;
+        // 세션에서 로그인 아이디 읽기
+        Object sessionDto = request.getSession().getAttribute("dto");
+        String loginId = "";
+        if (sessionDto != null) {
+            try {
+                loginId = (String) sessionDto.getClass().getMethod("getEmpid").invoke(sessionDto);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) pathInfo = "/list";
@@ -63,7 +69,6 @@ public class NoticeController extends HttpServlet {
                 map.put("size",    size);
                 map.put("page",    page);
                 map.put("keyword", keyword);
-                map.put("auth",    auth);
 
                 int totalCount    = (int) map.get("totalCount");
                 int totalPages    = (int) Math.ceil((double) totalCount / size);
@@ -122,10 +127,9 @@ public class NoticeController extends HttpServlet {
                     dto.setViews(dto.getViews() + 1);
                 }
 
-                request.setAttribute("noticeDTO",  dto);
+                request.setAttribute("noticeDTO", dto);
                 request.setAttribute("page", request.getParameter("page"));
                 request.setAttribute("size", request.getParameter("size"));
-                request.setAttribute("auth", auth);
 
                 request.getRequestDispatcher(
                     "/WEB-INF/views/P03_notice/noticeDetail.jsp"
@@ -134,10 +138,6 @@ public class NoticeController extends HttpServlet {
             }
 
             case "/register": {
-                if (auth != 3) {
-                    response.sendRedirect(request.getContextPath() + "/notice/list");
-                    return;
-                }
                 request.getRequestDispatcher(
                     "/WEB-INF/views/P03_notice/noticeRegister.jsp"
                 ).forward(request, response);
@@ -145,10 +145,6 @@ public class NoticeController extends HttpServlet {
             }
 
             case "/edit": {
-                if (auth != 3) {
-                    response.sendRedirect(request.getContextPath() + "/notice/list");
-                    return;
-                }
                 String boardno = request.getParameter("boardno");
                 NoticeDTO dto = noticeService.selectOneNotice(boardno);
                 request.setAttribute("noticeDTO", dto);
@@ -165,7 +161,7 @@ public class NoticeController extends HttpServlet {
             // ──────────────────────────────────────────────
             case "/download": {
                 String saveName   = request.getParameter("save");
-                String originName  = request.getParameter("origin");
+                String originName = request.getParameter("origin");
 
                 if (saveName == null || saveName.trim().isEmpty()) {
                     response.sendRedirect(request.getContextPath() + "/notice/list");
@@ -211,10 +207,16 @@ public class NoticeController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
-        // TODO: String loginId = (String) request.getSession().getAttribute("loginId");
-        // TODO: int auth = (int) request.getSession().getAttribute("auth");
-        String loginId = "user_1001";
-        int auth = 3;
+        // 세션에서 로그인 아이디 읽기
+        Object sessionDto = request.getSession().getAttribute("dto");
+        String loginId = "";
+        if (sessionDto != null) {
+            try {
+                loginId = (String) sessionDto.getClass().getMethod("getEmpid").invoke(sessionDto);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) pathInfo = "";
@@ -222,11 +224,6 @@ public class NoticeController extends HttpServlet {
         switch (pathInfo) {
 
             case "/insert": {
-                if (auth != 3) {
-                    response.sendRedirect(request.getContextPath() + "/notice/list");
-                    return;
-                }
-
                 NoticeDTO dto = new NoticeDTO();
                 dto.setEmpId(loginId);
 
@@ -258,7 +255,7 @@ public class NoticeController extends HttpServlet {
                             // 첨부파일
                             if (fileItem.getSize() > 0) {
                                 String originName = fileItem.getName(); // 원본 파일명
-                                String saveName  = System.currentTimeMillis() + "_" + originName;
+                                String saveName   = System.currentTimeMillis() + "_" + originName;
 
                                 fileItem.write(new File(uploadDir + "\\" + saveName));
 
@@ -278,10 +275,6 @@ public class NoticeController extends HttpServlet {
             }
 
             case "/update": {
-                if (auth != 3) {
-                    response.sendRedirect(request.getContextPath() + "/notice/list");
-                    return;
-                }
                 NoticeDTO dto = new NoticeDTO();
                 dto.setBoardno( request.getParameter("boardno") );
                 dto.setTitle(   request.getParameter("title") );
@@ -293,10 +286,6 @@ public class NoticeController extends HttpServlet {
             }
 
             case "/delete": {
-                if (auth != 3) {
-                    response.sendRedirect(request.getContextPath() + "/notice/list");
-                    return;
-                }
                 String boardno = request.getParameter("boardno");
                 noticeService.deleteNotice(boardno);
                 response.sendRedirect(request.getContextPath() + "/notice/list?page=1");
