@@ -14,19 +14,106 @@ public class LoginDTO {
 	String deptno;
 	String deptname;
 	int auth;
-	
-	Date hiredate;
-	
-	
 
+	
+	int wo_qty;
+	int prev_qty;
+	
+	String woid;
+	String planid;
+	Date workdate;
+	String content;
+    Date hiredate;
+    
+    
+    
+	
+	
+	
 	
 	
 	@Override
 	public String toString() {
 		return "LoginDTO [empid=" + empid + ", ename=" + ename + ", phone=" + phone + ", password=" + password
 				+ ", password2=" + password2 + ", mgr=" + mgr + ", license=" + license + ", deptno=" + deptno
-				+ ", deptname=" + deptname + ", auth=" + auth + ", hiredate=" + hiredate + "]";
+				+ ", deptname=" + deptname + ", auth=" + auth + ", wo_qty=" + wo_qty + ", prev_qty=" + prev_qty
+				+ ", woid=" + woid + ", planid=" + planid + ", workdate=" + workdate + ", content=" + content
+				+ ", hiredate=" + hiredate + "]";
 	}
+
+
+
+	public String getWoid() {
+		return woid;
+	}
+
+
+
+	public void setWoid(String woid) {
+		this.woid = woid;
+	}
+
+
+
+	public String getPlanid() {
+		return planid;
+	}
+
+
+
+	public void setPlanid(String planid) {
+		this.planid = planid;
+	}
+
+
+
+	public Date getWorkdate() {
+		return workdate;
+	}
+
+
+
+	public void setWorkdate(Date workdate) {
+		this.workdate = workdate;
+	}
+
+
+
+	public String getContent() {
+		return content;
+	}
+
+
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+
+	
+
+	public int getWo_qty() {
+		return wo_qty;
+	}
+
+	public void setWo_qty(int wo_qty) {
+		this.wo_qty = wo_qty;
+	}
+
+	public int getPrev_qty() {
+		return prev_qty;
+	}
+
+	public void setPrev_qty(int prev_qty) {
+		this.prev_qty = prev_qty;
+	}
+	
+	
+	
+
+	
+	
+	
 
 	public int getAuth() {
 		return auth;

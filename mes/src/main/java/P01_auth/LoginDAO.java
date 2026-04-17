@@ -1173,8 +1173,13 @@ public class LoginDAO {
 			conn = dataFactory.getConnection();
 			
 			// SQL 준비
-			String query = " SELECT * FROM defect d ";
-				   query += " LEFT OUTER JOIN defect_type t ON d.dtype_no = t.dtype_no ";
+			String query = " SELECT * ";
+			       query += " FROM Work_order w ";
+			       query += " LEFT OUTER JOIN production_plan p ON w.plan_id = p.plan_id ";
+			       query += " WHERE p.plan_sdate >= '2026-04-13' " ;
+			       query += " AND p.plan_edate <= '2026-04-17' ";
+			       query += " AND w.workdate = '2026-04-16' ";
+			       query += " ORDER BY w.workdate ASC ";
 				 
 			
 			ps = conn.prepareStatement(query);
@@ -1189,7 +1194,9 @@ public class LoginDAO {
 				DashDTO dto = new DashDTO();
 				
 				//바구니에 담기
-				dto.setDtype_name(rs.getString("dtype_name"));				
+				dto.setWo_qty(rs.getInt("wo_qty"));				
+				dto.setPrev_qty(rs.getInt("prev_qty"));				
+				dto.setItemid(rs.getString("item_id"));				
 				
 				//바구니를 리스트에 싣기
 				list.add(dto);
@@ -1229,7 +1236,87 @@ public class LoginDAO {
 		
 	}
 	
-	public List<DashDTO> i() {
+	
+	public int aread(String empid) {
+		System.out.println("/login DAO.aread 실행");
+
+		int count = 0;
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			// JNDI 방식
+			// connection.xml 맨 아래에 있는 DB정보로 커넥션 풀을 가져온다. Server 폴더에 있다. 기억!
+			Context ctx = new InitialContext();
+
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB접속(그런데 이제 커넥션 풀로.)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = " SELECT * FROM alarms ";
+		           query += " WHERE target_id = ? ";
+		           query += " AND is_show = 1 ";
+				   
+
+			ps = conn.prepareStatement(query);
+			ps.setString(1, empid);
+			
+
+			// SQL 실행 및 결과 확보
+			rs = ps.executeQuery();
+
+			// 결과 활용
+			
+			
+			while (rs.next()) {
+				
+				//숫자세기
+				count++;
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+		System.out.println(" aread 함수 실행 : " + count);
+		return count;
+
+	}
+	
+	
+	
+	public List<DashDTO> a(String empid, int astart_no, int acountPageNo) {
 		System.out.println("/dashboard DAO.i 실행");
 		
 		List<DashDTO> list = new ArrayList<DashDTO>();
@@ -1249,12 +1336,19 @@ public class LoginDAO {
 			// DB접속(그런데 이제 커넥션 풀로.)
 			conn = dataFactory.getConnection();
 			
-			// SQL 준비
-			String query = " SELECT * FROM defect d ";
-				   query += " LEFT OUTER JOIN defect_type t ON d.dtype_no = t.dtype_no ";
-				 
-			
-			ps = conn.prepareStatement(query);
+			String query = " SELECT * FROM ( ";
+	           query += " SELECT rownum AS rn, a.* FROM ( ";
+	           query += " SELECT * FROM alarms ";
+	           query += " WHERE target_id = ? ";
+	           query += " and is_show = 1 ";
+	           query += " ORDER BY reg_date DESC ";
+	           query += " ) a WHERE rownum <= ? ";
+	           query += " ) WHERE rn > ? "; 
+
+	           ps = conn.prepareStatement(query);
+	           ps.setString(1, empid);
+	           ps.setInt(2, acountPageNo);
+	           ps.setInt(3, astart_no);
 			
 			
 			// SQL 실행 및 결과 확보
@@ -1266,7 +1360,9 @@ public class LoginDAO {
 				DashDTO dto = new DashDTO();
 				
 				//바구니에 담기
-				dto.setDtype_name(rs.getString("dtype_name"));				
+				dto.setAtitle(rs.getString("title"));				
+				dto.setAcontent(rs.getString("content"));				
+				dto.setAlink_url(rs.getString("link_url"));				
 				
 				//바구니를 리스트에 싣기
 				list.add(dto);
@@ -1301,7 +1397,7 @@ public class LoginDAO {
 			}
 			
 		}
-		System.out.println("i 함수 실행 : " + list.size());
+		System.out.println("a 함수 실행 : " + list.size());
 		return list;
 		
 	}

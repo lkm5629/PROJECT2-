@@ -20,7 +20,8 @@
 
 <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 <script src="/mes/static/js/00_layout/snb.js"></script>
-<link rel="stylesheet" href="/mes/static/css/P02_dashboard/dashboard.css">
+<link rel="stylesheet"
+	href="/mes/static/css/P02_dashboard/dashboard.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -42,15 +43,13 @@
 					<h7>제조 실행 시스템</h7>
 				</div>
 				<div class="board-box">
-				
-				    <div class="box-type4 radius">						
-						<div class="weather">
-							
-						</div>
+
+					<div class="box-type4 radius">
+						<div class="weather"></div>
 					</div>
-					
-				    <div class="box-type4 radius">
-						<div class="chart-1 weather" >
+
+					<div class="box-type4 radius">
+						<div class="chart-1 weather">
 							<h3>품질 기준</h3>
 							<h4>성상 & 포장상태 : 육안 검사 결과 (합격/불합격)</h4>
 							<h4>알콜함량 & 성분분석 : 63% ~ 77%, 5mL 이상</h4>
@@ -58,80 +57,102 @@
 							<h4>포장밀봉상태 : 누설시험 진행</h4>
 						</div>
 					</div>
-					
-				    <div class="box-type4 radius">
+
+					<div class="box-type4 radius">
 						<div class="chart-1 weather">
-						<h3>현재 클린룸 상태</h3>
+							<h3>현재 클린룸 상태</h3>
 							<h4>미세먼지 : 452,000</h4>
 							<h4>온도 : 21 도</h4>
 							<h4>습도 : 53 %</h4>
 							<h4>차압 : 15 Pa</h4>
 						</div>
 					</div>
-				
+
 					<div class="box-type1 radius">
-						<h3>일별 생산 현황 (완제품별)</h3>
-						<div class="chart-1">
-							<canvas id="deily-pro-chart-1"></canvas>
+						<div
+							style="width: 100%; display: flex; justify-content: space-between;">
+							<h3 class="semi">일일 생산현황 (완제품별)</h3>
+							<div style="width: 100%;">
+								<canvas id="work-chart"></canvas>
+							</div>
 						</div>
 					</div>
 
 					<div class="box-type1 radius">
-						<div style="width: 100%; display : flex; justify-content : space-between; ">						
-						<h3 class="semi">불량 유형별 분포 (공정별)</h3>
-						<div style="width : 100%;">
-							<canvas id="defect-type-chart"></canvas>
-						</div>
+						<div
+							style="width: 100%; display: flex; justify-content: space-between;">
+							<h3 class="semi">불량 유형별 분포 (공정별)</h3>
+							<div style="width: 100%;">
+								<canvas id="defect-type-chart"></canvas>
+							</div>
 						</div>
 					</div>
 
 					<div class="box-type3 radius">
 						<h3>알림</h3>
 						<div class="short-box">
+
+							<c:forEach var="a" items="${ alarms }">
+								<div>
+									<a href="${ a.alink_url }">${ a.atitle } : ${ a.acontent }</a>
+								</div>
+							</c:forEach>
+
+
+						</div>
+						<div class="next">
+							<c:forEach var="m" begin="1" end="${ apage_no }">
+								<button name="n_btn" value="${ m }" class="buttonMain">${ m }</button>
+							</c:forEach>
 						</div>
 					</div>
-					<div class="box-type3 radius">
-						<h3>공지사항</h3>
-						<div class="short-box">
-						<c:forEach var="n" items="${ notice }" >
-	                         <div><a>${ n.nboardno }  :  ${ n.ntitle }</a></div>
-	                    </c:forEach>
-	                    
-					       
-						</div>
-	                       <div class="next">
-					         <c:forEach var="m" begin="1" end="${ npage_no }">
-						          <button name="n_btn" value="${ m }" class="buttonMain">${ m }</button>
-					         </c:forEach>
-					       </div>
+
+
+				<div class="box-type3 radius">
+					<h3>공지사항</h3>
+					<div class="short-box">
+						<c:forEach var="n" items="${ notice }">
+							<div>
+								<a>${ n.nboardno } : ${ n.ntitle }</a>
+							</div>
+						</c:forEach>
+
+
 					</div>
-					<div class="box-type3 radius">
-						<h3>건의사항</h3>
-						<div class="short-box">
-						<c:forEach var="s" items="${ suggestion }" >
-	                         <div>
-	                         <a>${ s.sboardno }  :  ${ s.stitle }  </a>
-	                         <div class='buttonMain small'>
-	                         ${ s.complete == 0 ? '검토중' : ( s.complete == 1 ? '검토완료' : '답변달림' ) }
-	                         </div>
-	                         </div>
-	                    </c:forEach>
-	                    
-	                    
-	                    
-	                    
-						</div>
-	                     <div class="next">
-					         <c:forEach var="m" begin="1" end="${ spage_no }">
-						          <button name="s_btn" value="${ m  }" class="buttonMain">${ m }</button>
-					         </c:forEach>
-					       </div>
+					<div class="next">
+						<c:forEach var="m" begin="1" end="${ npage_no }">
+							<button name="n_btn" value="${ m }" class="buttonMain">${ m }</button>
+						</c:forEach>
 					</div>
 				</div>
+
+				<div class="box-type3 radius">
+					<h3>건의사항</h3>
+					<div class="short-box">
+						<c:forEach var="s" items="${ suggestion }">
+							<div>
+								<a>${ s.sboardno } : ${ s.stitle } </a>
+								<div class='buttonMain small'>${ s.complete == 0 ? '검토중' : ( s.complete == 1 ? '검토완료' : '답변달림' ) }
+								</div>
+							</div>
+						</c:forEach>
+
+
+
+
+					</div>
+					<div class="next">
+						<c:forEach var="m" begin="1" end="${ spage_no }">
+							<button name="s_btn" value="${ m  }" class="buttonMain">${ m }</button>
+						</c:forEach>
+					</div>
+				</div>
+
+				</div>
 			</div>
-
-
 		</div>
+
+
 	</div>
 
 
@@ -170,11 +191,12 @@
 				 label : '불량 유형별 발생 건수',
 				 data : Object.values(counts),
 				 backgroundColor: [
-					 'rgba(255, 99, 132, 0.8)', // 막대 색상들 (자동 반복됨)
-	                  'rgba(54, 162, 235, 0.8)',
-	                  'rgba(255, 206, 86, 0.8)',
-	                  'rgba(75, 192, 192, 0.8)',
-	                  'rgba(153, 102, 255, 0.8)'
+					 'rgba(255, 99, 132, 1)', // 막대 색상들 (자동 반복됨)
+	                  'rgba(54, 162, 235, 1)',
+	                  'rgba(255, 206, 86, 1)',
+	                  'rgba(75, 192, 192, 1)',
+	                  'rgba(0, 0, 0, 1)',
+	                  'rgba(153, 102, 255, 1)'
 				 ],
 				 borderColor: 'rgba(0, 0, 0, 0.5)',
 				 borderWidth: 1
@@ -192,6 +214,78 @@
 	 });
 	 
 	
+	 
+	 
+	 
+		// 데이터 통합 바구니 생성
+		const work = [];
+
+			<c:forEach var="d" items="${ work }">
+			    work.push({
+			        itemId: "${d.itemid}",
+			        woQty: Number("${d.wo_qty}"), // 목표 수량
+			        prevQty: Number("${d.prev_qty}") // 현재 수량
+			    });
+			</c:forEach>
+			
+			
+		 //chart용 데이터 추출
+		 
+		 
+		   // 1. 제품명 이름표 바구니 생성 (ID : 실제이름)
+			const itemNames = {
+			    "fin_1003": "이소프로판올 (대) 박스",
+			    "fin_1004": "이소프로판올 (소) 박스",
+			    "fin_1005": "알코올 (대) 박스",
+			    "fin_1006": "알코올 (소) 박스"
+			};
+			
+			// 2. labels를 만들 때 이름표에서 쏙쏙 뽑아오기
+			const labels = work.map(d => {
+			    // 이름표에 해당 ID가 있으면 이름을 쓰고, 없으면 ID를 그대로 표시
+			    return itemNames[d.itemId] ? itemNames[d.itemId] : d.itemId;
+			});
+		 
+		 
+		 
+			const woData = work.map(d => d.woQty); // 데이터1: 목표 수량
+			const prevData = work.map(d => d.prevQty); // 데이터2: 현재 수량
+			
+			
+		 
+			// 차트 생성
+			const ctx = document.querySelector('#work-chart').getContext('2d');
+
+			new Chart(ctx, {
+			    type: 'bar',
+			    data: {
+			        labels: labels, 
+			        datasets: [
+			            {
+			                label: '목표 수량 (Work Order)',
+			                data: woData,
+			                backgroundColor: 'rgba(54, 162, 235, 0.9)', // 파랑
+			                borderColor: 'rgb(54, 162, 235)',
+			                borderWidth: 1
+			            },
+			            {
+			                label: '현재 수량 (Previous)',
+			                data: prevData,
+			                backgroundColor: 'rgba(255, 99, 132, 0.9)', // 빨강
+			                borderColor: 'rgb(255, 99, 132)',
+			                borderWidth: 1
+			            }
+			        ]
+			    },
+			    options: {
+			        responsive: true,
+			        scales: {
+			            y: {
+			                beginAtZero: true
+			            }
+			        }
+			    }
+			});
 	 
 	 
 	 

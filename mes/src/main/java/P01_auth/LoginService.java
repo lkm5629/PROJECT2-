@@ -196,15 +196,27 @@ public class LoginService {
 		return a.work_order();				
 	}
 	
-	public List<DashDTO> i() {
-		System.out.println("/dashboard service.i() 실행 ");
+	public int aread(String empid) {
+		System.out.println("/login service.aread() 실행 ");
 		
 		//실무 함수 소환
 		LoginDAO a = new LoginDAO();
 		
 		//로그인 함수 실행결과 리턴
-		return a.i();				
+		return a.aread(empid);				
 	}
+	
+	public List<DashDTO> a(String empid, int astart_no, int acountPageNo) {
+		System.out.println("/dashboard service.a() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.a(empid, astart_no, acountPageNo);				
+	}
+	
+	
 	
 	public static String encrypt(String password) {
 	    try {
