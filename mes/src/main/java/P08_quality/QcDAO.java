@@ -1711,4 +1711,608 @@ public class QcDAO {
 		return result;
 	} // modifyResult
 	
+	public String lotId() {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		String result = "";
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "Select lot_seq.nextval from dual";
+			
+			ps = new LoggableStatement(conn, query);
+			rs = ps.executeQuery();
+
+			// SQL 실행 및 결과 확보
+			if (rs.next()) {
+				result = "lot_" + rs.getString("nextval");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	}
+
+	public int addLot(FinIoDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "INSERT INTO lot (lot_id, lot_qty, item_id, expiry_date) "
+							+ "VALUES (?, ?, ?, ADD_MONTHS(?, 36))";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, dto.getLotId());
+			ps.setInt(2, dto.getQty());
+			ps.setString(3, dto.getItemId());
+			ps.setDate(4, dto.getDate());
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // addLot
+	
+	public int addIn(FinIoDTO dto) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "INSERT INTO io (io_id, io_type, io_reason, item_id, lot_id, emp_id, io_time) "
+					+ "values('in_'||in_seq.nextval, 0, '생산', ?, ?, ?, sysdate)";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, dto.getItemId());
+			ps.setString(2, dto.getLotId());
+			ps.setString(3, dto.getEmpId());
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // addIn
+	
+	public int updateStock(FinIoDTO dto) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "UPDATE STOCK "
+					+ "SET stock_no = stock_no + ? "
+					+ "WHERE item_id = ? ";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setInt(1, dto.getQty());
+			ps.setString(2, dto.getItemId());
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // updateStock
+	
+	
+	
+	
+
+	public int updateWoStatus(String woId) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "UPDATE work_order "
+					+ "SET wostatus_no = 60 "
+					+ "WHERE wo_id = ? ";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, woId);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // updateWoStatus
+	
+	
+	
+	public int updateQcStatus(String qcId) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "UPDATE quality_check "
+					+ "SET qcstatus_no = 50 "
+					+ "WHERE qc_id = ? ";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, qcId);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // updateQcStatus
+	
+	public int updateWoLot(String woId, FinIoDTO dto) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "UPDATE WORK_ORDER "
+					+ "SET lot_id = ? "
+					+ "WHERE WO_ID = ? ";
+			
+			ps = new LoggableStatement(conn, query);
+			
+			ps.setString(1, dto.getLotId());
+			ps.setString(2, woId);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // updateWoLot
+	
+	
+	
+	
+	
+	////////////////////////
+	
+	
+	
+	public String lotId(Connection conn) {
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    String result = "";
+
+	    try {
+	        String query = "Select lot_seq.nextval from dual";
+
+	        ps = conn.prepareStatement(query);
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            result = "lot_" + rs.getString(1);
+	        }
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (rs != null) rs.close(); } catch (Exception e) {}
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+
+	    return result;
+	}
+	
+	public int addLot(Connection conn, FinIoDTO dto) {
+	    PreparedStatement ps = null;
+
+	    try {
+	    	String query = "INSERT INTO lot (lot_id, lot_qty, item_id, expiry_date) "
+	    	        + "VALUES (?, ?, ?, ADD_MONTHS(?, 36))";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getLotId());
+	        ps.setInt(2, dto.getQty());
+	        ps.setString(3, dto.getItemId());
+	        ps.setDate(4, dto.getDate());
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int addIn(Connection conn, FinIoDTO dto) {
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "INSERT INTO io (io_id, io_type, io_reason, item_id, lot_id, emp_id, io_time) "
+	                + "values('in_'||in_seq.nextval, 0, '생산', ?, ?, ?, sysdate)";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getItemId());
+	        ps.setString(2, dto.getLotId());
+	        ps.setString(3, dto.getEmpId());
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int updateStock(Connection conn, FinIoDTO dto) {
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE STOCK "
+	                + "SET stock_no = stock_no + ? "
+	                + "WHERE item_id = ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setInt(1, dto.getQty());
+	        ps.setString(2, dto.getItemId());
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int updateWoStatus(Connection conn, String woId) {
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE work_order "
+	                + "SET wostatus_no = 60 "
+	                + "WHERE wo_id = ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, woId);
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int updateQcStatus(Connection conn, String qcId) {
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE quality_check "
+	                + "SET qcstatus_no = 50 "
+	                + "WHERE qc_id = ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, qcId);
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int updateWoLot(Connection conn, String woId, FinIoDTO dto) {
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE WORK_ORDER "
+	                + "SET lot_id = ? "
+	                + "WHERE WO_ID = ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getLotId());
+	        ps.setString(2, woId);
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	
 }

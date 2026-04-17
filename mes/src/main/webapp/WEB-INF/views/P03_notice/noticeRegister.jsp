@@ -15,6 +15,10 @@
 <script src="/mes/static/js/00_layout/snb.js"></script>
 <link rel="stylesheet" href="/mes/static/css/P07_work/main.css">
 <link rel="stylesheet" href="/mes/static/css/P03_notice/notice.css">
+
+<%-- TinyMCE CDN: notice.js보다 먼저 로드 --%>
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="/mes/static/js/03_notice/notice.js"></script>
 </head>
 <body>
 <%@ include file="/WEB-INF/views/P00_layout/header.jsp" %>
@@ -33,10 +37,9 @@
 
     <div class="card">
       <div class="card-title">공지 작성</div>
-      <%-- action=insert, POST --%>
       <form id="noticeRegisterForm"
             action="${ctx}/notice/insert" method="post"
-            enctype="multipart/form-data">
+            enctype="multipart/form-data" accept-charset="UTF-8">
 
         <div class="form-group">
           <label class="form-label" for="noticeRegTitle">제목 <span class="req">*</span></label>
@@ -46,29 +49,21 @@
 
         <div class="form-group">
           <label class="form-label">내용 <span class="req">*</span></label>
-          <div class="editor-toolbar">
-            <button type="button" class="editor-btn" title="굵게"><b>B</b></button>
-            <button type="button" class="editor-btn" title="기울임"><i>I</i></button>
-            <button type="button" class="editor-btn" title="밑줄"><u>U</u></button>
-            <div class="editor-sep"></div>
-            <button type="button" class="editor-btn">≡</button>
-            <button type="button" class="editor-btn">☰</button>
-            <button type="button" class="editor-btn">≡</button>
-            <div class="editor-sep"></div>
-            <button type="button" class="editor-btn">T</button>
-            <button type="button" class="editor-btn">A</button>
-            <button type="button" class="editor-btn">🔗</button>
-            <button type="button" class="editor-btn">🖼</button>
-          </div>
-          <textarea class="editor-area" id="noticeRegContent" name="content"
-                    placeholder="공지 내용을 입력하세요" rows="8"></textarea>
+          <%-- TinyMCE가 붙을 textarea, name=content으로 서버 전송 --%>
+          <textarea id="noticeRegContent" name="content"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">첨부파일</label>
+          <input type="file" name="file1" class="form-control">
         </div>
 
         <div class="form-actions">
           <button type="button" class="btn btn-outline"
             onclick="location.href='${ctx}/notice/list'">취소</button>
-          <button type="submit" class="btn btn-primary">등록</button>
+          <button type="button" class="btn btn-primary" id="noticeSubmitBtn">등록</button>
         </div>
+
       </form>
     </div>
   </div>

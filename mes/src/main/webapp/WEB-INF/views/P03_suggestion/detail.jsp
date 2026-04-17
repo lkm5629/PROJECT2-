@@ -15,6 +15,70 @@
 <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 <script src="/mes/static/js/00_layout/snb.js"></script>
 <link rel="stylesheet" href="/mes/static/css/P03_suggestion/suggestion.css">
+<style>
+    /* 댓글 계층 스타일 */
+    .comment-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .comment-item:last-child {
+        border-bottom: none;
+    }
+    .comment-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+    .reply-icon {
+        color: #888;
+        font-size: 13px;
+        margin-right: 2px;
+    }
+    .comment-content-text {
+        font-size: 14px;
+        color: #333;
+    }
+    .comment-time {
+        font-size: 12px;
+        color: #aaa;
+    }
+    .btn-reply-small {
+        font-size: 12px;
+        color: #5b8dee;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 2px 6px;
+    }
+    .btn-reply-small:hover {
+        text-decoration: underline;
+    }
+    /* 답글 입력창 */
+    .reply-input-box {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin: 6px 0 6px 0;
+        padding: 8px;
+        background: #f8f9fa;
+        border-radius: 6px;
+    }
+    .reply-input-box input {
+        flex: 1;
+        padding: 6px 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 13px;
+    }
+    .reply-input-box .btn-cancel {
+        font-size: 12px;
+        color: #888;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+</style>
 </head>
 <body>
 
@@ -52,7 +116,6 @@
             <div class="form-row">
                 <div class="form-group form-group-no-mb">
                     <label class="form-label">번호</label>
-                    <%-- sugg_ 접두사(5글자) 제거, 숫자만 표시 --%>
                     <input type="text" class="form-control"
                            value="${fn:substring(detail.boardno, 5, fn:length(detail.boardno))}"
                            readonly>
@@ -74,7 +137,6 @@
             <div class="form-row form-row-mt">
                 <div class="form-group form-group-no-mb">
                     <label class="form-label">작성자</label>
-                    <%-- user_info JOIN으로 가져온 ename 표시 --%>
                     <input type="text" class="form-control" value="${detail.ename}" readonly>
                 </div>
                 <div class="form-group form-group-no-mb">
@@ -107,15 +169,44 @@
             </div>
         </div>
 
-        <!-- 답변 (댓글) -->
+        <!-- ===== 답변 (무한 대댓글) ===== -->
         <div class="card">
             <div class="comment-section">
                 <div class="comment-section-title">
-                    답변 <span class="comment-count">0건</span>
+                    답변 <span class="comment-count">${fn:length(commentList)}건</span>
                 </div>
-                <form method="post"
+
+                <!-- 댓글 목록: CONNECT BY가 이미 계층 순서로 정렬해서 내려줌 -->
+                <div id="commentList">
+                    <c:forEach var="c" items="${commentList}">
+                        <div class="comment-item"
+                             data-comno="${c.comno}"
+                             data-depth="${c.depth}"
+                             style="padding-left: ${c.depth * 30}px;">
+
+                            <div class="comment-meta">
+                                <!-- depth > 0 이면 대댓글 화살표 표시 -->
+                                <c:if test="${c.depth > 0}">
+                                    <span class="reply-icon">↳</span>
+                                </c:if>
+                                <span class="comment-content-text">${c.content}</span>
+                                <span class="comment-time">${c.ctime}</span>
+                                <button class="btn-reply-small"
+                                        data-comno="${c.comno}"
+                                        data-depth="${c.depth}">
+                                    답글
+                                </button>
+                            </div>
+
+                        </div>
+                    </c:forEach>
+                </div>
+
+                <!-- 원댓글 입력 폼 (대댓글 클릭 시 JS로 이동) -->
+                <form id="commentForm" method="post"
                       action="${pageContext.request.contextPath}/suggestion/comment">
-                    <input type="hidden" name="boardno" value="${detail.boardno}">
+                    <input type="hidden" name="boardno"     value="${detail.boardno}">
+                    <input type="hidden" name="parentComno" id="parentComno" value="">
                     <div class="comment-input-row">
                         <input type="text" class="comment-input"
                                name="commentContent"
@@ -124,6 +215,7 @@
                         <button type="submit" class="btn btn-primary comment-submit-btn">등록</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -133,7 +225,7 @@
 </div>
 
 <script>
-    // 삭제
+    /* ── 삭제 ── */
     document.querySelector('#btnDelete').addEventListener('click', function () {
         if (!confirm('정말 삭제하시겠습니까?')) return;
 
@@ -151,7 +243,7 @@
         form.submit();
     });
 
-    // 답변완료
+    /* ── 답변완료 ── */
     const btnComplete = document.querySelector('#btnComplete');
     if (btnComplete) {
         btnComplete.addEventListener('click', function () {
@@ -177,6 +269,33 @@
             form.submit();
         });
     }
+
+    /* ── 무한 대댓글: 답글 버튼 클릭 ── */
+    document.addEventListener('click', function (e) {
+        if (!e.target.classList.contains('btn-reply-small')) return;
+
+        const comno = e.target.dataset.comno;
+        const depth = parseInt(e.target.dataset.depth);
+
+        // parentComno hidden에 클릭한 댓글의 comno 세팅
+        document.getElementById('parentComno').value = comno;
+
+        // 입력 폼을 해당 댓글 아래로 이동 + 들여쓰기
+        const form = document.getElementById('commentForm');
+        form.style.paddingLeft = (depth + 1) * 30 + 'px';
+
+        const targetItem = e.target.closest('.comment-item');
+        targetItem.after(form);
+
+        document.getElementById('commentInput').placeholder = '답글을 입력하세요';
+        document.getElementById('commentInput').focus();
+    });
+
+    /* ── 원댓글 입력 시 parentComno 초기화 ── */
+    // 댓글 목록 마지막으로 폼 복귀 버튼 (선택적으로 추가 가능)
+    document.getElementById('commentInput').addEventListener('focus', function () {
+        // 직접 입력창 클릭 시 parentComno 유지 (답글 버튼으로 세팅된 것 그대로 사용)
+    });
 </script>
 
 </body>

@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
 <script src="/mes/static/js/00_layout/snb.js"></script>
 <link rel="stylesheet" href="/mes/static/css/P06_prod/prod.css">
-<link rel="stylesheet" href="/mes/static/css/P06_prod/prodRegist.css">
 
 </head>
 <body>
@@ -27,35 +26,24 @@
     <div class="content">
         <main class="pp">
 
-  <!-- ====================================================
-       생산관리 목록
-       ==================================================== -->
   <div id="page-list">
     <div class="page-header-row">
       <div>
         <h1>생산관리</h1>
         <p class="page-header-desc">주간 생산 계획을 조회하고 관리합니다</p>
       </div>
-      <button class="btn btn-primary" onclick="openRegisterModal()">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-        생산계획 등록
-      </button>
+      <div class="header-actions">
+        <button class="btn btn-danger-outline btn-sm" id="btnBulkDelete">선택 삭제</button>
+        <button class="btn btn-primary" onclick="openRegisterModal()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          생산계획 등록
+        </button>
+      </div>
     </div>
 
-    <!-- 검색 툴바 -->
     <div class="table-toolbar">
-      <div class="search-wrap">
-        <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <circle cx="6" cy="6" r="4.5" stroke="#94A3B8" stroke-width="1.4"/>
-          <path d="M9.5 9.5L12 12" stroke="#94A3B8" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
-        <input type="text" class="search-input" placeholder="제품명으로 검색"
-               id="searchKeyword" name="searchKeyword">
-      </div>
-      <button class="btn btn-outline btn-sm toolbar-btn">검색</button>
-      <div class="toolbar-sep"></div>
       <input type="date" class="date-input" id="startDate" name="startDate" title="시작일">
       <input type="date" class="date-input" id="endDate"   name="endDate"   title="종료일">
 
@@ -67,11 +55,18 @@
       </select>
 
       <div class="toolbar-right">
-        <button class="btn btn-danger-outline btn-sm toolbar-btn">선택 삭제</button>
+        <div class="search-wrap">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="6" cy="6" r="4.5" stroke="#94A3B8" stroke-width="1.4"/>
+            <path d="M9.5 9.5L12 12" stroke="#94A3B8" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <input type="text" class="search-input" placeholder="제품명으로 검색"
+                 id="searchKeyword" name="searchKeyword">
+        </div>
+        <button class="btn btn-outline btn-sm toolbar-btn">검색</button>
       </div>
     </div>
 
-    <!-- 테이블 -->
     <div class="table-wrap">
       <table>
         <thead>
@@ -130,16 +125,16 @@
       </table>
     </div>
 
-    <!-- ── 페이지네이션 ── -->
+    <!-- 페이지네이션 -->
     <div class="pagination">
 
       <%-- 이전 --%>
       <c:choose>
-        <c:when test="${map.startSection == 1}">
-          <button class="page-btn" disabled>[이전]</button>
+        <c:when test="${map.page <= 1}">
+          <button class="page-btn" disabled>이전</button>
         </c:when>
         <c:otherwise>
-          <a class="page-btn" href="list?page=${map.startSection - 1}&size=${map.size}">[이전]</a>
+          <a class="page-btn" href="list?page=${map.page - 1}&size=${map.size}">이전</a>
         </c:otherwise>
       </c:choose>
 
@@ -157,24 +152,20 @@
 
       <%-- 다음 --%>
       <c:choose>
-        <c:when test="${map.endSection >= map.totalPage}">
-          <button class="page-btn" disabled>[다음]</button>
+        <c:when test="${map.page >= map.totalPage}">
+          <button class="page-btn" disabled>다음</button>
         </c:when>
         <c:otherwise>
-          <a class="page-btn" href="list?page=${map.endSection + 1}&size=${map.size}">[다음]</a>
+          <a class="page-btn" href="list?page=${map.page + 1}&size=${map.size}">다음</a>
         </c:otherwise>
       </c:choose>
 
     </div>
-    <!-- /페이지네이션 -->
 
   </div>
-  <!-- /page-list -->
 
 
-  <!-- ====================================================
-       등록 모달
-       ==================================================== -->
+  <!-- 등록 모달 -->
   <div id="modalRegister" class="pp-modal-overlay" style="display:none;">
     <div class="pp-modal">
       <div class="pp-modal-header">
@@ -185,25 +176,15 @@
         <form id="registerForm" action="/production/plan/insert" method="post">
           <div class="form-grid">
 
-            <!-- 대분류 -->
             <div class="form-group">
               <label class="form-label" for="regGroup">대분류 <span class="req">*</span></label>
               <select class="form-control" id="regGroup" name="gId" required>
                 <option value="">대분류 선택</option>
-                <c:forEach var="g" items="${groupList}">
-                  <option value="${g.gId}">
-                    <c:choose>
-                      <c:when test="${g.gId == 'raw'}">원자재</c:when>
-                      <c:when test="${g.gId == 'semi'}">반제품</c:when>
-                      <c:when test="${g.gId == 'fin'}">완제품</c:when>
-                      <c:otherwise>${g.itemgroupName}</c:otherwise>
-                    </c:choose>
-                  </option>
-                </c:forEach>
+                <option value="fin">완제품</option>
+                <option value="semi">반제품</option>
               </select>
             </div>
 
-            <!-- 소분류 -->
             <div class="form-group">
               <label class="form-label" for="regSubItem">소분류 <span class="req">*</span></label>
               <select class="form-control" id="regSubItem" name="itemId" required>
@@ -211,21 +192,18 @@
               </select>
             </div>
 
-            <!-- 단위 (readonly) -->
             <div class="form-group">
               <label class="form-label" for="regUnit">단위</label>
               <input type="text" class="form-control reg-readonly" id="regUnit"
                      name="unit" readonly tabindex="-1" placeholder="소분류 선택 시 자동입력">
             </div>
 
-            <!-- 규격 (readonly) -->
             <div class="form-group">
               <label class="form-label" for="regSpec">규격</label>
               <input type="text" class="form-control reg-readonly" id="regSpec"
                      name="spec" readonly tabindex="-1" placeholder="소분류 선택 시 자동입력">
             </div>
 
-            <!-- 담당자 -->
             <div class="form-group">
               <label class="form-label" for="regEmpName">담당자 <span class="req">*</span></label>
               <div class="emp-search-wrap">
@@ -241,34 +219,26 @@
               </div>
             </div>
 
-            <!-- 목표수량 -->
             <div class="form-group">
               <label class="form-label" for="regQty">목표수량 <span class="req">*</span></label>
               <input type="number" class="form-control" id="regQty" name="planQty"
                      placeholder="목표 수량 입력" min="1" required>
             </div>
 
-            <!-- 상태 -->
-            <div class="form-group">
-              <label class="form-label" for="regStatus">상태 <span class="req">*</span></label>
-              <select class="form-control" id="regStatus" name="status" required>
-                <option value="0">대기</option>
-                <option value="1">진행중</option>
-                <option value="2">완료</option>
-                <option value="3">보류</option>
-              </select>
-            </div>
-
-            <!-- 시작일 -->
             <div class="form-group">
               <label class="form-label" for="regStartDate">시작일 <span class="req">*</span></label>
               <input type="date" class="form-control" id="regStartDate" name="planSdate" required>
             </div>
 
-            <!-- 종료일 -->
             <div class="form-group">
               <label class="form-label" for="regEndDate">종료일 <span class="req">*</span></label>
               <input type="date" class="form-control" id="regEndDate" name="planEdate" required>
+            </div>
+
+            <div class="form-group reg-status-hidden">
+              <select class="form-control" id="regStatus" name="status" required>
+                <option value="0" selected>대기</option>
+              </select>
             </div>
 
           </div>
@@ -280,12 +250,9 @@
       </div>
     </div>
   </div>
-  <!-- /등록 모달 -->
 
 
-  <!-- ====================================================
-       수정 모달
-       ==================================================== -->
+  <!-- 수정 모달 -->
   <div id="modalEdit" class="pp-modal-overlay" style="display:none;">
     <div class="pp-modal">
       <div class="pp-modal-header">
@@ -344,12 +311,9 @@
       </div>
     </div>
   </div>
-  <!-- /수정 모달 -->
 
 
-  <!-- ====================================================
-       담당자 검색 팝업
-       ==================================================== -->
+  <!-- 담당자 검색 팝업 -->
   <div id="empPopup" class="emp-popup-overlay" style="display:none;">
     <div class="emp-popup">
       <div class="emp-popup-header">
@@ -377,10 +341,8 @@
       </div>
     </div>
   </div>
-  <!-- /담당자 검색 팝업 -->
 
 
-  <!-- item 데이터 JS 주입 (대분류→소분류 필터링용) -->
   <script>
     const itemDataMap = {};
     <c:forEach var="item" items="${itemList}">

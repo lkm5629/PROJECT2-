@@ -43,8 +43,8 @@ public class Stock2Service {
         return dao.selectLackCount();
     }
 
-    // ¡Ú ¾ÈÀüÀç°í ¼öÁ¤
-    public void updateSafeNo(String stockId, int safeNo) {
-        dao.updateSafeNo(stockId, safeNo);
+    // ì•ˆì „ìž¬ê³  ìˆ˜ì •  â˜… stockId â†’ itemId
+    public void updateSafeNo(String itemId, int safeNo) {
+        dao.updateSafeNo(itemId, safeNo);
     }
 }

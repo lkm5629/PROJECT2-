@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import P07_work.WoBOMDTO;
 import P07_work.WoDTO;
 import P07_work.WoService;
 
@@ -23,6 +24,7 @@ public class WoDetailController extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8;");
 		
 		setting(request, response);
+		setBOM(request, response);
 		
 		request.getRequestDispatcher("/WEB-INF/views/P07_work/detail.jsp").forward(request, response);
 	}
@@ -49,6 +51,22 @@ public class WoDetailController extends HttpServlet {
 		
 		// forward
 		request.setAttribute("woInfo", dto);
+	}
+	
+	protected void setBOM(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/workorder setBOM 실행");
+		
+		String woId = request.getParameter("woId");
+		WoBOMDTO dto = new WoBOMDTO();
+		dto.setWoId(woId);
+		
+		WoService service = new WoService();
+		List<WoBOMDTO> bom = service.setBOM(dto);
+		
+		System.out.println(bom);
+		
+		// forward
+		request.setAttribute("bom", bom);
 	}
 
 }

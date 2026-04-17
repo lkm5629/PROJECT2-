@@ -558,3 +558,235 @@ dialog::backdrop {
     white-space: nowrap;
     display: inline-block;
 }
+
+@charset "UTF-8";
+/* ================================================
+   P06_inventory / inventory.css
+   재고 관리 페이지 전용 스타일
+   ================================================ */
+
+/* ── 요약 카드 영역 ─────────────────────────────── */
+.inv-summary-cards {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.inv-card {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #e2e6ea;
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.inv-card-label {
+    font-size: 12px;
+    color: #888;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.inv-card-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #222;
+    line-height: 1.1;
+    background: #c8c8c8;
+    border-radius: 8px;
+    padding: 8px 32px;
+    min-width: 100px;
+    text-align: center;
+}
+
+.inv-card-normal .inv-card-value {
+    background: #2e8b57;
+    color: #fff;
+}
+
+.inv-card-lack .inv-card-value {
+    background: #d9534f;
+    color: #fff;
+}
+
+/* 유통기한 임박 (주황) */
+.inv-card-warn .inv-card-value {
+    background: #f0ad4e;
+    color: #fff;
+}
+
+/* 유통기한 초과 (진빨강) */
+.inv-card-over .inv-card-value {
+    background: #8b0000;
+    color: #fff;
+}
+
+.inv-card-title {
+    font-size: 13px;
+    color: #555;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* ── 필터바 ─────────────────────────────────────── */
+.filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.filter-bar select {
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #d0d5dd;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #333;
+    background: #fff;
+    cursor: pointer;
+    min-width: 110px;
+}
+
+.filter-bar select:focus {
+    outline: none;
+    border-color: #5b8dee;
+}
+
+.search-wrap {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.search-wrap input[type="text"] {
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid #d0d5dd;
+    border-radius: 6px;
+    font-size: 13px;
+    width: 260px;
+}
+
+.search-wrap input[type="text"]:focus {
+    outline: none;
+    border-color: #5b8dee;
+}
+
+.btn-search {
+    height: 36px;
+    padding: 0 16px;
+    background: #5b8dee;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-search:hover {
+    background: #3a6fd8;
+}
+
+/* ── 페이지당 건수 select ───────────────────────── */
+#size {
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid #d0d5dd;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+/* ── 테이블 ─────────────────────────────────────── */
+.table-wrap {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e2e6ea;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.table-wrap thead tr {
+    background: #f5f7fa;
+}
+
+.table-wrap thead th {
+    padding: 11px 14px;
+    text-align: center;
+    font-weight: 600;
+    color: #444;
+    border-bottom: 1px solid #e2e6ea;
+    white-space: nowrap;
+}
+
+.table-wrap tbody tr {
+    border-bottom: 1px solid #f0f2f5;
+    transition: background 0.15s;
+}
+
+.table-wrap tbody tr:last-child {
+    border-bottom: none;
+}
+
+.table-wrap tbody tr:hover {
+    background: #f7f9fc;
+}
+
+.table-wrap tbody td {
+    padding: 10px 14px;
+    text-align: center;
+    color: #333;
+}
+
+/* ── 페이지네이션 ───────────────────────────────── */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 0;
+}
+
+.pagination a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #555;
+    text-decoration: none;
+    border: 1px solid #e2e6ea;
+    background: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.pagination a:hover {
+    background: #f0f4ff;
+    border-color: #5b8dee;
+    color: #5b8dee;
+}
+
+.pagination a.active {
+    background: #5b8dee;
+    color: #fff;
+    border-color: #5b8dee;
+    font-weight: 700;
+}

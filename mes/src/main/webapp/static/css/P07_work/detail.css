@@ -109,6 +109,9 @@
     font-weight: bold;
 }
 
+.woLink:hover {
+	background-color: 
+}
 
 /* 진행률 */
 hr {
@@ -158,6 +161,8 @@ hr {
     border: none;
     padding: 10px;
     text-align: left;
+     
+    text-align: center;
 }
 
 .bomList th {

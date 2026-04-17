@@ -21,7 +21,6 @@
     <script>alert('${errorMsg}');</script>
 </c:if>
 	<%@ include file="/WEB-INF/views/P00_layout/header.jsp"%>
- 필요한 사항은 io 입고 롯번호 다시 써야하는거(홍세정씨 한테 물어봐야함), 안전재고 컬럼을 품목마스터로 빼야함. 입출고일 내일 안되게 막아야한다. 입고사유,자재대분류,자재소분류,거래처 안 고르면 못고르게 막는다.
 	<div class="layout_snb">
 		<div class="snbContent">
 			<%@ include file="/WEB-INF/views/P00_layout/snb.jsp"%>
@@ -86,7 +85,7 @@
 								${item.item_name}</option>
 						</c:forEach>
 					</select>
-					<%-- 작업자 검색 (추후 모달 연동 예정) --%>
+					<%-- 작업자 검색 --%>
 					<div style="display: flex; gap: 8px;">
 						<input type="text" id="filterEmp" placeholder="작업자 검색" readonly
 							value="${map.filterEmp != null ? map.filterEmp : ''}">
@@ -211,39 +210,37 @@
 					%>
 
 					<div class="pagination">
-						<c:if test="<%=start_section == 1%>">
-							<a>&laquo;</a>
+						<%-- 이전 버튼 --%>
+						<c:if test="<%=pageNum == 1%>">
+							<a>이전</a>
 						</c:if>
-						<c:if test="<%=start_section != 1%>">
-							<a
-								href="/mes/iocontroller?page=<%=start_section-1%>&size=${map.size}<%=filterParams%>">&laquo;</a>
+						<c:if test="<%=pageNum != 1%>">
+							<a href="/mes/io?page=<%=pageNum-1%>&size=${map.size}<%=filterParams%>">이전</a>
 						</c:if>
 
-						<c:forEach var="i" begin="<%=start_section%>"
-							end="<%=end_section%>">
+						<%-- 페이지 번호 --%>
+						<c:forEach var="i" begin="<%=start_section%>" end="<%=end_section%>">
 							<c:if test="${map.page eq i}">
-								<a
-									href="/mes/iocontroller?page=${i}&size=${map.size}<%=filterParams%>"
-									class="active"><strong>${i}</strong></a>
+								<a href="/mes/io?page=${i}&size=${map.size}<%=filterParams%>" class="active"><strong>${i}</strong></a>
 							</c:if>
 							<c:if test="${map.page ne i}">
-								<a
-									href="/mes/iocontroller?page=${i}&size=${map.size}<%=filterParams%>">${i}</a>
+								<a href="/mes/io?page=${i}&size=${map.size}<%=filterParams%>">${i}</a>
 							</c:if>
 						</c:forEach>
 
-						<c:if test="<%=end_section == totalPage%>">
-							<a>&raquo;</a>
+						<%-- 다음 버튼 --%>
+						<c:if test="<%=pageNum == totalPage%>">
+							<a>다음</a>
 						</c:if>
-						<c:if test="<%=end_section != totalPage%>">
-							<a
-								href="/mes/iocontroller?page=<%=end_section+1%>&size=${map.size}<%=filterParams%>">&raquo;</a>
+						<c:if test="<%=pageNum != totalPage%>">
+							<a href="/mes/io?page=<%=pageNum+1%>&size=${map.size}<%=filterParams%>">다음</a>
 						</c:if>
 					</div>
+
 					<%-- 입출고 등록 모달 --%>
 					<dialog id="myModal" class="modal-box">
 					<h2 class="modal-title" id="modalTitle">입출고 등록</h2>
-					<form method="post" action="/mes/iocontroller">
+					<form method="post" action="/mes/io">
 
 						<%-- io_type hidden --%>
 						<select name="io_type" id="io_type" style="display: none;">

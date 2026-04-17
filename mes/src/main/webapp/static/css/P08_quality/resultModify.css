@@ -68,6 +68,12 @@
     margin-bottom: 20px;
 }
 
+.formQty {
+	display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
 /* 오른쪽 정렬 (상태 라디오) */
 .right-align {
     justify-content: flex-end;
@@ -177,7 +183,8 @@ table.defList th, table.defList td {
 
 /* 모달 박스 */
 .modal-box {
-    width: 600px;
+    max-width: 600px;
+    width: 90%;
     background: #fff;
     border-radius: 16px;
     padding: 30px;
@@ -257,4 +264,24 @@ table.defList th, table.defList td {
 	display: flex;
 	align-items: center;
 	gap: 3px;
+}
+
+
+
+
+@media (max-width: 768px) {
+
+    .formQty {
+    	grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .formDate {
+    	display: grid;
+    	grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .formDate .form-group:first-child {
+	    grid-column: 1 / -1;
+	}
+
 }

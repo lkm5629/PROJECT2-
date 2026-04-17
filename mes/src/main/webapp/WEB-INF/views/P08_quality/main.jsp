@@ -11,6 +11,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>품질관리</title>
 
 <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
@@ -66,7 +68,7 @@
 		            <p>품질검사 내역</p>
 		        </div>
 		
-		        <button class="addBtn buttonMain">
+		        <button class="addBtn buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 2}">style="display: none;"</c:if> >
 		            검사계획 등록
 		        </button>
 		    </div>
@@ -74,7 +76,7 @@
 		    <!-- 요약 카드 -->
 		    <div class="summary">
 		        <div class="card">
-		            <p>금일 총 검사 수량</p>
+		            <p>금일 검사 수량</p>
 		            <strong>${cardDTO.total}</strong>
 		        </div>
 		        <div class="card">
@@ -107,11 +109,14 @@
 		                            <option value="10" ${param.status == '10' ? 'selected' : ''}>검사 전</option>
 		                            <option value="20" ${param.status == '20' ? 'selected' : ''}>검사 중</option>
 		                            <option value="30" ${param.status == '30' ? 'selected' : ''}>검사 완료</option>
-		                            <option value="30" ${param.status == '40' ? 'selected' : ''}>보류</option>
+		                            <option value="50" ${param.status == '50' ? 'selected' : ''}>입고 완료</option>
+		                            <option value="40" ${param.status == '40' ? 'selected' : ''}>보류</option>
 		                        </select>
-		
-		                        <input type="date" name="startDate" value="${param.startDate}" class="date"> ~
-		                        <input type="date" name="endDate" value="${param.endDate}" min="${param.startDate}" class="date">
+		                        
+								<div>
+									<input type="date" name="startDate" value="${param.startDate}" class="date"> ~
+									<input type="date" name="endDate" value="${param.endDate}" class="date" min="${param.startDate}">
+								</div>
 		                    </div>
 		
 		                    <div class="search-area">
@@ -160,6 +165,9 @@
 		                            <c:if test="${ i.qcStatus == 30 }">
 		                                <span class="status qcFin">검사 완료</span>
 		                            </c:if>
+		                            <c:if test="${ i.qcStatus == 50 }">
+		                                <span class="status hold">입고 완료</span>
+		                            </c:if>
 		                            <c:if test="${ i.qcStatus == 40 }">
 		                                <span class="status hold">보류</span>
 		                            </c:if>
@@ -169,7 +177,7 @@
 		
 		                <c:if test="${ empty qcMap.list }">
 		                    <tr>
-		                        <td colspan="10">내용 없음</td>
+		                        <td colspan="8">내용 없음</td>
 		                    </tr>
 		                </c:if>
 		            </tbody>

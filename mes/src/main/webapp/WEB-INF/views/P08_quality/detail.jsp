@@ -5,12 +5,16 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@ page import="java.util.*" %>
+<%@ page import="P08_quality.QcDTO" %>
+<%@ page import="P08_quality.QcDefDTO" %>
 
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>품질검사 결과</title>
 
 <script>
@@ -39,6 +43,33 @@
 
     <%@ include file="/WEB-INF/views/P00_layout/header.jsp" %>
     
+    <%
+    	List<QcDefDTO> defList = (List)request.getAttribute("defList");
+    	QcDTO qcInfo = (QcDTO)request.getAttribute("qcInfo");
+    	
+    	System.out.println("defList : " + defList);
+    	System.out.println("qcInfo : " + qcInfo);
+    	
+    	int inQty = 0;
+    	
+    	if (qcInfo != null) {
+    		inQty = qcInfo.getQty();
+    	}
+    	
+    	if (defList != null) {
+    		for (int i=0; i<defList.size(); i++) {
+    			
+    			String dispose = defList.get(i).getDispose();
+    			if ("Y".equals(dispose)) {
+    				inQty = inQty-defList.get(i).getDefCnt();
+    			}
+    			
+    		}
+    	}
+    	
+    	System.out.println("inQty : " + inQty);
+    %>
+    
     <div class="layout_snb">
         <div class="snbContent">
             <%@ include file="/WEB-INF/views/P00_layout/snb.jsp" %>
@@ -55,12 +86,14 @@
 			        <a href="/mes/qclist">
 			            <button type="button" class="buttonWhite">목록으로</button>
 			        </a>
-			        <a href="/mes/qcmodify?qcId=${qcInfo.qcId}">
-			            <button type="button" class="buttonMain">계획 수정</button>
-			        </a>
-			        <a href="/mes/qcresultmodify?qcId=${qcInfo.qcId}">
-			            <button type="button" class="buttonSub">결과 수정</button>
-			        </a>
+			        <c:if test="${qcInfo.qcStatus != 50}">
+				        <a href="/mes/qcmodify?qcId=${qcInfo.qcId}">
+				            <button type="button" class="buttonMain" <c:if test="${(empty dto.auth) || dto.auth < 2}">style="display: none;"</c:if> >계획 수정</button>
+				        </a>
+				        <a href="/mes/qcresultmodify?qcId=${qcInfo.qcId}">
+				            <button type="button" class="buttonSub">결과 수정</button>
+				        </a>
+			        </c:if>
 		        </div>
 		    </div>
 		
@@ -78,7 +111,15 @@
 	            		<span class="status ongoing">검사 중</span>
 	            	</c:if>
 	            	<c:if test="${ qcInfo.qcStatus == 30 }">
-	            		<span class="status qcFin">검사 완료</span>
+	            		<div class="finIo">
+	            			<span class="status qcFin">검사 완료</span>
+		            		<a href="/mes/fin?woId=${qcInfo.woId}&qcId=${qcInfo.qcId}&empId=${qcInfo.wId}&itemId=${qcInfo.itemId}&qty=<%= inQty %>&date=${qcInfo.eDate}" class="buttonMain">
+		            			생산품 입고
+		            		</a>
+	            		</div>
+	            	</c:if>
+	            	<c:if test="${ qcInfo.qcStatus == 50 }">
+	            		<span class="status hold">입고 완료</span>
 	            	</c:if>
 	            	<c:if test="${ qcInfo.qcStatus == 40 }">
 	            		<span class="status hold">보류</span>
@@ -99,10 +140,12 @@
 		                <span class="value">${qcInfo != null ? qcInfo.wName : ' - '} (${qcInfo != null ? qcInfo.wId : ' - '})</span>
 		            </div>
 		
-		            <div class="info-box">
-		                <span class="label">작업코드 (작업일)</span>
-		                <span class="value">${qcInfo != null ? qcInfo.woId : ' - '}</span>
-		            </div>
+	            	<a href="/mes/workorder?woId=${qcInfo.woId}" title="작업지시 페이지로 이동" class="woLink">
+		            	<div class="info-box woBox">
+			                <span class="label">작업코드 (작업일)</span>
+			                <span class="value">${qcInfo != null ? qcInfo.woId : ' - '}</span>
+		            	</div>
+	            	</a>
 		
 		            <div class="info-box">
 		                <span class="label">제품</span>

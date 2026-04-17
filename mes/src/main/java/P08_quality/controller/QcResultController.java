@@ -180,23 +180,35 @@ public class QcResultController extends HttpServlet {
 	
 	protected void modifyResult(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("/qcresultmodify modifyResult 실행");
-		
-		String qcId = request.getParameter("qcId");
-		
-		// qc
-		Date eDate = Date.valueOf(request.getParameter("eDate"));
-		int qcStatus = Integer.parseInt(request.getParameter("status"));
-		
-		QcDTO dto = new QcDTO();
-		
-		dto.setQcId(qcId);
-		dto.seteDate(eDate);
-		dto.setQcStatus(qcStatus);
-		
-		QcService service = new QcService();
-		int result = service.modifyResult(dto);
-		
-		response.sendRedirect("/mes/qcdetail?qcId=" + qcId);
+
+	    String qcId = request.getParameter("qcId");
+	    String eDateStr = request.getParameter("eDate");
+	    int qcStatus = Integer.parseInt(request.getParameter("status"));
+
+	    Date eDate = null;
+
+	    // 검사 완료(30)일 때만 완료일 필수
+	    if (qcStatus == 30) {
+	        if (eDateStr == null || eDateStr.trim().isEmpty()) {
+	            throw new RuntimeException("검사 완료 상태에서는 검사 완료일을 입력해야 합니다.");
+	        }
+	        eDate = Date.valueOf(eDateStr);
+	    } else {
+	        // 검사 전/검사 중/보류는 완료일 없어도 됨
+	        if (eDateStr != null && !eDateStr.trim().isEmpty()) {
+	            eDate = Date.valueOf(eDateStr);
+	        }
+	    }
+
+	    QcDTO dto = new QcDTO();
+	    dto.setQcId(qcId);
+	    dto.seteDate(eDate);
+	    dto.setQcStatus(qcStatus);
+
+	    QcService service = new QcService();
+	    int result = service.modifyResult(dto);
+
+	    response.sendRedirect("/mes/qcdetail?qcId=" + qcId);
 	}
 
 }

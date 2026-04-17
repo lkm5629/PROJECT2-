@@ -386,6 +386,7 @@ public class WoDAO {
 				String wName = rs.getString("workerName");
 				String content = rs.getString("content");
 				String deleted = rs.getString("deleted");
+				String lotId = rs.getString("lot_id");
 				
 				// plan
 				String planId = rs.getString("plan_id");
@@ -415,6 +416,7 @@ public class WoDAO {
 				dto.setwName(wName);
 				dto.setContent(content);
 				dto.setDeleted(deleted);
+				dto.setLotId(lotId);
 				
 				//plan
 				dto.setPlanId(planId);
@@ -1154,10 +1156,10 @@ public class WoDAO {
 			// SQL 준비
 			String query = "UPDATE production_plan p "
 					+ "SET p.prev_qty = ( "
-					+ "    SELECT NVL(SUM(w.wo_qty), 0) "
+					+ "    SELECT NVL(SUM(w.prev_qty), 0) "
 					+ "    FROM work_order w "
 					+ "    WHERE w.plan_id = p.plan_id "
-					+ "      AND w.wostatus_no IN (30, 40) "
+					+ "      AND w.wostatus_no IN (30, 40, 60) "
 					+ "      AND w.deleted IS null "
 					+ ")";
 			
@@ -1197,5 +1199,749 @@ public class WoDAO {
 		return result;
 	} // updatePlan
 	
+	
+	
+	
+	
+	public List<WoBOMDTO> setBOM(WoBOMDTO dto) {
+		
+		List<WoBOMDTO> list = new ArrayList();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT w.wo_id woId, b.BOM_ID, ip.item_name pName, ip.ITEM_ID pId, ic.item_name cName, ic.item_id cId, ic.spec, bd.ea ea, ic.unit unit "
+					+ "FROM work_order w "
+					+ "	LEFT OUTER JOIN production_plan p "
+					+ "		ON w.plan_id = p.PLAN_ID "
+					+ "	LEFT OUTER JOIN item ip "
+					+ "		ON p.item_id = ip.ITEM_ID "
+					+ "	LEFT OUTER JOIN bom2 b "
+					+ "		ON b.PARENT_ITEM_ID = ip.ITEM_ID "
+					+ "	LEFT OUTER JOIN BOM_DETAIL2 bd "
+					+ "		ON bd.BOM_ID = b.BOM_ID "
+					+ "	LEFT OUTER JOIN item ic "
+					+ "		ON bd.CHILD_ITEM_ID = ic.ITEM_ID "
+					+ "WHERE w.wo_id = ? "
+					+ "ORDER BY woId, ic.g_id, ic.ITEM_ID";
+
+			ps = conn.prepareStatement(query);
+			ps.setString(1, dto.getWoId());
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				String woId = rs.getString("woId");
+				String bomId = rs.getString("bom_id");
+				String pName = rs.getString("pName");
+				String pId = rs.getString("pId");
+				String cName = rs.getString("cName");
+				String cId = rs.getString("cId");
+				String spec = rs.getString("spec");
+				double ea = rs.getDouble("ea");
+				String unit = rs.getString("unit");
+				
+				WoBOMDTO bom = new WoBOMDTO();
+					
+				bom.setWoId(woId);
+				bom.setBomId(bomId);
+				bom.setpName(pName);
+				bom.setpId(pId);
+				bom.setcName(cName);
+				bom.setcId(cId);
+				bom.setSpec(spec);
+				bom.setEa(ea);
+				bom.setUnit(unit);
+				
+				list.add(bom);
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return list;
+	} // setBOM
+	
+	
+	
+
+	public LotDTO getLot (String itemId) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		LotDTO lot = null;
+
+		try {
+
+			Context ctx = new InitialContext();
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			conn = dataFactory.getConnection();
+
+			String query = "SELECT * "
+					+ "FROM LOT "
+					+ "WHERE item_id = ? AND lot_qty > 0 AND (lot_status = '사용 전' OR lot_status = '사용 중') AND expiry_date >= sysdate "
+					+ "ORDER BY EXPIRY_DATE";
+			
+			ps = conn.prepareStatement(query);
+			ps.setString(1, itemId);
+
+			rs = ps.executeQuery();
+			
+			if (rs.next()) {
+				lot = new LotDTO();
+
+			    String lotId = rs.getString("lot_id");
+			    double lotQty = rs.getDouble("lot_qty");
+			    String status = rs.getString("lot_status");
+			    Date expire = rs.getDate("expiry_date");
+			    
+			    lot.setLotId(lotId);
+			    lot.setItemId(itemId);
+			    lot.setQty(lotQty);
+			    lot.setStatus(status);
+			    lot.setExpire(expire);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return lot;
+	}
+	
+	
+	
+	
+	public int insertOut(LotDTO dto, String worker) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "INSERT INTO io (io_id, io_type, io_reason, item_id, lot_id, emp_id, io_time) "
+					+ "VALUES ('out_'||out_seq.nextval, 1, '작업', ?, ?, ?, sysdate)";
+			
+			ps = new LoggableStatement(conn, query);
+			ps.setString(1, dto.getItemId());
+			ps.setString(2, dto.getLotId());
+			ps.setString(3, worker);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // insertOut
+	
+
+	public int updateLot(LotDTO dto) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+		
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE lot "
+					+ "SET lot_status = ?, lot_qty = ? "
+					+ "WHERE lot_id = ?";
+			
+			ps = new LoggableStatement(conn, query);
+			ps.setString(1,  dto.getStatus());
+			ps.setDouble(2, dto.getQty());
+			ps.setString(3, dto.getLotId());
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // updateLot
+	
+
+	
+	public int insertIn(LotDTO dto, String worker) {
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int result = -1;
+		
+		try {
+			
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = "INSERT INTO io (io_id, io_type, io_reason, item_id, lot_id, emp_id, io_time) "
+					+ "VALUES ('in_'||out_seq.nextval, 0, '작업 후 잔여', ?, ?, ?, sysdate)";
+			
+			ps = new LoggableStatement(conn, query);
+			ps.setString(1, dto.getItemId());
+			ps.setString(2, dto.getLotId());
+			ps.setString(3, worker);
+			
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+		
+		return result;
+	} // insertIn
+	
+
+	public int minStock(String itemId, double min) {
+
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		int result = -1;
+		
+		try {
+
+			// JNDI 방식
+			// context.xml에 있는 DB 정보로 커넥션 풀을 가져온다
+			Context ctx = new InitialContext();
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+
+			// DB 접속(그런데 이제 커넥션 풀로)
+			conn = dataFactory.getConnection();
+
+			// SQL 준비
+			String query = "UPDATE stock "
+					+ "SET stock_no = stock_no - ? "
+					+ "WHERE item_id = ? "
+					+ "  AND stock_no >= ?";
+			
+			ps = new LoggableStatement(conn, query);
+			ps.setDouble(1, min);
+			ps.setString(2,  itemId);
+			ps.setDouble(3, min);
+
+			// SQL 실행 및 결과 확보
+			result = ps.executeUpdate();
+
+	        if (result == 0) {
+	            throw new RuntimeException("재고가 부족합니다. itemId=" + itemId);
+	        }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} // finally
+
+		return result;
+	} // updateLot
+	
+	
+	/////////////////////////////////////////////////
+	
+	
+	public LotDTO getLot(Connection conn, String itemId) {
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    LotDTO lot = null;
+
+	    try {
+	        String query = "SELECT * "
+	                + "FROM LOT "
+	                + "WHERE item_id = ? "
+	                + "AND lot_qty > 0 "
+	                + "AND (lot_status = '사용 전' OR lot_status = '사용 중') "
+	                + "AND expiry_date >= sysdate "
+	                + "ORDER BY expiry_date";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, itemId);
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            lot = new LotDTO();
+	            lot.setLotId(rs.getString("lot_id"));
+	            lot.setItemId(itemId);
+	            lot.setQty(rs.getDouble("lot_qty"));
+	            lot.setStatus(rs.getString("lot_status"));
+	            lot.setExpire(rs.getDate("expiry_date"));
+	        }
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (rs != null) rs.close(); } catch (Exception e) {}
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+
+	    return lot;
+	}
+	
+	public int minStock(Connection conn, String itemId, double qty) {
+
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE stock "
+	                + "SET stock_no = stock_no - ? "
+	                + "WHERE item_id = ? AND stock_no >= ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setDouble(1, qty);
+	        ps.setString(2, itemId);
+	        ps.setDouble(3, qty);
+
+	        int result = ps.executeUpdate();
+
+	        if (result == 0) {
+	            throw new RuntimeException("재고 부족: " + itemId);
+	        }
+
+	        return result;
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int insertOut(Connection conn, LotDTO dto, String worker) {
+
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "INSERT INTO io (io_id, io_type, io_reason, item_id, lot_id, emp_id, io_time) "
+	                + "VALUES ('out_'||out_seq.nextval, 1, '작업', ?, ?, ?, sysdate)";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getItemId());
+	        ps.setString(2, dto.getLotId());
+	        ps.setString(3, worker);
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int updateLot(Connection conn, LotDTO dto) {
+
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE lot SET lot_status=?, lot_qty=? WHERE lot_id=?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getStatus());
+	        ps.setDouble(2, dto.getQty());
+	        ps.setString(3, dto.getLotId());
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	public int insertIn(Connection conn, LotDTO dto, String worker) {
+
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "INSERT INTO io (io_id, io_type, io_reason, item_id, lot_id, emp_id, io_time) "
+	                + "VALUES ('in_'||out_seq.nextval, 0, '작업 후 잔여', ?, ?, ?, sysdate)";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getItemId());
+	        ps.setString(2, dto.getLotId());
+	        ps.setString(3, worker);
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+	
+
+	public List<WoBOMDTO> setBOM(Connection conn, WoBOMDTO dto) {
+
+	    List<WoBOMDTO> list = new ArrayList<>();
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    try {
+	        String query = "SELECT w.wo_id woId, b.BOM_ID, ip.item_name pName, ip.ITEM_ID pId, "
+	                + "ic.item_name cName, ic.item_id cId, ic.spec, bd.ea ea, ic.unit unit "
+	                + "FROM work_order w "
+	                + "LEFT JOIN production_plan p ON w.plan_id = p.PLAN_ID "
+	                + "LEFT JOIN item ip ON p.item_id = ip.ITEM_ID "
+	                + "LEFT JOIN bom2 b ON b.PARENT_ITEM_ID = ip.ITEM_ID "
+	                + "LEFT JOIN BOM_DETAIL2 bd ON bd.BOM_ID = b.BOM_ID "
+	                + "LEFT JOIN item ic ON bd.CHILD_ITEM_ID = ic.ITEM_ID "
+	                + "WHERE w.wo_id = ? "
+	                + "ORDER BY woId, ic.g_id, ic.ITEM_ID";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getWoId());
+
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            WoBOMDTO bom = new WoBOMDTO();
+
+	            bom.setWoId(rs.getString("woId"));
+	            bom.setBomId(rs.getString("bom_id"));
+	            bom.setpName(rs.getString("pName"));
+	            bom.setpId(rs.getString("pId"));
+	            bom.setcName(rs.getString("cName"));
+	            bom.setcId(rs.getString("cId"));
+	            bom.setSpec(rs.getString("spec"));
+	            bom.setEa(rs.getDouble("ea"));
+	            bom.setUnit(rs.getString("unit"));
+
+	            list.add(bom);
+	        }
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (rs != null) rs.close(); } catch (Exception e) {}
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+
+	    return list;
+	}
+	
+	
+	public WoDTO detail(Connection conn, WoDTO dto) {
+
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    try {
+	        String query = "SELECT "
+	                + "    wo.*, "
+	                + "    worker.ename workerName, "
+	                + "    pp.status, "
+	                + "    pp.plan_qty, "
+	                + "    pp.prev_qty plan_prev, "
+	                + "    pp.item_id, "
+	                + "    pp.emp_id director, "
+	                + "    pp.plan_sdate sdate, "
+	                + "    pp.plan_edate edate, "
+	                + "    director.ename directorName, "
+	                + "    i.item_name, "
+	                + "    i.unit, "
+	                + "    i.spec, "
+	                + "    i.g_id "
+	                + "FROM work_order wo "
+	                + "LEFT OUTER JOIN user_info worker "
+	                + "    ON wo.emp_id = worker.emp_id "
+	                + "LEFT OUTER JOIN production_plan pp "
+	                + "    ON wo.plan_id = pp.plan_id "
+	                + "LEFT OUTER JOIN user_info director "
+	                + "    ON pp.emp_id = director.emp_id "
+	                + "LEFT OUTER JOIN item i "
+	                + "    ON pp.item_id = i.item_id "
+	                + "WHERE wo.deleted IS NULL "
+	                + "AND wo_id = ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, dto.getWoId());
+
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            dto.setWoId(rs.getString("wo_id"));
+	            dto.setWorkDate(rs.getDate("workdate"));
+	            dto.setWoStatus(rs.getInt("wostatus_no"));
+	            dto.setWoQty(rs.getInt("wo_qty"));
+	            dto.setPrevQty(rs.getInt("prev_qty"));
+	            dto.setWorker(rs.getString("emp_id"));
+	            dto.setwName(rs.getString("workerName"));
+	            dto.setContent(rs.getString("content"));
+	            dto.setDeleted(rs.getString("deleted"));
+	            dto.setLotId(rs.getString("lot_id"));
+
+	            dto.setPlanId(rs.getString("plan_id"));
+	            dto.setsDate(rs.getDate("sdate"));
+	            dto.seteDate(rs.getDate("edate"));
+	            dto.setPlanStatus(rs.getInt("status"));
+	            dto.setPlanQty(rs.getInt("plan_qty"));
+	            dto.setPlanPrev(rs.getInt("plan_prev"));
+	            dto.setDirector(rs.getString("director"));
+	            dto.setdName(rs.getString("directorName"));
+
+	            dto.setItemId(rs.getString("item_id"));
+	            dto.setItemName(rs.getString("item_name"));
+	            dto.setUni(rs.getString("unit"));
+	            dto.setSpec(rs.getString("spec"));
+	            dto.setGroup(rs.getString("g_id"));
+	        }
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (rs != null) rs.close(); } catch (Exception e) {}
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+
+	    return dto;
+	}
+
+	public int updateContent(Connection conn, String woId, int status, int prevQty) {
+
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE work_order "
+	                + "SET wostatus_no = ?, prev_qty = ? "
+	                + "WHERE wo_id = ?";
+
+	        ps = conn.prepareStatement(query);
+	        ps.setInt(1, status);
+	        ps.setInt(2, prevQty);
+	        ps.setString(3, woId);
+
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+
+	public int updatePlan(Connection conn) {
+
+	    PreparedStatement ps = null;
+
+	    try {
+	        String query = "UPDATE production_plan p "
+	                + "SET p.prev_qty = ( "
+	                + "    SELECT NVL(SUM(w.prev_qty), 0) "
+	                + "    FROM work_order w "
+	                + "    WHERE w.plan_id = p.plan_id "
+	                + "      AND w.wostatus_no IN (30, 40, 60) "
+	                + "      AND w.deleted IS NULL "
+	                + ")";
+
+	        ps = conn.prepareStatement(query);
+	        return ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	        try { if (ps != null) ps.close(); } catch (Exception e) {}
+	    }
+	}
+	
+
 	
 }

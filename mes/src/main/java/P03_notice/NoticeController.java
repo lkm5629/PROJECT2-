@@ -1,6 +1,11 @@
 package P03_notice;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -10,9 +15,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
 @WebServlet("/notice/*")
 public class NoticeController extends HttpServlet {
     private static final long serialVersionUID = 1L;
+
+    // íŒŒì¼ ì €ì¥ ê²½ë¡œ
+    private static final String UPLOAD_PATH =
+        "C:\\workspace_proj2\\mes\\src\\main\\webapp\\static\\upload\\notice";
 
     NoticeService noticeService = new NoticeService();
 
@@ -20,13 +33,12 @@ public class NoticeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
-        // ¨ê auth ±ÇÇÑ ÇÏµåÄÚµù (¼¼¼Ç ¿¬µ¿ ½Ã ¾Æ·¡ µÎ ÁÙÀ» ±³Ã¼)
         // TODO: String loginId = (String) request.getSession().getAttribute("loginId");
         // TODO: int auth = (int) request.getSession().getAttribute("auth");
-        String loginId = "admin";
+        String loginId = "user_1001";
         int auth = 3;
 
         String pathInfo = request.getPathInfo();
@@ -40,7 +52,6 @@ public class NoticeController extends HttpServlet {
                 try { size = Integer.parseInt(request.getParameter("size")); } catch (Exception e) {}
                 try { page = Integer.parseInt(request.getParameter("page")); } catch (Exception e) {}
 
-                // ¨ç °Ë»ö¾î ¼ö½Å
                 String keyword = request.getParameter("keyword");
 
                 NoticeDTO noticeDTO = new NoticeDTO();
@@ -51,8 +62,8 @@ public class NoticeController extends HttpServlet {
                 Map map = noticeService.getListNotice(noticeDTO);
                 map.put("size",    size);
                 map.put("page",    page);
-                map.put("keyword", keyword);  // JSP °Ë»öÃ¢ À¯Áö¿ë
-                map.put("auth",    auth);      // ¨ê JSP ¹öÆ° ³ëÃâ Á¦¾î¿ë
+                map.put("keyword", keyword);
+                map.put("auth",    auth);
 
                 int totalCount    = (int) map.get("totalCount");
                 int totalPages    = (int) Math.ceil((double) totalCount / size);
@@ -89,7 +100,7 @@ public class NoticeController extends HttpServlet {
                     return;
                 }
 
-                // ÄíÅ°·Î Á¶È¸¼ö Áßº¹ ¹æÁö (emp_id Æ÷ÇÔ)
+                // ì¿ í‚¤ë¡œ ì¡°íšŒìˆ˜ ì¤‘ë³µ ë°©ì§€
                 String cookieName = "notice_" + boardno + "_" + loginId;
 
                 boolean viewed = false;
@@ -111,10 +122,10 @@ public class NoticeController extends HttpServlet {
                     dto.setViews(dto.getViews() + 1);
                 }
 
-                request.setAttribute("dto",  dto);
+                request.setAttribute("noticeDTO",  dto);
                 request.setAttribute("page", request.getParameter("page"));
                 request.setAttribute("size", request.getParameter("size"));
-                request.setAttribute("auth", auth);  // ¨ê ¼öÁ¤/»èÁ¦ ¹öÆ° ³ëÃâ Á¦¾î¿ë
+                request.setAttribute("auth", auth);
 
                 request.getRequestDispatcher(
                     "/WEB-INF/views/P03_notice/noticeDetail.jsp"
@@ -123,7 +134,6 @@ public class NoticeController extends HttpServlet {
             }
 
             case "/register": {
-                // ¨ê auth=3 ¾Æ´Ï¸é ¸ñ·ÏÀ¸·Î
                 if (auth != 3) {
                     response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
@@ -135,18 +145,57 @@ public class NoticeController extends HttpServlet {
             }
 
             case "/edit": {
-                // ¨ê auth=3 ¾Æ´Ï¸é ¸ñ·ÏÀ¸·Î
                 if (auth != 3) {
                     response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
                 }
                 String boardno = request.getParameter("boardno");
                 NoticeDTO dto = noticeService.selectOneNotice(boardno);
-                request.setAttribute("dto", dto);
+                request.setAttribute("noticeDTO", dto);
 
                 request.getRequestDispatcher(
                     "/WEB-INF/views/P03_notice/noticeEdit.jsp"
                 ).forward(request, response);
+                break;
+            }
+
+            // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            // íŒŒì¼ ë‹¤ìš´ë¡œë“œ
+            // ìš”ì²­ ì˜ˆ: /notice/download?save=ë°€ë¦¬ì´ˆ_íŒŒì¼ëª…&origin=ì›ë³¸íŒŒì¼ëª…
+            // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            case "/download": {
+                String saveName   = request.getParameter("save");
+                String originName  = request.getParameter("origin");
+
+                if (saveName == null || saveName.trim().isEmpty()) {
+                    response.sendRedirect(request.getContextPath() + "/notice/list");
+                    return;
+                }
+
+                File file = new File(UPLOAD_PATH + "\\" + saveName);
+
+                if (!file.exists()) {
+                    response.setContentType("text/html;charset=UTF-8");
+                    response.getWriter().write("<script>alert('íŒŒì¼ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.'); history.back();</script>");
+                    return;
+                }
+
+                // ë¸Œë¼ìš°ì € ìºì‹œ ë¯¸ì‚¬ìš©
+                response.setHeader("Cache-Control", "no-cache");
+                // ë‹¤ìš´ë¡œë“œ í—¤ë” - ì›ë³¸ íŒŒì¼ëª…ìœ¼ë¡œ ì €ì¥ë˜ë„ë¡
+                String encodedName = new String(originName.getBytes("UTF-8"), "ISO-8859-1");
+                response.addHeader("Content-Disposition", "attachment; filename=\"" + encodedName + "\"");
+                response.setContentLengthLong(file.length());
+
+                byte[] buf = new byte[1024 * 8];
+                try (InputStream is = new FileInputStream(file);
+                     OutputStream os = response.getOutputStream()) {
+                    int count;
+                    while ((count = is.read(buf)) != -1) {
+                        os.write(buf, 0, count);
+                    }
+                    os.flush();
+                }
                 break;
             }
 
@@ -159,13 +208,12 @@ public class NoticeController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
-        // ¨ê auth ±ÇÇÑ ÇÏµåÄÚµù (¼¼¼Ç ¿¬µ¿ ½Ã ±³Ã¼)
         // TODO: String loginId = (String) request.getSession().getAttribute("loginId");
         // TODO: int auth = (int) request.getSession().getAttribute("auth");
-        String loginId = "admin";
+        String loginId = "user_1001";
         int auth = 3;
 
         String pathInfo = request.getPathInfo();
@@ -174,15 +222,55 @@ public class NoticeController extends HttpServlet {
         switch (pathInfo) {
 
             case "/insert": {
-                // ¨ê auth=3 ¾Æ´Ï¸é ¸ñ·ÏÀ¸·Î
                 if (auth != 3) {
                     response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
                 }
+
                 NoticeDTO dto = new NoticeDTO();
-                dto.setTitle(   request.getParameter("title") );
-                dto.setContent( request.getParameter("content") );
                 dto.setEmpId(loginId);
+
+                try {
+                    // ì—…ë¡œë“œ í´ë” ì—†ìœ¼ë©´ ìƒì„±
+                    File uploadDir = new File(UPLOAD_PATH);
+                    if (!uploadDir.exists()) uploadDir.mkdirs();
+
+                    DiskFileItemFactory factory = new DiskFileItemFactory();
+                    factory.setRepository(uploadDir);
+                    factory.setSizeThreshold(1024 * 1024);
+
+                    ServletFileUpload upload = new ServletFileUpload(factory);
+                    upload.setFileSizeMax(1024 * 1024 * 10); // 10MB
+
+                    // â˜… getParameter() ë³´ë‹¤ ë¨¼ì € parseRequest() í•´ì•¼ í•¨
+                    List<FileItem> items = upload.parseRequest(request);
+
+                    for (FileItem fileItem : items) {
+                        if (fileItem.isFormField()) {
+                            // ì¼ë°˜ í…ìŠ¤íŠ¸ í•„ë“œ
+                            String fieldName = fileItem.getFieldName();
+                            String value     = fileItem.getString("UTF-8");
+
+                            if ("title".equals(fieldName))   dto.setTitle(value);
+                            if ("content".equals(fieldName)) dto.setContent(value);
+
+                        } else {
+                            // ì²¨ë¶€íŒŒì¼
+                            if (fileItem.getSize() > 0) {
+                                String originName = fileItem.getName(); // ì›ë³¸ íŒŒì¼ëª…
+                                String saveName  = System.currentTimeMillis() + "_" + originName;
+
+                                fileItem.write(new File(uploadDir + "\\" + saveName));
+
+                                dto.setOriginName(originName);
+                                dto.setSaveName(saveName);
+                            }
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 noticeService.insertNotice(dto);
                 response.sendRedirect(request.getContextPath() + "/notice/list?page=1");
@@ -190,7 +278,6 @@ public class NoticeController extends HttpServlet {
             }
 
             case "/update": {
-                // ¨ê auth=3 ¾Æ´Ï¸é ¸ñ·ÏÀ¸·Î
                 if (auth != 3) {
                     response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;
@@ -206,7 +293,6 @@ public class NoticeController extends HttpServlet {
             }
 
             case "/delete": {
-                // ¨ê auth=3 ¾Æ´Ï¸é ¸ñ·ÏÀ¸·Î
                 if (auth != 3) {
                     response.sendRedirect(request.getContextPath() + "/notice/list");
                     return;

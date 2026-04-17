@@ -29,3 +29,17 @@ function clampNumber(el) {
 
     return num;
 }
+
+function submitContentModify() {
+    const form = document.getElementById("contentModify");
+    const checkedStatus = document.querySelector('input[name="status"]:checked');
+    const targetQty = Number(document.getElementById("woQty").value);
+    const prevQty = Number(document.getElementById("prevQty").value);
+
+    if (checkedStatus && checkedStatus.value === "30" && prevQty < targetQty) {
+        alert("완료 수량이 목표 수량보다 적으면 작업을 완료할 수 없습니다");
+        return;
+    }
+
+    form.submit();
+}

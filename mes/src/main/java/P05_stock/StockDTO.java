@@ -4,15 +4,15 @@ import java.sql.Date;
 
 public class StockDTO {
 	
-	// ¿Ü·¡Å°´Â Á¦¿ÜÇÏ°í ±¸ºÐÇÔ
-	// Á¦°í¿ë DTO
+	// ï¿½Ü·ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ DTO
 	
 	
 	private String stock_id;
 	private Integer stock_no;
-	private Integer safe_no; 
+	private Integer safe_qty; 
 	
-	// ÀÔÃâ°í¿ë DTO
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ DTO
 	
 	private String io_id;
 	private Date io_time;
@@ -20,11 +20,11 @@ public class StockDTO {
 	private int io_type;
 	private String io_reason;
 	
-	// °Å·¡Ã³ ¾ÆÀÌµð
+	// ï¿½Å·ï¿½Ã³ ï¿½ï¿½ï¿½Ìµï¿½
 	private String vender_id;
 	private String vender_name;
 	
-	// Á¦Ç° ¾ÆÀÌµð
+	// ï¿½ï¿½Ç° ï¿½ï¿½ï¿½Ìµï¿½
 	private String item_id;
 	private String g_id;
 	private String item_name;
@@ -32,7 +32,7 @@ public class StockDTO {
 	private String unit;
 	private String spec;
 	
-	// lot ÄÚµå
+	// lot ï¿½Úµï¿½
 	private String lot_id;
 	private int lot_qty;
 	private Date expiry_date;
@@ -86,10 +86,10 @@ public class StockDTO {
 		this.stock_no = stock_no;
 	}
 	public Integer getSafe_no() {
-		return safe_no;
+		return safe_qty;
 	}
-	public void setSafe_no(Integer safe_no) {
-		this.safe_no = safe_no;
+	public void setSafe_no(Integer safe_qty) {
+		this.safe_qty = safe_qty;
 	}
 	public String getIo_id() {
 		return io_id;
@@ -287,7 +287,7 @@ public class StockDTO {
 	}
 	@Override
 	public String toString() {
-		return "StockDTO [stock_id=" + stock_id + ", stock_no=" + stock_no + ", safe_no=" + safe_no + ", io_id=" + io_id
+		return "StockDTO [stock_id=" + stock_id + ", stock_no=" + stock_no + ", safe_qty=" + safe_qty + ", io_id=" + io_id
 				+ ", io_time=" + io_time + ", deleted=" + deleted + ", io_type=" + io_type + ", io_reason=" + io_reason
 				+ ", vender_id=" + vender_id + ", vender_name=" + vender_name + ", item_id=" + item_id + ", g_id="
 				+ g_id + ", item_name=" + item_name + ", unit=" + unit + ", spec=" + spec + ", lot_id=" + lot_id

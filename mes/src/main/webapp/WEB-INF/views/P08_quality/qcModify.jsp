@@ -12,6 +12,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>검사계획 수정</title>
 
 <link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
@@ -90,7 +92,7 @@
 						<div class="form-group">
 							<label>검사자</label>
 							<div class="inline-group">
-								<input type="hidden" name="workerId" id="workerId">
+								<input type="hidden" name="workerId" id="workerId" value="${qcInfo.wId}">
 								<input type="text" placeholder="작업자 (사원번호)" name="worker" id="worker" value="${qcInfo.wName} (${qcInfo.wId})" readonly>
 								<button type="button" class="buttonSub" id="workerBtn">조회</button>
 							</div>
