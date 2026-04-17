@@ -1,10 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
 <%@ page import="java.util.*"%>
 
 <!DOCTYPE html>
@@ -13,16 +11,23 @@
 <meta charset="UTF-8">
 <title>거래처 관리</title>
 
-<link rel="stylesheet" href="/mes/static/css/P00_common/common.css">
-<link rel="stylesheet" href="/mes/static/css/P00_layout/header.css">
-<script src="/mes/static/js/00_layout/header.js"></script>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/static/css/P00_common/common.css">
 
-<link rel="stylesheet" href="/mes/static/css/P00_layout/snb.css">
-<script src="/mes/static/js/00_layout/snb.js"></script>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/static/css/P00_layout/header.css">
+<script
+	src="${pageContext.request.contextPath}/static/js/00_layout/header.js"></script>
 
-<link rel="stylesheet" href="/mes/static/css/P07_work/main.css">
-<link rel="stylesheet" href="/mes/static/css/P11_masterdata/vendor.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/static/css/P00_layout/snb.css">
+<script
+	src="${pageContext.request.contextPath}/static/js/00_layout/snb.js"></script>
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/static/css/P11_masterdata/vendor.css">
 </head>
+
 <body>
 
 	<%@ include file="/WEB-INF/views/P00_layout/header.jsp"%>
@@ -33,262 +38,226 @@
 		</div>
 
 		<div class="content">
-			<div class="wrap">
-				<h1 class="page-title">거래처 관리</h1>
-				<p class="page-desc">공급업체 및 고객사 정보를 관리합니다.</p>
-
-				<section class="summary-grid">
-					<div class="summary-card">
-						<h3>전체 거래처</h3>
-						<div class="count">5</div>
+			<div class="page-wrapper">
+				<div class="page-top">
+					<div class="page-header">
+						<h1>거래처 관리</h1>
+						<p>공급업체 및 고객사 거래처 정보를 관리</p>
 					</div>
-					<div class="summary-card">
-						<h3>공급업체</h3>
-						<div class="count">3</div>
-					</div>
-					<div class="summary-card">
-						<h3>고객사</h3>
-						<div class="count">2</div>
-					</div>
-				</section>
+					<button type="button" class="btn-add">+ 거래처 등록</button>
+				</div>
 
-				<section class="panel">
-					<div class="panel-top">
-						<h2 class="panel-title">거래처 목록</h2>
+				<div class="summary-cards">
+					<div class="summary-box">
+						<div class="summary-title">전체 거래처</div>
+						<div class="summary-value">${totalVendor}</div>
+					</div>
+					<div class="summary-box">
+						<div class="summary-title">공급업체</div>
+						<div class="summary-value">${vendorTypeA}</div>
+					</div>
+					<div class="summary-box">
+						<div class="summary-title">고객사</div>
+						<div class="summary-value">${vendorTypeB}</div>
+					</div>
+				</div>
 
-						<div class="panel-actions">
-							<div class="search-box">
-								
-								<input type="text" placeholder="거래처명/담당자/연락처 검색..." />
-							</div>
-							<button class="add-btn">+ 거래처 등록</button>
+				<div class="list-section">
+					<h2>거래처 목록</h2>
+
+					<form class="filter-row" method="get"
+						action="${pageContext.request.contextPath}/vendor">
+						<input type="hidden" name="page" value="1"> <input
+							type="hidden" name="size" value="${size}"> <select
+							id="vendorType" name="vendorType" onchange="this.form.submit()">
+							<option value="" ${empty vendorType ? 'selected' : ''}>선택</option>
+							<option value="공급업체" ${vendorType eq '공급업체' ? 'selected' : ''}>공급업체</option>
+							<option value="고객사" ${vendorType eq '고객사' ? 'selected' : ''}>고객사</option>
+						</select>
+
+						<div class="search-wrap">
+							<input type="text" id="searchKeyword" name="keyword"
+								value="${keyword}" placeholder="거래처명 검색..." />
+							<button type="submit" id="searchBtn" class="btn-search">검색</button>
 						</div>
-					</div>
+					</form>
 
 					<div class="table-wrap">
 						<table>
 							<thead>
 								<tr>
-									<th>코드</th>
+									<th>거래처코드</th>
 									<th>거래처명</th>
-									<th>유형</th>
-									<th>담당자</th>
-									<th>취급목록</th>
+									<th>거래처분류</th>
+									<th>연락처</th>
+									<th>주소</th>
+									<th>관리</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="vendor_list">
-									<td>V001</td>
-									<td>OO부직포</td>
-									<td><span class="badge supplier">공급업체</span></td>
-									<td>김OO</td>
-									<td>
-										<div class="actions">
-											<button type="button" class="icon-btn edit">✏</button>
-											<button type="button" class="icon-btn delete">🗑</button>
-										</div>
-									</td>
-								</tr>
-								<tr class="vendor_list">
-									<td>V002</td>
-									<td>에탄올화학OO</td>
-									<td><span class="badge supplier">공급업체</span></td>
-									<td>이OO</td>
-									<td>
-										<div class="actions">
-											<button type="button" class="icon-btn edit">✏</button>
-											<button type="button" class="icon-btn delete">🗑</button>
-										</div>
-									</td>
-								</tr>
-								<tr class="vendor_list">
-									<td>V003</td>
-									<td>포장재산업OO</td>
-									<td><span class="badge supplier">공급업체</span></td>
-									<td>박OO</td>
-									<td>
-										<div class="actions">
-											<button type="button" class="icon-btn edit">✏</button>
-											<button type="button" class="icon-btn delete">🗑</button>
-										</div>
-									</td>
-								</tr>
-								<tr class="vendor_list">
-									<td>V004</td>
-									<td>OO약국체인</td>
-									<td><span class="badge customer">고객사</span></td>
-									<td>최OO</td>
-									<td>
-										<div class="actions">
-											<button type="button" class="icon-btn edit">✏</button>
-											<button type="button" class="icon-btn delete">🗑</button>
-										</div>
-									</td>
-								</tr>
-								<tr class="vendor_list">
-									<td>V005</td>
-									<td>OO병원</td>
-									<td><span class="badge customer">고객사</span></td>
-									<td>장OO</td>
-									<td>
-										<div class="actions">
-											<button type="button" class="icon-btn edit">✏</button>
-											<button type="button" class="icon-btn delete">🗑</button>
-										</div>
-									</td>
-								</tr>
+								<c:choose>
+									<c:when test="${empty list}">
+										<tr>
+											<td colspan="6" class="empty-row">조회된 거래처가 없습니다.</td>
+										</tr>
+									</c:when>
+									<c:otherwise>
+										<c:forEach var="vendor" items="${list}">
+											<tr>
+												<td>${vendor.vendor_id}</td>
+												<td>${vendor.vendor_name}</td>
+												<td><span
+													class="badge ${vendor.vendor_type eq '공급업체' ? 'supplier' : 'customer'}">
+														${vendor.vendor_type} </span></td>
+												<td>${vendor.phone_no}</td>
+												<td>${vendor.addr}</td>
+												<%-- 												<td>${vendor.emp_id}</td> --%>
+												<td>
+													<div class="action-btns">
+														<button type="button" class="icon-btn edit"
+															data-vendor-id="${vendor.vendor_id}"
+															data-vendor-name="${fn:escapeXml(vendor.vendor_name)}"
+															data-vendor-type="${fn:escapeXml(vendor.vendor_type)}"
+															data-phone-no="${vendor.phone_no}"
+															data-addr="${fn:escapeXml(vendor.addr)}"
+															data-emp-id="${fn:escapeXml(vendor.emp_id)}">
+															수정</button>
+													</div>
+												</td>
+											</tr>
+										</c:forEach>
+									</c:otherwise>
+								</c:choose>
 							</tbody>
 						</table>
-					</div>
 
-					<div class="pagination">
-						<a href="#">&lt;</a>
-						<a href="#" class="active">1</a>
-						<a href="#">2</a>
-						<a href="#">3</a>
-						<a href="#">4</a>
-						<a href="#">5</a>
-						<a href="#">&gt;</a>
-					</div>
-				</section>
-			</div>
-
-			<!-- 거래처 상세 모달 -->
-			<div class="modal" id="detailModal">
-				<div class="modal_popup">
-					<h3>거래처 상세</h3>
-					<br>
-
-					<div class="modal_form_row">
-						<div class="modal_form_group">
-							<label>거래처 명</label>
-							<input class="vendor_info" type="text" placeholder="OO부직포">
+						<div class="pagination">
+							<c:forEach var="i" begin="1" end="${totalPage}">
+								<a
+									href="${pageContext.request.contextPath}/vendor?page=${i}&size=${size}&vendorType=${vendorType}&keyword=${keyword}"
+									class="${page == i ? 'active' : ''}">${i}</a>
+							</c:forEach>
 						</div>
-
-						<div class="modal_form_group">
-							<label>담당자 명</label>
-							<input class="vendor_info" type="text" placeholder="김OO">
-						</div>
-
-						<div class="modal_form_group">
-							<label>유형</label>
-							<select class="vendor_info">
-								<option>공급업체</option>
-								<option>고객사</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="modal_form_row">
-						<div class="modal_form_group">
-							<label>연락처</label>
-							<input class="vendor_info" type="text" placeholder="041-1234-1234">
-						</div>
-
-						<div class="modal_form_group">
-							<label>주소</label>
-							<input class="vendor_info" type="text" placeholder="충청남도 천안시">
-						</div>
-					</div>
-
-					<div class="detail_btn_area">
-						<button type="button" class="close_btn">닫기</button>
-						<button type="button" class="edit_btn" id="detailEditBtn">수정</button>
 					</div>
 				</div>
 			</div>
 
-			<!-- 거래처 등록 모달 -->
-			<div class="add_vendor_modal">
-				<div class="add_vendor_modal_popup">
-					<h3 class="add_vendor_modal_title">거래처 등록</h3>
-
-					<div class="add_modal_form_row">
-						<div class="add_modal_form_group">
-							<label>거래처 명</label>
-							<input class="add_vendor_info" type="text" placeholder="거래처명을 입력하세요">
-						</div>
-
-						<div class="add_modal_form_group">
-							<label>담당자 명</label>
-							<input class="add_vendor_info" type="text" placeholder="담당자명을 입력하세요">
-						</div>
-
-						<div class="add_modal_form_group">
-							<label>유형</label>
-							<select class="add_vendor_info">
-								<option>공급업체</option>
-								<option>고객사</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="add_modal_form_row">
-						<div class="add_modal_form_group">
-							<label>연락처</label>
-							<input class="add_vendor_info" type="text" placeholder="연락처를 입력하세요">
-						</div>
-
-						<div class="add_modal_form_group">
-							<label>주소</label>
-							<input class="add_vendor_info" type="text" placeholder="주소를 입력하세요">
-						</div>
-					</div>
-
-					<div class="add_vendor_btn_area">
-						<button type="button" class="add_vendor_close_btn">닫기</button>
-						<button type="button" class="add_vendor_save_btn">등록</button>
-					</div>
-				</div>
-			</div>
-
-			<!-- 거래처 수정 모달 -->
-			<div class="edit_vendor_modal" id="editVendorModal">
+			<!-- 수정 모달 -->
+			<div class="edit_vendor_modal">
 				<div class="edit_vendor_modal_popup">
-					<h3 class="edit_vendor_modal_title">거래처 수정</h3>
+					<form action="${pageContext.request.contextPath}/vendorUpdate"
+						method="post">
+						<input type="hidden" id="edit_emp_id" name="emp_id"
+							value="${not empty currentEmpId ? currentEmpId : (not empty sessionScope.dto.empid ? sessionScope.dto.empid : sessionScope.dto.empId)}">
 
-					<div class="edit_modal_form_row">
-						<div class="edit_modal_form_group">
-							<label>거래처 명</label>
-							<input class="edit_vendor_info" type="text" value="OO부직포">
+						<h3 class="edit_vendor_modal_title">거래처 수정</h3>
+
+						<div class="edit_vendor_form_row">
+							<div class="edit_vendor_form_group code">
+								<label>거래처코드</label> <input id="edit_vendor_id" name="vendor_id"
+									class="edit_vendor_info readonly" type="text" readonly>
+							</div>
+
+							<div class="edit_vendor_form_group group">
+								<label>거래처분류</label> <select id="edit_vendor_type"
+									name="vendor_type" class="edit_vendor_info">
+									<option value="공급업체">공급업체</option>
+									<option value="고객사">고객사</option>
+								</select>
+							</div>
+
 						</div>
 
-						<div class="edit_modal_form_group">
-							<label>담당자 명</label>
-							<input class="edit_vendor_info" type="text" value="김OO">
+						<div class="edit_vendor_form_row second">
+							<div class="edit_vendor_form_group name-group">
+								<label>거래처명</label> <input id="edit_vendor_name"
+									name="vendor_name" type="text" class="edit_vendor_info">
+							</div>
 						</div>
 
-						<div class="edit_modal_form_group">
-							<label>유형</label>
-							<select class="edit_vendor_info">
-								<option selected>공급업체</option>
-								<option>고객사</option>
-							</select>
-						</div>
-					</div>
+						<div class="edit_vendor_form_row second">
+							<div class="edit_vendor_form_group small">
+								<label>연락처</label> <input type="text" id="edit_phone_no"
+									name="phone_no" class="edit_vendor_info" min="0">
+							</div>
 
-					<div class="edit_modal_form_row">
-						<div class="edit_modal_form_group">
-							<label>연락처</label>
-							<input class="edit_vendor_info" type="text" value="041-1234-1234">
+							<div class="edit_vendor_form_group name-group">
+								<label>주소</label> <input type="text" id="edit_addr" name="addr"
+									class="edit_vendor_info">
+							</div>
 						</div>
 
-						<div class="edit_modal_form_group">
-							<label>주소</label>
-							<input class="edit_vendor_info" type="text" value="충청남도 천안시">
+						<div class="edit_vendor_btn_area">
+							<button type="button" class="edit_vendor_close_btn">닫기</button>
+							<button type="submit" class="edit_vendor_save_btn">수정</button>
 						</div>
-					</div>
 
-					<div class="edit_vendor_btn_area">
-						<button type="button" class="edit_vendor_close_btn" id="editVendorCloseBtn">닫기</button>
-						<button type="button" class="edit_vendor_save_btn" id="editVendorSaveBtn">수정</button>
-					</div>
+					</form>
 				</div>
 			</div>
-
-			<script src="/mes/static/js/11_masterdata/vendor.js"></script>
 		</div>
 	</div>
 
+	<!-- 등록 모달 -->
+	<div class="add_vendor_modal" id="addVendorModal"
+		style="display: none;">
+		<div class="add_vendor_modal_popup">
+			<form action="${pageContext.request.contextPath}/vendorAdd"
+				method="post">
+				<input type="hidden" id="add_emp_id" name="emp_id"
+					value="${not empty currentEmpId ? currentEmpId : (not empty sessionScope.dto.empid ? sessionScope.dto.empid : sessionScope.dto.empId)}">
+
+				<h3 class="add_vendor_modal_title">거래처 등록</h3>
+
+				<div class="add_vendor_form_row">
+					<div class="add_vendor_form_group code">
+						<label>거래처코드</label> <input type="text" id="add_vendor_id"
+							class="add_vendor_info readonly" name="vendor_id"
+							value="${nextVendorId}" readonly>
+					</div>
+
+					<div class="add_vendor_form_group group">
+						<label>거래처분류</label> <select id="add_vendor_type"
+							class="add_vendor_info" name="vendor_type">
+							<option value="공급업체">공급업체</option>
+							<option value="고객사">고객사</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="add_vendor_form_row second">
+					<div class="add_vendor_form_group name-group">
+						<label>거래처명</label> <input type="text" id="add_vendor_name"
+							name="vendor_name" class="add_vendor_info"
+							placeholder="거래처명을 입력하세요">
+					</div>
+				</div>
+
+				<div class="add_vendor_form_row second">
+					<div class="add_vendor_form_group small">
+						<label>연락처</label> <input type="text" id="add_phone_no"
+							class="add_vendor_info" name="phone_no" min="0"
+							placeholder="숫자만 입력">
+					</div>
+
+					<div class="add_vendor_form_group name-group">
+						<label>주소</label> <input type="text" id="add_addr"
+							class="add_vendor_info" name="addr" placeholder="주소를 입력하세요">
+					</div>
+				</div>
+
+				<div class="add_vendor_btn_area">
+					<button type="button" class="add_vendor_close_btn"
+						id="cancelAddVendorModal">닫기</button>
+					<button type="submit" class="add_vendor_save_btn"
+						id="saveAddVendorModal">등록</button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+	<script
+		src="${pageContext.request.contextPath}/static/js/11_masterdata/vendor.js"></script>
 </body>
 </html>

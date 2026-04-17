@@ -33,12 +33,14 @@ public class ProcessUpdateController extends HttpServlet {
 		String process_id = request.getParameter("process_id");
 		String process_name = request.getParameter("process_name");
 		String process_info = request.getParameter("process_info");
+		String process_type = request.getParameter("process_type");
 
 		// DTO 담기(가져오고!)
 		ProcessDTO processDTO = new ProcessDTO();
 		processDTO.setProcess_id(process_id);
 		processDTO.setProcess_name(process_name);
 		processDTO.setProcess_info(process_info);
+		processDTO.setProcess_type(process_type);
 
 		// update 실행
 		int result = updateItem(processDTO);

@@ -98,8 +98,8 @@ body {
 
 .process-select {
 	display: block;
-	width: 180px;
-	min-width: 180px;
+	width: 250px;
+	min-width: 300px;
 	max-width: 180px;
 	height: 38px;
 	padding: 0 34px 0 12px;
@@ -256,7 +256,7 @@ body {
 	border-collapse: collapse;
 	table-layout: fixed;
 	background: #fff;
-	min-width: 760px;
+	min-width: 900px;
 }
 
 .process-table thead tr {
@@ -432,6 +432,10 @@ body {
 	flex: 1.1;
 }
 
+.process-step-form-group.type {
+	flex: 0.9;
+}
+
 .process-step-form-group.name {
 	flex: 1.4;
 }
@@ -602,7 +606,9 @@ body {
 		flex-direction: column;
 		gap: 14px;
 	}
-	.process-step-form-group.code, .process-step-form-group.name {
+	.process-step-form-group.code,
+	.process-step-form-group.type,
+	.process-step-form-group.name {
 		flex: 1;
 		width: 100%;
 	}
@@ -674,6 +680,11 @@ body {
 
 .process-edit-form-group.code {
 	width: 180px;
+}
+
+.process-edit-form-group.type {
+	width: 100%;
+	max-width: 220px;
 }
 
 .process-edit-form-group.name {
@@ -785,6 +796,7 @@ body {
 	}
 
 	.process-edit-form-group.code,
+	.process-edit-form-group.type,
 	.process-edit-form-group.name,
 	.process-edit-form-group.info {
 		width: 100%;

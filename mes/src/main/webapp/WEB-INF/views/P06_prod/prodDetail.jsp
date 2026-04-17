@@ -26,6 +26,7 @@
 <script src="/mes/static/js/00_layout/snb.js"></script>
 <link rel="stylesheet" href="/mes/static/css/P07_work/main.css">
 <link rel="stylesheet" href="/mes/static/css/P06_prod/prod.css">
+<link rel="stylesheet" href="/mes/static/css/P11_masterdata/process.css">
 
 </head>
 <body>
@@ -47,8 +48,10 @@
       </div>
       <div class="action-header">
         <button class="btn btn-outline btn-sm" onclick="location.href='list'">목록</button>
-        <button class="btn btn-success-outline btn-sm" onclick="openEditModal()">수정</button>
-        <button class="btn btn-danger btn-sm" onclick="deletePlan()">삭제</button>
+        <%-- auth 2이상만 수정 버튼 표시 --%>
+        <c:if test="${dto.auth >= 2}">
+          <button class="btn btn-success-outline btn-sm" onclick="openEditModal()">수정</button>
+        </c:if>
       </div>
     </div>
 
@@ -83,6 +86,7 @@
             <c:when test="${planDto.status == 1}"><span class="badge badge-blue   dtl-badge" id="dtlStatus">진행중</span></c:when>
             <c:when test="${planDto.status == 2}"><span class="badge badge-green  dtl-badge" id="dtlStatus">완료</span></c:when>
             <c:when test="${planDto.status == 3}"><span class="badge badge-yellow dtl-badge" id="dtlStatus">보류</span></c:when>
+            <c:when test="${planDto.status == 4}"><span class="badge badge-red    dtl-badge" id="dtlStatus">취소</span></c:when>
           </c:choose>
         </div>
       </div>
@@ -127,6 +131,31 @@
         </div>
       </div>
     </div>
+
+    <!-- 공정 흐름도 -->
+    <div class="card dtl-card-gap" style="margin-top:16px;">
+      <div class="section-title">공정 흐름도</div>
+      <div class="flow-board">
+        <c:choose>
+          <c:when test="${empty stepList}">
+            <div class="flow-empty">등록된 공정 단계가 없습니다.</div>
+          </c:when>
+          <c:otherwise>
+            <div class="flow-top-line">
+              <c:forEach var="step" items="${stepList}" varStatus="status">
+                <div class="flow-step">
+                  <span class="flow-badge">${step.seq}단계</span>
+                  <strong>${step.stepName}</strong>
+                </div>
+                <c:if test="${not status.last}">
+                  <div class="flow-arrow">→</div>
+                </c:if>
+              </c:forEach>
+            </div>
+          </c:otherwise>
+        </c:choose>
+      </div>
+    </div>
   </div>
 
 
@@ -147,9 +176,17 @@
               <select class="form-control" id="regGroup" name="gId" required>
                 <option value="">대분류 선택</option>
                 <c:forEach var="g" items="${groupList}">
-                  <c:if test="${g.gId != 'raw'}">
-                    <option value="${g.gId}">${g.itemgroupName}</option>
-                  </c:if>
+                  <c:choose>
+                    <c:when test="${g.gId == 'fin'}">
+                      <option value="${g.gId}">완제품</option>
+                    </c:when>
+                    <c:when test="${g.gId == 'semi'}">
+                      <option value="${g.gId}">반제품</option>
+                    </c:when>
+                    <c:when test="${g.gId != 'raw'}">
+                      <option value="${g.gId}">${g.itemgroupName}</option>
+                    </c:when>
+                  </c:choose>
                 </c:forEach>
               </select>
             </div>
@@ -213,13 +250,14 @@
                 <option value="1" <c:if test="${planDto.status == 1}">selected</c:if>>진행중</option>
                 <option value="2" <c:if test="${planDto.status == 2}">selected</c:if>>완료</option>
                 <option value="3" <c:if test="${planDto.status == 3}">selected</c:if>>보류</option>
+                <option value="4" <c:if test="${planDto.status == 4}">selected</c:if>>취소</option>
               </select>
             </div>
 
           </div>
           <div class="form-actions">
             <button type="button" class="btn btn-outline" onclick="closeEditModal()">취소</button>
-            <button type="submit" class="btn btn-primary">수정</button>
+            <button type="submit" class="btn btn-primary btn-sm">수정</button>
           </div>
         </form>
       </div>
@@ -270,6 +308,9 @@
       });
     })();
     </c:forEach>
+
+    // 상세 페이지에서 수정 모달 열 때 현재 아이템 ID 전달용
+    const DTL_ITEM_ID = '${planDto.itemId}';
   </script>
   <script src="/mes/static/js/06_prod/prod.js"></script>
 

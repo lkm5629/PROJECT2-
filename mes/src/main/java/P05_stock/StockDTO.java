@@ -63,6 +63,7 @@ public class StockDTO {
 	private String filterDateTo;
 	private String filterKeyword;
 	private String filterEmpId;
+	private String filterExpiry;  // "warn" | "over" | null
 	
 	
 	
@@ -72,6 +73,12 @@ public class StockDTO {
 	}
 	public void setFilterEmpId(String filterEmpId) {
 		this.filterEmpId = filterEmpId;
+	}
+	public String getFilterExpiry() {
+		return filterExpiry;
+	}
+	public void setFilterExpiry(String filterExpiry) {
+		this.filterExpiry = filterExpiry;
 	}
 	public String getStock_id() {
 		return stock_id;

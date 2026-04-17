@@ -17,6 +17,10 @@
 <script src="/mes/static/js/05_stock/stock.js"></script>
 </head>
 <body>
+<script>
+    const SESSION_ENAME  = '${dto.ename}';
+    const SESSION_EMP_ID = '${dto.empid}';
+</script>
 <c:if test="${not empty errorMsg}">
     <script>alert('${errorMsg}');</script>
 </c:if>
@@ -40,8 +44,30 @@
 					</div>
 				</div>
 
+				<%-- 유통기한 요약 카드 --%>
+				<div class="inv-summary-cards">
+					<div class="inv-card inv-card-warn ${map.filterExpiry == 'warn' ? 'inv-card-active' : ''}">
+						<div class="inv-card-label">LOT 수</div>
+						<div class="inv-card-value">${map.expiryWarnCount != null ? map.expiryWarnCount : 0}</div>
+						<div class="inv-card-title">유통기한 임박</div>
+					</div>
+					<div class="inv-card inv-card-over ${map.filterExpiry == 'over' ? 'inv-card-active' : ''}">
+						<div class="inv-card-label">LOT 수</div>
+						<div class="inv-card-value">${map.expiryOverCount != null ? map.expiryOverCount : 0}</div>
+						<div class="inv-card-title">유통기한 초과</div>
+					</div>
+				</div>
+
 				<%-- 필터 / 검색 영역 --%>
 				<div class="filter-bar">
+
+					<%-- 페이지당 건수 (맨 왼쪽) --%>
+					<select id="size">
+						<option value="5"  ${map.size == 5  ? 'selected' : ''}>5</option>
+						<option value="10" ${map.size == 10 ? 'selected' : ''}>10</option>
+						<option value="15" ${map.size == 15 ? 'selected' : ''}>15</option>
+						<option value="20" ${map.size == 20 ? 'selected' : ''}>20</option>
+					</select>
 
 					<%-- 입출고 분류 --%>
 					<select id="filterIoType">
@@ -85,8 +111,9 @@
 								${item.item_name}</option>
 						</c:forEach>
 					</select>
+
 					<%-- 작업자 검색 --%>
-					<div style="display: flex; gap: 8px;">
+					<div style="display: flex; gap: 6px; align-items: center; flex-shrink: 0;">
 						<input type="text" id="filterEmp" placeholder="작업자 검색" readonly
 							value="${map.filterEmp != null ? map.filterEmp : ''}">
 						<button type="button" id="btnFilterEmpSearch">🔍</button>
@@ -94,29 +121,25 @@
 					<input type="hidden" id="filterEmpId"
 						value="${map.filterEmpId != null ? map.filterEmpId : ''}">
 
-					<%-- 기간 --%>
-					기간: <input type="date" id="filterDateFrom"
-						value="${map.filterDateFrom != null ? map.filterDateFrom : ''}">
-					~ <input type="date" id="filterDateTo"
-						value="${map.filterDateTo != null ? map.filterDateTo : ''}">
+					<%-- 기간 (한 묶음) --%>
+					<div class="date-range-wrap">
+						기간:
+						<input type="date" id="filterDateFrom"
+							value="${map.filterDateFrom != null ? map.filterDateFrom : ''}">
+						~
+						<input type="date" id="filterDateTo"
+							value="${map.filterDateTo != null ? map.filterDateTo : ''}">
+					</div>
 
-					<%-- 자재명/코드 검색 --%>
+					<%-- 자재명/코드 검색 (keyword 1/4 축소) --%>
 					<div class="search-wrap">
 						<input type="text" id="filterKeyword"
-							placeholder="자재명 또는 자재코드로 검색"
+							placeholder="자재명/코드"
 							value="${map.filterKeyword != null ? map.filterKeyword : ''}" />
 						<button class="btn-search" id="btnSearch">검색</button>
 					</div>
 
 				</div>
-
-				<%-- 페이지당 표시 건수 --%>
-				<select id="size">
-					<option value="5" ${map.size == 5  ? 'selected' : ''}>5</option>
-					<option value="10" ${map.size == 10 ? 'selected' : ''}>10</option>
-					<option value="15" ${map.size == 15 ? 'selected' : ''}>15</option>
-					<option value="20" ${map.size == 20 ? 'selected' : ''}>20</option>
-				</select>
 
 				<%-- 테이블 --%>
 				<div class="table-wrap">
@@ -161,7 +184,7 @@
 											<c:otherwise>${dto.expiry_date}</c:otherwise>
 										</c:choose></td>
 									<td>${dto.io_reason}</td>
-									<td>${dto.vender_name}</td>
+									<td>${empty dto.vender_name ? '-' : dto.vender_name}</td>
 									<td>${dto.ename}</td>
 									<td><c:choose>
 											<c:when test="${dto.io_type == 0}">
@@ -191,7 +214,6 @@
 					if (end_section > totalPage)
 						end_section = totalPage;
 
-					// 필터 파라미터 유지용 문자열
 					String filterParams = "";
 					if (map.get("filterIoType") != null)
 						filterParams += "&filterIoType=" + map.get("filterIoType");
@@ -207,6 +229,8 @@
 						filterParams += "&filterDateTo=" + map.get("filterDateTo");
 					if (map.get("filterKeyword") != null)
 						filterParams += "&filterKeyword=" + map.get("filterKeyword");
+					if (map.get("filterExpiry") != null)
+						filterParams += "&filterExpiry=" + map.get("filterExpiry");
 					%>
 
 					<div class="pagination">
@@ -248,7 +272,7 @@
 							<option value="1">출고</option>
 						</select>
 
-						<%-- 출고 전용: LOT 검색 (grid 밖) --%>
+						<%-- 출고 전용: LOT 검색 --%>
 						<div id="in_select_wrap"
 							style="display: none; margin-bottom: 14px;">
 							<div class="modal-field">
@@ -279,7 +303,7 @@
 								</select>
 							</div>
 
-							<%-- 입고 전용: 자재 대분류/소분류 (grid 안, 출고 시 hidden) --%>
+							<%-- 입고 전용: 자재 대분류/소분류 --%>
 							<div id="item_wrap">
 								<div class="modal-field">
 									<label>자재 대분류</label> <select name="g_id" id="g_id">
@@ -346,16 +370,17 @@
 								</select>
 							</div>
 
-							<%-- 작업자 --%>
+							<%-- 작업자 (세션에서 자동 세팅) --%>
 							<div class="modal-field">
-								<label>작업자</label> <input type="text" id="empName"
-									placeholder="자동입력" readonly> <input type="hidden"
-									name="emp_id" id="emp_id_hidden" value="user_1001">
+								<label>작업자</label>
+								<input type="text" id="empName"
+									value="${dto.ename}" readonly>
+								<input type="hidden" name="emp_id" id="emp_id_hidden"
+									value="${dto.empid}">
 							</div>
 
 							<div class="modal-footer">
-								<button type="button" class="btn-cancel" id="btnCancel">←
-									취소</button>
+								<button type="button" class="btn-cancel" id="btnCancel">← 취소</button>
 								<button type="submit" class="btn-submit">등록</button>
 							</div>
 
@@ -366,61 +391,63 @@
 				</div>
 			</div>
 		</div>
-		<!-- 입고 롯 검색 모달 -->
-		<dialog id="lotSearchModal" class="modal-box">
-		<h2 class="modal-title">LOT 검색</h2>
-		<div style="display: flex; gap: 8px; margin-bottom: 12px;">
-			<input type="text" id="lotKeyword" placeholder="자재명 또는 LOT번호 검색">
-			<button type="button" id="btnLotKeywordSearch">검색</button>
-		</div>
-		<table id="lotSearchTable">
-			<thead>
-				<tr>
-					<th>LOT번호</th>
-					<th>자재코드</th>
-					<th>자재명</th>
-					<th>규격</th>
-					<th>단위</th>
-					<th>수량</th>
-					<th>유통기한</th>
-					<th>선택</th>
-				</tr>
-			</thead>
-			<tbody id="lotSearchBody">
-				<tr>
-					<td colspan="8">검색어를 입력하세요</td>
-				</tr>
-			</tbody>
-		</table>
-		<div class="modal-footer">
-			<button type="button" id="btnLotSearchCancel">닫기</button>
-		</div>
-		</dialog>
+	</div>
 
-		<dialog id="empSearchModal" class="modal-box">
-		<h2 class="modal-title">작업자 검색</h2>
-		<div style="display: flex; gap: 8px; margin-bottom: 12px;">
-			<input type="text" id="empKeyword" placeholder="이름 또는 사번 검색">
-			<button type="button" id="btnEmpKeywordSearch">검색</button>
-		</div>
-		<table>
-			<thead>
-				<tr>
-					<th>사번</th>
-					<th>이름</th>
-					<th>부서</th>
-					<th>선택</th>
-				</tr>
-			</thead>
-			<tbody id="empSearchBody">
-				<tr>
-					<td colspan="4">검색어를 입력하세요</td>
-				</tr>
-			</tbody>
-		</table>
-		<div class="modal-footer">
-			<button type="button" id="btnEmpSearchCancel">닫기</button>
-		</div>
-		</dialog>
+	<!-- LOT 검색 모달 -->
+	<dialog id="lotSearchModal" class="modal-box">
+	<h2 class="modal-title">LOT 검색</h2>
+	<div style="display: flex; gap: 8px; margin-bottom: 12px;">
+		<input type="text" id="lotKeyword" placeholder="자재명 또는 LOT번호 검색">
+		<button type="button" id="btnLotKeywordSearch">검색</button>
+	</div>
+	<table id="lotSearchTable">
+		<thead>
+			<tr>
+				<th>LOT번호</th>
+				<th>자재코드</th>
+				<th>자재명</th>
+				<th>규격</th>
+				<th>단위</th>
+				<th>수량</th>
+				<th>유통기한</th>
+				<th>선택</th>
+			</tr>
+		</thead>
+		<tbody id="lotSearchBody">
+			<tr>
+				<td colspan="8">검색어를 입력하세요</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="modal-footer">
+		<button type="button" id="btnLotSearchCancel">닫기</button>
+	</div>
+	</dialog>
+
+	<dialog id="empSearchModal" class="modal-box">
+	<h2 class="modal-title">작업자 검색</h2>
+	<div style="display: flex; gap: 8px; margin-bottom: 12px;">
+		<input type="text" id="empKeyword" placeholder="이름 또는 사번 검색">
+		<button type="button" id="btnEmpKeywordSearch">검색</button>
+	</div>
+	<table>
+		<thead>
+			<tr>
+				<th>사번</th>
+				<th>이름</th>
+				<th>부서</th>
+				<th>선택</th>
+			</tr>
+		</thead>
+		<tbody id="empSearchBody">
+			<tr>
+				<td colspan="4">검색어를 입력하세요</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="modal-footer">
+		<button type="button" id="btnEmpSearchCancel">닫기</button>
+	</div>
+	</dialog>
 </body>
 </html>

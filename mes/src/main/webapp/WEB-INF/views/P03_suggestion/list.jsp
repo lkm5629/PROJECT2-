@@ -68,7 +68,6 @@
             <th>제목</th>
             <th>작성자</th>
             <th>작성일</th>
-            <th>조회수</th>
             <th>상태</th>
           </tr>
         </thead>
@@ -83,15 +82,17 @@
                 </a>
               </td>
               <td>${sg.ename}</td>
-              <td><fmt:formatDate value="${sg.ctime}" pattern="yyyy-MM-dd"/></td>
-              <td>${sg.views}</td>
+              <td>${sg.ctimeStr}</td>
               <td>
                 <c:choose>
                   <c:when test="${sg.complete == 0}">
-                    <span class="badge badge-blue">처리중</span>
+                    <span class="badge badge-blue">검토중</span>
+                  </c:when>
+                  <c:when test="${sg.complete == 2}">
+                    <span class="badge badge-amber">답변달림</span>
                   </c:when>
                   <c:otherwise>
-                    <span class="badge badge-gray">처리완료</span>
+                    <span class="badge badge-gray">검토완료</span>
                   </c:otherwise>
                 </c:choose>
               </td>
@@ -99,7 +100,7 @@
           </c:forEach>
           <c:if test="${empty map.list}">
             <tr>
-              <td colspan="6" class="empty-row">등록된 건의사항이 없습니다.</td>
+              <td colspan="5" class="empty-row">등록된 건의사항이 없습니다.</td>
             </tr>
           </c:if>
         </tbody>

@@ -32,15 +32,24 @@ public class ProcessAddController extends HttpServlet {
 
 		// 파라메타 확보
 		String process_id = request.getParameter("process_id");
-		
 		int seq = Integer.parseInt(request.getParameter("seq"));
-		String step_name = request.getParameter("step_name");
+		String process_name = request.getParameter("process_name");
+		String process_type = request.getParameter("process_type");
+		String item_id = request.getParameter("item_id");
+		String process_info = request.getParameter("process_info");
+
+		if (process_info == null || process_info.trim().equals("")) {
+			process_info = process_name;
+		}
 
 		// DTO에 담기
 		ProcessDTO processDTO = new ProcessDTO();
 		processDTO.setProcess_id(process_id);
 		processDTO.setSeq(seq);
-		processDTO.setStep_name(step_name);
+		processDTO.setProcess_name(process_name);
+		processDTO.setProcess_type(process_type);
+		processDTO.setItem_id(item_id);
+		processDTO.setProcess_info(process_info);
 		
 		// addProcess 호출
 		int result = addProcess(processDTO);

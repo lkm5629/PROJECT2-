@@ -11,15 +11,11 @@ html, body {
 }
 
 body {
-	font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
-	background: #f4f6f9;
-	color: #222;
-	font-size: 14px;
+	font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+	color: #333;
+	background: #fff;
 }
 
-/* =========================
-   layout
-========================= */
 .layout_snb {
 	display: flex;
 	min-height: 100vh;
@@ -40,151 +36,185 @@ body {
 	align-items: flex-start;
 	min-width: 0;
 	padding: 30px 24px;
-	background: #f4f6f9;
+	background: #fff;
 }
 
-.wrap {
+.page-wrapper {
 	width: 100%;
 	max-width: 1100px;
-}
-
-/* =========================
-   page header
-========================= */
-.page-title {
-	margin: 0;
-	font-size: 32px;
-	font-weight: 800;
-	color: #111;
-	line-height: 1.2;
-}
-
-.page-desc {
-	margin: 10px 0 24px;
+	color: #333;
 	font-size: 14px;
-	color: #7b8794;
 }
 
-/* =========================
-   summary cards
-========================= */
-.summary-grid {
-	display: flex;
-	gap: 16px;
-	margin-bottom: 20px;
-}
-
-.summary-card {
-	flex: 1;
-	min-height: 120px;
-	background: #fff;
-	border: 1px solid #dfe3e8;
-	border-radius: 6px;
-	padding: 24px 20px;
-	box-shadow: none;
-}
-
-.summary-card h3 {
-	margin: 0 0 24px;
-	font-size: 16px;
-	font-weight: 700;
-	color: #111;
-}
-
-.summary-card .count {
-	font-size: 42px;
-	font-weight: 800;
-	color: #111;
-	line-height: 1;
-}
-
-/* =========================
-   panel
-========================= */
-.panel {
-	background: #fff;
-	border: 1px solid #dfe3e8;
-	border-radius: 4px;
-	padding: 22px;
-	box-shadow: none;
-}
-
-.panel-top {
+/* 상단 */
+.page-top {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	align-items: flex-start;
+	margin-bottom: 24px;
 	gap: 16px;
-	margin-bottom: 16px;
-	flex-wrap: wrap;
 }
 
-.panel-title {
+.page-header h1 {
 	margin: 0;
-	font-size: 20px;
-	font-weight: 800;
+	font-size: 35px;
+	font-weight: 900;
 	color: #111;
+	letter-spacing: -1px;
+	line-height: 1.1;
+	text-shadow:
+		0 0 0 #111,
+		0.5px 0 0 #111,
+		-0.5px 0 0 #111,
+		0 0.5px 0 #111,
+		0 -0.5px 0 #111;
 }
 
-.panel-actions {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	flex-wrap: wrap;
-}
-
-/* =========================
-   search
-========================= */
-.search-box {
-	position: relative;
-	width: 320px;
-	max-width: 100%;
-}
-
-.search-box input {
-	width: 100%;
-	height: 36px;
-	padding: 0 12px;
-	border: 1px solid #cfd6df;
-	border-radius: 4px;
-	background: #fff;
-	font-size: 13px;
-	color: #333;
-	outline: none;
-}
-
-.search-box input::placeholder {
-	color: #a8b0ba;
-}
-
-/* =========================
-   buttons
-========================= */
-.add-btn {
-	height: 40px;
-	padding: 0 18px;
-	background: #4b8df8;
-	color: #fff;
-	border: none;
-	border-radius: 4px;
+.page-header p {
+	margin-top: 8px;
 	font-size: 14px;
-	font-weight: 700;
+	color: #777;
+}
+
+.btn-add {
+	background: #6a8df6;
+	color: #fff;
+	border: 1px solid #c7d2fe;
+	border-radius: 6px;
+	padding: 11px 20px;
+	font-size: 14px;
+	font-weight: 600;
 	cursor: pointer;
 	white-space: nowrap;
 }
 
-.add-btn:hover {
-	background: #357cf3;
+.btn-add:hover {
+	background: #597fe9;
 }
 
-/* =========================
-   table
-========================= */
-.table-wrap {
-	margin-top: 10px;
+/* 요약 카드 */
+.summary-cards {
+	display: flex;
+	gap: 16px;
+	margin-bottom: 22px;
+}
+
+.summary-box {
+	flex: 1;
 	background: #fff;
 	border: 1px solid #dfe3e8;
-	border-radius: 0;
+	border-radius: 6px;
+	padding: 24px 20px;
+	min-height: 120px;
+}
+
+.summary-title {
+	font-size: 18px;
+	font-weight: 700;
+	color: #222;
+	margin-bottom: 24px;
+}
+
+.summary-value {
+	font-size: 40px;
+	font-weight: 800;
+	color: #111;
+}
+
+/* 목록 */
+.list-section {
+	background: #fff;
+	border: 1px solid #dfe3e8;
+	border-radius: 6px;
+	padding: 24px 24px 20px;
+}
+
+.list-section h2 {
+	margin: 0 0 18px 0;
+	font-size: 28px;
+	font-weight: 800;
+	color: #111;
+}
+
+.vendor-error-message {
+	margin-bottom: 16px;
+	padding: 12px 14px;
+	border: 1px solid #f1b3b3;
+	border-radius: 6px;
+	background: #fff3f3;
+	color: #b42318;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+/* 검색/필터 */
+.filter-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.filter-row select {
+	min-width: 110px;
+	height: 38px;
+	padding: 0 12px;
+	border: 1px solid #d0d5dd;
+	border-radius: 6px;
+	background: #fff;
+	font-size: 13px;
+	color: #555;
+	cursor: pointer;
+	outline: none;
+}
+
+.search-wrap {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.search-wrap input {
+	width: 260px;
+	height: 38px;
+	padding: 0 12px;
+	border: 1px solid #d0d5dd;
+	border-radius: 6px;
+	font-size: 13px;
+	outline: none;
+	color: #333;
+	background: #fff;
+}
+
+.search-wrap input::placeholder {
+	color: #aaa;
+}
+
+.btn-search {
+	height: 38px;
+	padding: 0 16px;
+	background: #6a8df6;
+	color: #fff;
+	border: 1px solid #c7d2fe;
+	border-radius: 6px;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.btn-search:hover {
+	background: #597fe9;
+}
+
+/* 테이블 */
+.table-wrap {
+	margin-top: 8px;
+	background: #fff;
+	border: 1px solid #dfe3e8;
+	border-radius: 6px;
+	padding: 0 14px;
 	overflow: hidden;
 }
 
@@ -192,6 +222,8 @@ table {
 	width: 100%;
 	border-collapse: collapse;
 	table-layout: fixed;
+	background: #fff;
+	min-width: 0;
 }
 
 thead tr {
@@ -199,22 +231,25 @@ thead tr {
 }
 
 th {
-	padding: 14px 12px;
+	padding: 16px 10px;
 	text-align: center;
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: 700;
 	color: #222;
 	border-bottom: 1px solid #d8dde5;
+	white-space: nowrap;
+	vertical-align: middle;
 }
 
 td {
-	padding: 16px 12px;
+	padding: 16px 10px;
 	font-size: 13px;
 	color: #444;
 	text-align: center;
 	border-bottom: 1px solid #eceff3;
-	vertical-align: middle;
 	word-break: keep-all;
+	white-space: normal;
+	vertical-align: middle;
 }
 
 tbody tr:last-child td {
@@ -222,55 +257,95 @@ tbody tr:last-child td {
 }
 
 tbody tr:hover {
-	background: #f8f9fc;
+	background: #fafbfc;
 }
 
-tbody td:nth-child(2) {
-	text-align: left;
+/* 테이블 */
+.table-wrap {
+	margin-top: 8px;
+	background: #fff;
+	border: 1px solid #dfe3e8;
+	border-radius: 6px;
+	padding: 0 14px;
+	overflow: hidden;
 }
 
-/* =========================
-   badge
-========================= */
-.badge {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 70px;
-	height: 24px;
-	padding: 0 10px;
-	border-radius: 999px;
-	font-size: 11px;
+table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+	background: #fff;
+	min-width: 0;
+}
+
+thead tr {
+	background: #fff;
+}
+
+th {
+	padding: 16px 10px;
+	text-align: center;
+	font-size: 14px;
 	font-weight: 700;
+	color: #222;
+	border-bottom: 1px solid #d8dde5;
+	white-space: nowrap;
+	vertical-align: middle;
 }
 
-.badge.supplier {
-	background: #e8f1ff;
-	color: #3a5fd9;
+td {
+	padding: 16px 10px;
+	font-size: 13px;
+	color: #444;
+	text-align: center;
+	border-bottom: 1px solid #eceff3;
+	word-break: keep-all;
+	white-space: normal;
+	vertical-align: middle;
 }
 
-.badge.customer {
-	background: #e9f8ef;
-	color: #2e9e5b;
+tbody tr:last-child td {
+	border-bottom: none;
 }
 
-/* =========================
-   action buttons
-========================= */
-.actions {
+tbody tr:hover {
+	background: #fafbfc;
+}
+
+/* 전부 가운데 정렬 */
+thead th:nth-child(1),
+thead th:nth-child(2),
+thead th:nth-child(3),
+thead th:nth-child(4),
+thead th:nth-child(5),
+thead th:nth-child(6),
+tbody td:nth-child(1),
+tbody td:nth-child(2),
+tbody td:nth-child(3),
+tbody td:nth-child(4),
+tbody td:nth-child(5),
+tbody td:nth-child(6) {
+	text-align: center;
+}
+
+/* 관리 버튼도 정확히 가운데 */
+.action-btns {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	gap: 10px;
+	width: 100%;
+	margin: 0 auto;
+	gap: 0;
 }
 
 .icon-btn {
 	background: none;
 	border: none;
 	cursor: pointer;
-	font-size: 14px;
-	padding: 2px;
-	line-height: 1;
+	font-size: 13px;
+	font-weight: 700;
+	padding: 0;
+	text-align: center;
 }
 
 .icon-btn.edit {
@@ -281,22 +356,81 @@ tbody td:nth-child(2) {
 	color: #2f6fe0;
 }
 
-.icon-btn.delete {
-	color: #e04444;
+/* 연락처, 분류, 관리는 가운데 */
+tbody td:nth-child(3),
+tbody td:nth-child(4),
+tbody td:nth-child(6) {
+	text-align: center;
 }
 
-.icon-btn.delete:hover {
-	color: #b82e2e;
+/* 마지막 컬럼 확실히 가운데 */
+thead th:last-child,
+tbody td:last-child {
+	text-align: center;
 }
 
-/* =========================
-   pagination
-========================= */
+.empty-row {
+	padding: 28px 10px !important;
+	color: #888;
+	text-align: center;
+}
+
+/* 뱃지 */
+.badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 70px;
+	padding: 5px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 1.4;
+	color: #fff;
+}
+
+.badge.supplier {
+	background: #6a8df6;
+}
+
+.badge.customer {
+	background: #7c8aa5;
+}
+
+/* 버튼 */
+.action-btns {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+.icon-btn {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 700;
+	padding: 2px;
+	text-align: center;
+}
+
+.icon-btn.edit {
+	color: #444;
+}
+
+.icon-btn.edit:hover {
+	color: #2f6fe0;
+}
+
+/* 페이지네이션 */
 .pagination {
 	display: flex;
 	justify-content: center;
 	gap: 6px;
-	padding: 18px 0 4px;
+	padding: 20px 0 6px;
 }
 
 .pagination a {
@@ -304,7 +438,7 @@ tbody td:nth-child(2) {
 	min-width: 24px;
 	text-align: center;
 	padding: 4px 6px;
-	border-radius: 3px;
+	border-radius: 4px;
 	font-size: 13px;
 	color: #555;
 	text-decoration: none;
@@ -312,168 +446,368 @@ tbody td:nth-child(2) {
 }
 
 .pagination a:hover {
-	background: #e8eaf3;
+	background: #eef2ff;
 }
 
 .pagination a.active {
-	background: #eef3fb;
-	color: #111;
 	font-weight: 700;
+	color: #111;
+	background: #eef3fb;
 }
 
-/* =========================
-   common modal background
-========================= */
-.modal, .add_vendor_modal, .edit_vendor_modal {
+/* 수정 모달 */
+.edit_vendor_modal {
 	display: none;
 	position: fixed;
 	inset: 0;
-	width: 100%;
-	height: 100vh;
-	background: rgba(0, 0, 0, 0.18);
-	z-index: 9999;
+	z-index: 1000;
+	background: rgba(0, 0, 0, 0.35);
+	justify-content: center;
+	align-items: center;
 }
 
-/* =========================
-   common modal popup
-========================= */
-.modal_popup, .add_vendor_modal_popup, .edit_vendor_modal_popup {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 700px;
-	max-width: calc(100% - 32px);
+.edit_vendor_modal_popup {
+	width: 720px;
+	max-width: calc(100% - 40px);
 	background: #fff;
-	padding: 32px 28px 26px;
 	border-radius: 8px;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+	padding: 32px 28px 26px;
+	box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #e5e7eb;
 }
 
-/* =========================
-   modal title
-========================= */
-.modal_popup h3, .add_vendor_modal_title, .edit_vendor_modal_title {
-	margin: 0 0 22px;
-	font-size: 22px;
+.edit_vendor_modal_title {
+	margin: 0 0 22px 0;
+	font-size: 24px;
 	font-weight: 800;
 	color: #111;
 }
 
-/* =========================
-   form rows
-========================= */
-.modal_form_row, .add_modal_form_row, .edit_modal_form_row {
+.edit_vendor_form_row {
 	display: flex;
-	gap: 16px;
+	align-items: flex-end;
+	gap: 18px;
 	margin-bottom: 16px;
 }
 
-/* =========================
-   form groups
-========================= */
-.modal_form_group, .add_modal_form_group, .edit_modal_form_group {
+.edit_vendor_form_row.second {
+	margin-bottom: 0;
+}
+
+.edit_vendor_form_group {
 	display: flex;
 	flex-direction: column;
+	min-width: 0;
 	flex: 1;
 }
 
-.modal_form_group label, .add_modal_form_group label,
-	.edit_modal_form_group label {
+.edit_vendor_form_group label {
 	font-size: 13px;
 	font-weight: 700;
 	color: #111;
-	margin-bottom: 6px;
+	margin-bottom: 8px;
 }
 
-/* =========================
-   inputs
-========================= */
-.vendor_info, .add_vendor_info, .edit_vendor_info {
+.edit_vendor_form_group.code {
+	width: 150px;
+	flex: 0 0 150px;
+}
+
+.edit_vendor_form_group.group {
+	width: 130px;
+	flex: 0 0 130px;
+}
+
+.edit_vendor_form_group.small {
+	width: 140px;
+	flex: 0 0 140px;
+}
+
+.edit_vendor_form_group.name-group {
 	width: 100%;
-	height: 36px;
-	border: 1px solid #cfd6df;
-	border-radius: 4px;
+}
+
+.edit_vendor_info {
+	width: 100%;
+	height: 38px;
+	border: 1px solid #d0d5dd;
+	background: #fff;
+	border-radius: 6px;
 	padding: 0 12px;
 	font-size: 13px;
 	color: #333;
-	background: #fff;
 	outline: none;
 }
 
-.vendor_info:focus, .add_vendor_info:focus, .edit_vendor_info:focus {
+.edit_vendor_info:focus {
 	border-color: #9dbcf8;
+	box-shadow: 0 0 0 2px rgba(106, 141, 246, 0.10);
 }
 
-/* =========================
-   button area
-========================= */
-.detail_btn_area, .add_vendor_btn_area, .edit_vendor_btn_area {
+.edit_vendor_info.readonly {
+	background: #f1f3f5;
+	color: #666;
+	cursor: not-allowed;
+}
+
+.edit_vendor_btn_area {
+	width: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	gap: 12px;
-	margin-top: 24px;
+	gap: 14px;
+	margin-top: 32px;
+	text-align: center;
 }
 
-/* =========================
-   modal buttons
-========================= */
-.close_btn, .edit_btn, .add_vendor_close_btn, .add_vendor_save_btn,
-	.edit_vendor_close_btn, .edit_vendor_save_btn {
-	min-width: 90px;
-	height: 36px;
-	padding: 0 16px;
+.edit_vendor_close_btn,
+.edit_vendor_save_btn {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	min-width: 96px;
+	height: 38px;
+	padding: 0;
 	border: none;
-	border-radius: 4px;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1;
+	text-align: center;
 	cursor: pointer;
-	font-size: 13px;
-	font-weight: 700;
+	white-space: nowrap;
+}
+
+.edit_vendor_close_btn {
+	background: #e9edf3;
+	color: #333;
+}
+
+.edit_vendor_save_btn {
+	background: #6a8df6;
 	color: #fff;
+	border: 1px solid #c7d2fe;
 }
 
-.close_btn, .add_vendor_close_btn, .edit_vendor_close_btn {
-	background: #4a4a4a;
+.edit_vendor_close_btn:hover {
+	background: #dde3ea;
 }
 
-.edit_btn, .add_vendor_save_btn, .edit_vendor_save_btn {
-	background: #4b8df8;
+.edit_vendor_save_btn:hover {
+	background: #597fe9;
 }
 
-.close_btn:hover, .edit_btn:hover, .add_vendor_close_btn:hover,
-	.add_vendor_save_btn:hover, .edit_vendor_close_btn:hover,
-	.edit_vendor_save_btn:hover {
-	opacity: 0.95;
+/* 등록 모달 */
+.add_vendor_modal {
+	position: fixed;
+	inset: 0;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.35);
+	z-index: 1000;
 }
 
-/* =========================
-   responsive
-========================= */
-@media ( max-width : 900px) {
-	.summary-grid {
-		flex-direction: column;
+.add_vendor_modal_popup {
+	width: 720px;
+	max-width: 90%;
+	background: #fff;
+	border-radius: 8px;
+	padding: 32px 28px;
+	box-shadow: 0 18px 34px rgba(0, 0, 0, 0.14);
+	border: 1px solid #e5e7eb;
+}
+
+.add_vendor_modal_title {
+	margin: 0 0 24px;
+	font-size: 24px;
+	font-weight: 800;
+	color: #111;
+}
+
+.add_vendor_form_row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-bottom: 18px;
+}
+
+.add_vendor_form_row.second {
+	margin-bottom: 0;
+}
+
+.add_vendor_form_group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	flex: 1;
+	min-width: 140px;
+}
+
+.add_vendor_form_group.code {
+	flex: 1.2;
+}
+
+.add_vendor_form_group.group {
+	flex: 1;
+}
+
+.add_vendor_form_group.small {
+	flex: 0.8;
+}
+
+.add_vendor_form_group.name-group {
+	width: 100%;
+}
+
+.add_vendor_form_group label {
+	font-size: 14px;
+	font-weight: 700;
+	color: #111;
+}
+
+.add_vendor_info {
+	width: 100%;
+	height: 40px;
+	padding: 0 12px;
+	border: 1px solid #d0d5dd;
+	border-radius: 6px;
+	font-size: 14px;
+	color: #222;
+	background-color: #fff;
+	box-sizing: border-box;
+	outline: none;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add_vendor_info:focus {
+	border-color: #6a8df6;
+	box-shadow: 0 0 0 2px rgba(106, 141, 246, 0.10);
+}
+
+.add_vendor_info.readonly {
+	background-color: #f1f3f5;
+	color: #666;
+	cursor: not-allowed;
+}
+
+.add_vendor_btn_area {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 14px;
+	margin-top: 34px;
+	text-align: center;
+}
+
+.add_vendor_close_btn,
+.add_vendor_save_btn {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	min-width: 96px;
+	height: 38px;
+	padding: 0;
+	border: none;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1;
+	text-align: center;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.add_vendor_close_btn {
+	background-color: #e9edf3;
+	color: #333;
+}
+
+.add_vendor_save_btn {
+	background-color: #6a8df6;
+	color: #fff;
+	border: 1px solid #c7d2fe;
+}
+
+.add_vendor_close_btn:hover {
+	background-color: #dde3ea;
+}
+
+.add_vendor_save_btn:hover {
+	background-color: #597fe9;
+}
+
+@media (max-width: 1024px) {
+	.summary-cards {
+		flex-wrap: wrap;
 	}
-	.panel-top {
+
+	.summary-box {
+		min-width: calc(50% - 8px);
+	}
+
+	.filter-row {
 		flex-direction: column;
 		align-items: stretch;
 	}
-	.panel-actions {
+
+	.search-wrap {
 		justify-content: space-between;
 	}
-	.search-box {
+}
+
+@media (max-width: 768px) {
+	.content {
+		padding: 20px 16px;
+	}
+
+	.page-top {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.page-header h1 {
+		font-size: 30px;
+	}
+
+	.summary-box {
+		min-width: 100%;
+	}
+
+	.search-wrap {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.search-wrap input,
+	.btn-search,
+	.btn-add {
 		width: 100%;
 	}
-	.table-wrap {
-		overflow-x: auto;
+
+	.add_vendor_modal_popup,
+	.edit_vendor_modal_popup {
+		width: 92%;
+		padding: 24px 18px;
 	}
-	table {
-		min-width: 760px;
-	}
-	.modal_form_row, .add_modal_form_row, .edit_modal_form_row {
+
+	.add_vendor_form_row,
+	.edit_vendor_form_row {
 		flex-direction: column;
+		gap: 14px;
+		align-items: stretch;
 	}
-	.modal_popup, .add_vendor_modal_popup, .edit_vendor_modal_popup {
-		width: calc(100% - 24px);
-		padding: 22px 18px;
+
+	.add_vendor_form_group.code,
+	.add_vendor_form_group.group,
+	.add_vendor_form_group.small,
+	.edit_vendor_form_group.code,
+	.edit_vendor_form_group.group,
+	.edit_vendor_form_group.small {
+		width: 100%;
+		flex: 1;
 	}
 }

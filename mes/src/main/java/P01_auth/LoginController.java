@@ -78,6 +78,7 @@ public class LoginController extends HttpServlet {
 
 					session.setAttribute("dto", list.get(0));
 					session.setAttribute("login", "true");
+					session.setAttribute("auth", list.get(0).getAuth());
 //					response.sendRedirect(request.getContextPath() + "/WEB-INF/views/P01_auth/mypage.jsp");
 					response.sendRedirect(request.getContextPath() + "/dashboard");
 					return;

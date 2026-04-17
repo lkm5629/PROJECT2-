@@ -24,17 +24,20 @@ public class Stock2Conttroller extends HttpServlet {
         String sPage         = request.getParameter("page");
         String filterGId     = request.getParameter("filterGId");
         String filterKeyword = request.getParameter("filterKeyword");
+        String filterStock   = request.getParameter("filterStock");
 
         try { if (sSize != null) size = Integer.parseInt(sSize); } catch (Exception e) {}
         try { if (sPage != null) page = Integer.parseInt(sPage); } catch (Exception e) {}
         if (filterGId     != null && filterGId.isEmpty())     filterGId     = null;
         if (filterKeyword != null && filterKeyword.isEmpty()) filterKeyword = null;
+        if (filterStock   != null && filterStock.isEmpty())   filterStock   = null;
 
         Stock2DTO dto = new Stock2DTO();
         dto.setSize(size);
         dto.setPage(page);
         dto.setFilterGId(filterGId);
         dto.setFilterKeyword(filterKeyword);
+        dto.setFilterStock(filterStock);
 
         Map map = service.getStockList(dto);
         map.put("size",          size);
@@ -42,6 +45,7 @@ public class Stock2Conttroller extends HttpServlet {
         map.put("groupList",     service.getGroupList());
         map.put("filterGId",     filterGId);
         map.put("filterKeyword", filterKeyword);
+        map.put("filterStock",   filterStock);
         map.put("totalStock",    service.getTotalCount());
         map.put("normalStock",   service.getNormalCount());
         map.put("lackStock",     service.getLackCount());

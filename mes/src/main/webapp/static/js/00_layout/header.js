@@ -13,7 +13,6 @@ function bind_header() {
     toggleAlarm_header();
     closeAlarmBox_header();
     deleteAlarm_header();
-    moveMyPage_header();
 }
 
 

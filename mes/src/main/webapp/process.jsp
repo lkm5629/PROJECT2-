@@ -6,6 +6,17 @@
 
 <%@ page import="java.util.*"%>
 
+<c:set var="nextSeq" value="1" />
+<c:if test="${not empty stepList}">
+	<c:set var="nextSeq" value="${fn:length(stepList) + 1}" />
+</c:if>
+
+<c:set var="defaultProcessType" value="wo" />
+<c:if
+	test="${not empty selectedProcess and not empty selectedProcess.process_type}">
+	<c:set var="defaultProcessType" value="${selectedProcess.process_type}" />
+</c:if>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,12 +53,11 @@
 				<div class="process-top">
 					<div class="process-header">
 						<h1>공정 관리</h1>
-						<p>생산 공정 정보를 관리</p>
+						<p>생산 공정 정보를 관리합니다.</p>
 					</div>
 
 					<button type="button" class="process-primary-btn"
 						id="openProcessStepModal">+ 공정 단계 등록</button>
-
 				</div>
 
 				<div class="process-filter-row">
@@ -106,11 +116,12 @@
 						</div>
 					</div>
 
-					<div class="process-table-wrap">
+<!-- 					<div class="process-table-wrap"> -->
 						<table class="process-table">
 							<thead>
 								<tr>
 									<th>공정코드</th>
+									<th>공정유형</th>
 									<th>공정명</th>
 									<th>설명</th>
 									<th>품목코드</th>
@@ -121,30 +132,35 @@
 								<c:choose>
 									<c:when test="${empty processList}">
 										<tr class="process-empty-row">
-											<td colspan="5">등록된 공정이 없습니다.</td>
+											<td colspan="6">등록된 공정이 없습니다.</td>
 										</tr>
 									</c:when>
 
 									<c:otherwise>
 										<c:forEach var="p" items="${processList}">
-											<tr>
-												<td><span class="process-code-badge">${p.process_id}</span>
+											<tr data-process-row="true">
+												<td><span class="process-code-badge">${p.process_id}</span></td>
+												<td>
+													<c:choose>
+														<c:when test="${p.process_type eq 'wo'}">작업</c:when>
+														<c:when test="${p.process_type eq 'qc'}">품질</c:when>
+														<c:otherwise>-</c:otherwise>
+													</c:choose>
 												</td>
-												<td><a
-													href="${pageContext.request.contextPath}/processDetail?processId=${p.process_id}">
-														${p.process_name} </a></td>
-
+												<td>
+													<a href="${pageContext.request.contextPath}/processDetail?processId=${p.process_id}">
+														${p.process_name}
+													</a>
+												</td>
 												<td>${p.process_info}</td>
 												<td>${p.item_id}</td>
 												<td>
 													<div class="process-action-group">
 														<button type="button" class="process-icon-btn edit"
 															data-process-id="${p.process_id}"
+															data-process-type="${p.process_type}"
 															data-process-name="${fn:escapeXml(p.process_name)}"
-															data-process-info="${fn:escapeXml(p.process_info)}">
-															수정</button>
-
-														<!-- 														<button type="button" class="process-icon-btn delete">삭제</button> -->
+															data-process-info="${fn:escapeXml(p.process_info)}">수정</button>
 													</div>
 												</td>
 											</tr>
@@ -155,27 +171,28 @@
 						</table>
 					</div>
 
-					<div class="process-pagination">
-						<c:if test="${page > 1}">
-							<a
-								href="${pageContext.request.contextPath}/process?page=${page - 1}&size=${size}&processId=${selectedProcessId}">&lt;</a>
-						</c:if>
+			<div class="process-pagination">
+				<c:if test="${page > 1}">
+					<a
+						href="${pageContext.request.contextPath}/process?page=${page - 1}&size=${size}&processId=${selectedProcessId}">&lt;</a>
+				</c:if>
 
-						<c:forEach var="i" begin="1" end="${totalPage}">
-							<a
-								href="${pageContext.request.contextPath}/process?page=${i}&size=${size}&processId=${selectedProcessId}"
-								class="${page == i ? 'active' : ''}">${i}</a>
-						</c:forEach>
+				<c:forEach var="i" begin="1" end="${totalPage}">
+					<a
+						href="${pageContext.request.contextPath}/process?page=${i}&size=${size}&processId=${selectedProcessId}"
+						class="${page == i ? 'active' : ''}">${i}</a>
+				</c:forEach>
 
-						<c:if test="${page < totalPage}">
-							<a
-								href="${pageContext.request.contextPath}/process?page=${page + 1}&size=${size}&processId=${selectedProcessId}">&gt;</a>
-						</c:if>
-					</div>
-				</section>
+				<c:if test="${page < totalPage}">
+					<a
+						href="${pageContext.request.contextPath}/process?page=${page + 1}&size=${size}&processId=${selectedProcessId}">&gt;</a>
+				</c:if>
 			</div>
+			</section>
 		</div>
 	</div>
+	</div>
+
 	<div class="process-step-modal" id="processStepModal">
 		<div class="process-step-modal-popup">
 			<form
@@ -190,22 +207,37 @@
 					<div class="process-step-form-group code">
 						<label for="processCodeInput">공정코드</label> <input type="text"
 							id="processCodeInput" name="process_id"
-							class="process-step-input" value="${selectedProcessId}" readonly>
+							class="process-step-input" value="${nextProcessId}" readonly>
 					</div>
 
 					<div class="process-step-form-group code">
 						<label for="processSeqView">단계순서</label> <input type="text"
 							id="processSeqView" class="process-step-input"
-							value="${fn:length(stepList) + 1}단계" readonly> <input
-							type="hidden" name="seq" value="${fn:length(stepList) + 1}">
+							value="${nextSeq}단계" readonly> <input type="hidden"
+							name="seq" value="${nextSeq}">
+					</div>
+
+					<div class="process-step-form-group type">
+						<label for="processTypeInput">공정유형</label> <select
+							id="processTypeInput" name="process_type"
+							class="process-step-input">
+							<option value="wo"
+								<c:if test="${defaultProcessType eq 'wo'}">selected</c:if>>작업</option>
+							<option value="qc"
+								<c:if test="${defaultProcessType eq 'qc'}">selected</c:if>>품질</option>
+						</select>
 					</div>
 
 					<div class="process-step-form-group name">
 						<label for="processNameInput">공정 단계명</label> <input type="text"
-							id="processNameInput" name="step_name" class="process-step-input"
-							placeholder="">
+							id="processNameInput" name="process_name"
+							class="process-step-input" placeholder="">
 					</div>
 				</div>
+
+				<input type="hidden" name="item_id"
+					value="${selectedProcess.item_id}"> <input type="hidden"
+					name="process_info" value="">
 
 				<div class="process-step-preview-box">
 					<h4 class="process-step-preview-title">공정 단계(예상)</h4>
@@ -242,7 +274,6 @@
 		</div>
 	</div>
 
-	</div>
 	<div class="process-edit-modal" id="processEditModal">
 		<div class="process-edit-modal-popup">
 			<form action="${pageContext.request.contextPath}/processUpdate"
@@ -262,6 +293,16 @@
 					</div>
 				</div>
 
+				<div class="process-edit-form-row">
+					<div class="process-edit-form-group type">
+						<label for="editProcessType">공정유형</label> <select
+							id="editProcessType" name="process_type"
+							class="process-edit-input">
+							<option value="wo">작업</option>
+							<option value="qc">품질</option>
+						</select>
+					</div>
+				</div>
 
 				<div class="process-edit-form-row">
 					<div class="process-edit-form-group name">
@@ -282,7 +323,6 @@
 				<div class="process-edit-modal-actions">
 					<button type="button" class="process-edit-cancel-btn"
 						id="closeProcessEditModal">취소</button>
-
 					<button type="submit" class="process-edit-save-btn">수정</button>
 				</div>
 

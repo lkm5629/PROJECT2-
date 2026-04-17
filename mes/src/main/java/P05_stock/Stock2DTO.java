@@ -18,6 +18,7 @@ public class Stock2DTO {
     // 필터
     private String filterGId;
     private String filterKeyword;
+    private String filterStock;  // "normal" | "lack" | null
 
     // 페이징
     private int page;
@@ -57,6 +58,9 @@ public class Stock2DTO {
 
     public String getFilterKeyword() { return filterKeyword; }
     public void setFilterKeyword(String filterKeyword) { this.filterKeyword = filterKeyword; }
+
+    public String getFilterStock() { return filterStock; }
+    public void setFilterStock(String filterStock) { this.filterStock = filterStock; }
 
     public int getPage() { return page; }
     public void setPage(int page) { this.page = page; }
