@@ -1,7 +1,11 @@
 package P01_auth;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
+import P02_dashboard.DashDTO;
 
 public class LoginService {
 	
@@ -180,6 +184,52 @@ public class LoginService {
 		
 		//로그인 함수 실행결과 리턴
 		return a.suggestion(sstart_no, scountPageNo);				
+	}
+	
+	public List<DashDTO> work_order() {
+		System.out.println("/dashboard service.work_order() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.work_order();				
+	}
+	
+	public List<DashDTO> i() {
+		System.out.println("/dashboard service.i() 실행 ");
+		
+		//실무 함수 소환
+		LoginDAO a = new LoginDAO();
+		
+		//로그인 함수 실행결과 리턴
+		return a.i();				
+	}
+	
+	public static String encrypt(String password) {
+	    try {
+	        // 1. 암호화 도구 준비 (알고리즘 선택)
+	        MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+	        // 2. 재료 손질 (문자열 -> 바이트 배열)
+	        byte[] passBytes = password.getBytes();
+
+	        // 3. 암호화 실행 (해싱)
+	        md.update(passBytes);
+	        byte[] hashBytes = md.digest();
+
+	        // 4. 결과물 포장 (바이트 -> 16진수 문자열)
+	        StringBuilder sb = new StringBuilder();
+	        for (byte b : hashBytes) {
+	            sb.append(String.format("%02x", b));
+	        }
+
+	        // 5. 완제품 반환
+	        return sb.toString();
+
+	    } catch (NoSuchAlgorithmException e) {
+	        return null; // 알고리즘 이름이 틀렸을 때 예외 처리
+	    }
 	}
 
 	

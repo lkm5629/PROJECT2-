@@ -9,8 +9,9 @@ import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-
 import javax.sql.DataSource;
+
+import P02_dashboard.DashDTO;
 
 public class LoginDAO {
 
@@ -532,7 +533,7 @@ public class LoginDAO {
 			// SQL 준비
 			String query = " SELECT * FROM ( ";
 				   query += " SELECT rownum AS rn, a.* FROM ( ";
-				   query += " SELECT u.emp_id, u.ename, d.dept_name ";
+				   query += " SELECT u.emp_id, u.ename, d.dept_name, u.auth ";
 				   query += " FROM USER_INFO u ";
 				   query += " LEFT OUTER JOIN DEPT d ON u.dept_no = d.dept_no ";
 				   query += " ORDER BY u.emp_id DESC ";
@@ -558,6 +559,7 @@ public class LoginDAO {
 				dto.setEname(rs.getString("ename"));
 				
 				dto.setDeptname(rs.getString("DEPT_NAME"));
+				dto.setAuth(rs.getInt("AUTH"));
 				
 				//바구니를 리스트에 싣기
 				list.add(dto);
@@ -1084,7 +1086,7 @@ public class LoginDAO {
 			
 			String query = " SELECT * FROM ( ";
 		           query += " SELECT rownum AS rn, a.* FROM ( ";
-		           query += " SELECT boardno, title ";
+		           query += " SELECT boardno, title, complete ";
 		           query += " FROM suggestion ";
 		           query += " ORDER BY boardno DESC ";
 		           query += " ) a WHERE rownum <= ? ";
@@ -1106,6 +1108,7 @@ public class LoginDAO {
 				//바구니에 담기
 				dto.setSboardno(rs.getString("boardno"));				
 				dto.setStitle(rs.getString("title"));				
+				dto.setComplete(rs.getInt("complete"));				
 				
 				//바구니를 리스트에 싣기
 				list.add(dto);
@@ -1141,6 +1144,163 @@ public class LoginDAO {
 			
 		}
 		System.out.println("suggestion 함수 실행 : " + list.size());
+		return list;
+		
+	}
+	
+	
+	
+	
+	public List<DashDTO> work_order() {
+		System.out.println("/dashboard DAO.work_order 실행");
+		
+		List<DashDTO> list = new ArrayList<DashDTO>();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			// JNDI 방식
+			// connection.xml 맨 아래에 있는 DB정보로 커넥션 풀을 가져온다. Server 폴더에 있다. 기억!
+			Context ctx = new InitialContext();
+			
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB접속(그런데 이제 커넥션 풀로.)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = " SELECT * FROM defect d ";
+				   query += " LEFT OUTER JOIN defect_type t ON d.dtype_no = t.dtype_no ";
+				 
+			
+			ps = conn.prepareStatement(query);
+			
+			
+			// SQL 실행 및 결과 확보
+			rs = ps.executeQuery();
+			
+			// 결과 활용
+			
+			while (rs.next()) {
+				DashDTO dto = new DashDTO();
+				
+				//바구니에 담기
+				dto.setDtype_name(rs.getString("dtype_name"));				
+				
+				//바구니를 리스트에 싣기
+				list.add(dto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		System.out.println("work_order 함수 실행 : " + list.size());
+		return list;
+		
+	}
+	
+	public List<DashDTO> i() {
+		System.out.println("/dashboard DAO.i 실행");
+		
+		List<DashDTO> list = new ArrayList<DashDTO>();
+		
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			// JNDI 방식
+			// connection.xml 맨 아래에 있는 DB정보로 커넥션 풀을 가져온다. Server 폴더에 있다. 기억!
+			Context ctx = new InitialContext();
+			
+			// DataSource : 커넥션 풀 관리자
+			DataSource dataFactory = (DataSource) ctx.lookup("java:/comp/env/jdbc/oracle");
+			
+			// DB접속(그런데 이제 커넥션 풀로.)
+			conn = dataFactory.getConnection();
+			
+			// SQL 준비
+			String query = " SELECT * FROM defect d ";
+				   query += " LEFT OUTER JOIN defect_type t ON d.dtype_no = t.dtype_no ";
+				 
+			
+			ps = conn.prepareStatement(query);
+			
+			
+			// SQL 실행 및 결과 확보
+			rs = ps.executeQuery();
+			
+			// 결과 활용
+			
+			while (rs.next()) {
+				DashDTO dto = new DashDTO();
+				
+				//바구니에 담기
+				dto.setDtype_name(rs.getString("dtype_name"));				
+				
+				//바구니를 리스트에 싣기
+				list.add(dto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		System.out.println("i 함수 실행 : " + list.size());
 		return list;
 		
 	}
