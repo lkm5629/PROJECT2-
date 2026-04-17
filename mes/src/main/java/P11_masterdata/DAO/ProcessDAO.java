@@ -39,7 +39,8 @@ public class ProcessDAO {
 			query += "       process_name, ";
 			query += "       seq, ";
 			query += "       item_id, ";
-			query += "       process_info ";
+			query += "       process_info, ";
+			query += "       process_type ";
 			query += "FROM process ";
 			query += "ORDER BY process_id";
 
@@ -53,6 +54,7 @@ public class ProcessDAO {
 				dto.setSeq(rs.getInt("seq"));
 				dto.setItem_id(rs.getString("item_id"));
 				dto.setProcess_info(rs.getString("process_info"));
+				dto.setProcess_type(rs.getString("process_type"));
 
 				list.add(dto);
 			}
@@ -156,7 +158,8 @@ public class ProcessDAO {
 			query += "               process_name, ";
 			query += "               seq, ";
 			query += "               item_id, ";
-			query += "               process_info ";
+			query += "               process_info, ";
+			query += "               process_type ";
 			query += "        FROM process ";
 			query += "        ORDER BY process_id ";
 			query += "    ) t ";
@@ -177,6 +180,7 @@ public class ProcessDAO {
 				dto.setSeq(rs.getInt("seq"));
 				dto.setItem_id(rs.getString("item_id"));
 				dto.setProcess_info(rs.getString("process_info"));
+				dto.setProcess_type(rs.getString("process_type"));
 				list.add(dto);
 			}
 
@@ -273,6 +277,57 @@ public class ProcessDAO {
 		return list;
 	}
 
+	public String selectNextProcessId() {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		String nextProcessId = "proc_1001";
+
+		try {
+			conn = getConnection();
+
+			String query = "";
+			query += "SELECT NVL(MAX(TO_NUMBER(SUBSTR(process_id, 6))), 1000) AS max_num ";
+			query += "FROM process ";
+			query += "WHERE process_id LIKE 'proc_%'";
+
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				nextProcessId = "proc_" + (rs.getInt("max_num") + 1);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return nextProcessId;
+	}
+
 	public int insertProcess(ProcessDTO processDTO) {
 		Connection conn = null;
 		PreparedStatement psMax = null;
@@ -280,6 +335,50 @@ public class ProcessDAO {
 		ResultSet rs = null;
 
 		int result = 0;
+
+		if (processDTO != null) {
+			Connection insertConn = null;
+			PreparedStatement insertPs = null;
+
+			try {
+				insertConn = getConnection();
+
+				String insertQuery = "";
+				insertQuery += "INSERT INTO process (process_id, process_name, seq, item_id, process_info, process_type) ";
+				insertQuery += "VALUES (?, ?, ?, ?, ?, ?)";
+
+				insertPs = insertConn.prepareStatement(insertQuery);
+				insertPs.setString(1, processDTO.getProcess_id());
+				insertPs.setString(2, processDTO.getProcess_name());
+				insertPs.setInt(3, processDTO.getSeq());
+				insertPs.setString(4, processDTO.getItem_id());
+				insertPs.setString(5, processDTO.getProcess_info());
+				insertPs.setString(6, processDTO.getProcess_type());
+
+				result = insertPs.executeUpdate();
+				System.out.println("process insert 결과: " + result);
+				return result;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			} finally {
+				if (insertPs != null) {
+					try {
+						insertPs.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				if (insertConn != null) {
+					try {
+						insertConn.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 
 		try {
 			conn = getConnection();
@@ -367,7 +466,8 @@ public class ProcessDAO {
 			query += "       process_name, ";
 			query += "       seq, ";
 			query += "       item_id, ";
-			query += "       process_info ";
+			query += "       process_info, ";
+			query += "       process_type ";
 			query += "FROM process ";
 			query += "WHERE process_id = ?";
 
@@ -383,6 +483,7 @@ public class ProcessDAO {
 				dto.setSeq(rs.getInt("seq"));
 				dto.setItem_id(rs.getString("item_id"));
 				dto.setProcess_info(rs.getString("process_info"));
+				dto.setProcess_type(rs.getString("process_type"));
 			}
 
 		} catch (Exception e) {
@@ -558,13 +659,14 @@ public class ProcessDAO {
 
 			// Sql 작성
 			String query = "UPDATE process";
-			query += " SET process_name = ?, process_info = ?";
+			query += " SET process_name = ?, process_info = ?, process_type = ?";
 			query += " WHERE process_id = ?";
 
 			ps = conn.prepareStatement(query);
 			ps.setString(1, processDTO.getProcess_name());
 			ps.setString(2, processDTO.getProcess_info());
-			ps.setString(3, processDTO.getProcess_id());
+			ps.setString(3, processDTO.getProcess_type());
+			ps.setString(4, processDTO.getProcess_id());
 
 			// SQL 실행
 			update_result = ps.executeUpdate();

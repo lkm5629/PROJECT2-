@@ -59,12 +59,22 @@ public class ProcessController extends HttpServlet {
 		}
 
 		List<ProcessDTO> allProcessList = processDAO.selectProcessList();
+		ProcessDTO selectedProcess = null;
 
 		String selectedProcessId = request.getParameter("processId");
 
 		if ((selectedProcessId == null || selectedProcessId.trim().equals("")) && !allProcessList.isEmpty()) {
 			selectedProcessId = allProcessList.get(0).getProcess_id();
 		}
+
+		for (ProcessDTO dto : allProcessList) {
+			if (dto.getProcess_id() != null && dto.getProcess_id().equals(selectedProcessId)) {
+				selectedProcess = dto;
+				break;
+			}
+		}
+
+		String nextProcessId = processDAO.selectNextProcessId();
 
 		int totalCount = processDAO.selectProcessTotalCount();
 		int totalPage = totalCount / size;
@@ -99,6 +109,8 @@ public class ProcessController extends HttpServlet {
 		request.setAttribute("processList", processList);
 		request.setAttribute("stepList", stepList);
 		request.setAttribute("selectedProcessId", selectedProcessId);
+		request.setAttribute("selectedProcess", selectedProcess);
+		request.setAttribute("nextProcessId", nextProcessId);
 		request.setAttribute("page", page);
 		request.setAttribute("size", size);
 		request.setAttribute("totalPage", totalPage);

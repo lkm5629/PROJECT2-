@@ -7,6 +7,7 @@ public class ProcessDTO {
 	private int seq;
 	private String item_id;
 	private String process_info;
+	private String process_type;
 	private int page;
 	private int size;
 	private int start;
@@ -90,6 +91,14 @@ public class ProcessDTO {
 
 	public void setProcess_info(String process_info) {
 		this.process_info = process_info;
+	}
+
+	public String getProcess_type() {
+		return process_type;
+	}
+
+	public void setProcess_type(String process_type) {
+		this.process_type = process_type;
 	}
 
 	public int getPage() {
