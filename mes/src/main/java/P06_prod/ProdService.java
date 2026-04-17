@@ -44,6 +44,11 @@ public class ProdService {
         return prodPlanDAO.selectOne(planId);
     }
 
+    /* ── 생산계획 수정 ────────────────────────────────────── */
+    public int updatePlan(ProdDTO dto) {
+        return prodPlanDAO.updatePlan(dto);
+    }
+
     /* ── 대분류 목록 ──────────────────────────────────────── */
     public List<Map<String, String>> getGroupList() {
         return prodPlanDAO.selectGroupList();
@@ -52,6 +57,13 @@ public class ProdService {
     /* ── 소분류(item) 전체 목록 ───────────────────────────── */
     public List<Map<String, String>> getItemList() {
         return prodPlanDAO.selectItemList();
+    }
+
+    /* ── 공정 단계 목록 (item_id 기준) ───────────────────── */
+    public List<Map<String, Object>> getProcessStepList(String itemId) {
+        String processId = prodPlanDAO.selectProcessIdByItemId(itemId);
+        if (processId == null || processId.isEmpty()) return new java.util.ArrayList<>();
+        return prodPlanDAO.selectProcessStepList(processId);
     }
 
     /* ── 담당자 검색 ──────────────────────────────────────── */

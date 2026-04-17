@@ -57,6 +57,15 @@ function bind() {
 
     /* ── 날짜 유효성: 시작일 > 종료일 방지 ── */
     bindDateValidation("regStartDate", "regEndDate");
+    bindDateValidation("editStartDate", "editEndDate");
+
+    /* ── 수정 모달 대분류 변경 → 소분류 갱신 ── */
+    var editGroup = document.getElementById("editGroup");
+    if (editGroup) {
+        editGroup.addEventListener("change", function () {
+            updateSubItemOptions(this, document.getElementById("editSubItem"));
+        });
+    }
 
     /* ── 담당자 검색 버튼 / 엔터 ── */
     var empSearchBtn = document.getElementById("empSearchBtn");
@@ -84,23 +93,19 @@ function bind() {
 
 
 /* ==========================================================
-   날짜 유효성
+   날짜 유효성 — 시작일 변경 시 종료일 min 세팅, 종료일 변경 시 시작일 max 세팅
    ========================================================== */
 function bindDateValidation(startId, endId) {
     var startEl = document.getElementById(startId);
     var endEl   = document.getElementById(endId);
     if (!startEl || !endEl) return;
     startEl.addEventListener("change", function () {
-        if (endEl.value && this.value > endEl.value) {
-            alert("시작일은 종료일보다 늦을 수 없습니다.");
-            this.value = "";
-        }
+        endEl.min = this.value;
+        if (endEl.value && endEl.value < this.value) endEl.value = this.value;
     });
     endEl.addEventListener("change", function () {
-        if (startEl.value && this.value < startEl.value) {
-            alert("종료일은 시작일보다 빠를 수 없습니다.");
-            this.value = "";
-        }
+        startEl.max = this.value;
+        if (startEl.value && startEl.value > this.value) startEl.value = this.value;
     });
 }
 
@@ -144,8 +149,34 @@ function openEditModal(planId, itemId, itemName, planQty,
         document.getElementById("editStatus").value    = status;
         document.getElementById("editStartDate").value = String(planSdate).substring(0, 10);
         document.getElementById("editEndDate").value   = String(planEdate).substring(0, 10);
-        setSelectValue("editProduct", itemId);
-        setSelectValue("editEmp",     empId);
+
+        // 종료일 min 세팅
+        var editEndEl = document.getElementById("editEndDate");
+        if (editEndEl) editEndEl.min = String(planSdate).substring(0, 10);
+
+        // 대분류 찾아서 세팅 후 소분류 채우기
+        var foundGId = "";
+        if (typeof itemDataMap !== "undefined") {
+            Object.keys(itemDataMap).forEach(function (gId) {
+                itemDataMap[gId].forEach(function (item) {
+                    if (item.itemId === String(itemId)) foundGId = gId;
+                });
+            });
+        }
+        if (foundGId) {
+            setSelectValue("editGroup", foundGId);
+            updateSubItemOptions(
+                document.getElementById("editGroup"),
+                document.getElementById("editSubItem"),
+                itemId
+            );
+        }
+
+        /* 담당자 세팅 */
+        var empNameEl = document.getElementById("regEmpName");
+        var empIdEl   = document.getElementById("regEmpId");
+        if (empNameEl) empNameEl.value = ename  || "";
+        if (empIdEl)   empIdEl.value   = empId  || "";
 
     /* ── detail 페이지 (파라미터 없음 → DTL_ITEM_ID 사용) ── */
     } else {
@@ -198,6 +229,7 @@ var EMP_PAGE_SIZE = 5;
 function openEmpPopup() {
     document.getElementById("empSearchKeyword").value = "";
     document.getElementById("empPopup").style.display = "flex";
+    document.getElementById("empPopup").classList.remove("dtl-hidden");
     fetchEmpList("", 1);
 }
 function closeEmpPopup() {
@@ -327,16 +359,5 @@ function initDetailPage() {
     var fill = document.getElementById("dtlProgressFill");
     if (fill) {
         fill.style.width = (fill.dataset.width || 0) + "%";
-    }
-}
-
-
-/* ==========================================================
-   상세 페이지 — 삭제
-   ========================================================== */
-function deletePlan() {
-    var planId = document.querySelector('#editForm input[name="planId"]').value;
-    if (confirm("정말 삭제하시겠습니까?")) {
-        location.href = "/mes/prod/delete?planId=" + planId;
     }
 }
