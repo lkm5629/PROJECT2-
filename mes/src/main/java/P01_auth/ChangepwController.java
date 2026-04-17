@@ -53,6 +53,8 @@ public class ChangepwController extends HttpServlet {
 
 		// 전화번호. 숫자 21억 넘어서 long으로 저장.
 		long phone = 0;
+		
+		
 
 		// 이 값들이 있다면 비밀번호 변경으로
 		String change_empid = request.getParameter("change_empid");
@@ -64,6 +66,7 @@ public class ChangepwController extends HttpServlet {
 		if (!(change_empid == null && "".equals(change_empid)) && !(change_phone == null && "".equals(change_phone))
 				&& !(change_pw == null && "".equals(change_pw)) && !(change_pw2 == null && "".equals(change_pw2))) {
 			System.out.println("/changepw doget.changepw 실행");
+			
 
 			// 만약 null이 아니라면 공백 제거 후 덮어씌우기
 			if (change_empid != null)
@@ -74,6 +77,7 @@ public class ChangepwController extends HttpServlet {
 				change_pw = change_pw.trim();
 			if (change_pw2 != null)
 				change_pw2 = change_pw2.trim();
+			
 
 			// empid 바구니에 넣기.
 			d.setEmpid(change_empid);
@@ -86,7 +90,12 @@ public class ChangepwController extends HttpServlet {
 			}
 			// 비밀번호
 			if ((change_pw != null && change_pw2 != null) && change_pw.equals(change_pw2) && change_pw.length() > 0) {
-				d.setPassword(change_pw);
+				
+				//비밀번호 SHA-256 암호화
+				System.out.println("암호화 비밀번호 확인 : "+s.encrypt(change_pw));
+				
+				d.setPassword(s.encrypt(change_pw));
+				
 			} else if ((change_pw != null && change_pw2 != null) && !change_pw.equals(change_pw2)
 					&& change_pw.length() > 0) {
 				// 비밀번호가 일치하지 않으면 null 실행

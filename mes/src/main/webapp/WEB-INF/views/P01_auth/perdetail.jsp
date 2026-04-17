@@ -52,7 +52,7 @@
 			<div class="form-parent">
 			
 			
-			<form method="get" action="login">
+			<form method="post" action="/mes/pdetail">
 					<div class="center">
 				           <div class="pd-box">
 							사번 : 

@@ -86,7 +86,14 @@ public class MypageController extends HttpServlet {
 			}
 			// 비밀번호
 			if ((mp_pw != null && mp_pw2 != null) && mp_pw.equals(mp_pw2) && mp_pw.length() > 0) {
-				d.setPassword(mp_pw);
+				
+				//비밀번호 SHA-256 암호화
+				System.out.println("암호화 비밀번호 확인 : "+s.encrypt(mp_pw));
+				
+				
+				d.setPassword(s.encrypt(mp_pw));
+				
+				
 			} else if ((mp_pw != null && mp_pw2 != null) && !mp_pw.equals(mp_pw2) && mp_pw.length() > 0) {
 				// 비밀번호가 일치하지 않으면 null 실행
 				d.setPassword(null);
