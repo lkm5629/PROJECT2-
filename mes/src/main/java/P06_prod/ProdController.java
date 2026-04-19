@@ -2,6 +2,7 @@ package P06_prod;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +21,8 @@ public class ProdController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) pathInfo = "/list";
@@ -67,6 +68,11 @@ public class ProdController extends HttpServlet {
                 request.setAttribute("planDto", dto);
                 request.setAttribute("groupList", prodService.getGroupList());
                 request.setAttribute("itemList",  prodService.getItemList());
+
+                // item_id로 공정 process_id 조회 → 공정 단계 목록 조회
+                List<Map<String, Object>> stepList = prodService.getProcessStepList(dto.getItemId());
+                request.setAttribute("stepList", stepList);
+
                 request.getRequestDispatcher("/WEB-INF/views/P06_prod/prodDetail.jsp")
                        .forward(request, response);
                 break;
@@ -74,7 +80,7 @@ public class ProdController extends HttpServlet {
 
             /* ── 담당자 검색 AJAX ──────────────────────────────── */
             case "/api/empSearch": {
-                response.setContentType("application/json;charset=utf-8");
+                response.setContentType("application/json;charset=UTF-8");
 
                 String keyword = request.getParameter("keyword");
                 if (keyword == null) keyword = "";
@@ -103,6 +109,55 @@ public class ProdController extends HttpServlet {
                 PrintWriter out = response.getWriter();
                 out.print(sb.toString());
                 out.flush();
+                break;
+            }
+
+            default: {
+                response.sendRedirect("list");
+                break;
+            }
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+
+        String pathInfo = request.getPathInfo();
+        if (pathInfo == null) pathInfo = "/list";
+
+        switch (pathInfo) {
+
+            /* ── 수정 ──────────────────────────────────────────── */
+            case "/update": {
+                ProdDTO dto = new ProdDTO();
+                dto.setPlanId(request.getParameter("planId"));
+                dto.setItemId(request.getParameter("itemId"));
+                dto.setEmpId (request.getParameter("empId"));
+
+                // 목표수량
+                try { dto.setPlanQty(Integer.parseInt(request.getParameter("planQty"))); } catch (Exception e) {}
+
+                // 날짜: String → java.sql.Date
+                try { dto.setPlanSdate(Date.valueOf(request.getParameter("planSdate"))); } catch (Exception e) {}
+                try { dto.setPlanEdate(Date.valueOf(request.getParameter("planEdate"))); } catch (Exception e) {}
+
+                // 상태 (detail 수정 모달에서만 넘어옴, list 수정 시엔 현재 DB 값 유지)
+                // CASE WHEN prev_qty >= plan_qty THEN 2 ELSE ? END 에서 ? 에 들어갈 값
+                // list 수정 모달엔 status 셀렉트가 없으므로 기본값 처리
+                String statusParam = request.getParameter("status");
+                if (statusParam != null && !statusParam.isEmpty()) {
+                    try { dto.setStatus(Integer.parseInt(statusParam)); } catch (Exception e) {}
+                } else {
+                    // status 파라미터가 없으면 현재 DB 값 유지를 위해 상세 조회 후 세팅
+                    ProdDTO current = prodService.getPlanDetail(dto.getPlanId());
+                    if (current != null) dto.setStatus(current.getStatus());
+                }
+
+                prodService.updatePlan(dto);
+                response.sendRedirect("/mes/prod/list");
                 break;
             }
 

@@ -30,7 +30,8 @@
       <div class="action-header">
         <button class="btn btn-outline btn-sm"
           onclick="location.href='${ctx}/notice/list?page=${page}&size=${size}'">목록</button>
-        <c:if test="${auth == 3}">
+        <%-- auth 2 이상만 수정/삭제 버튼 표시 --%>
+        <c:if test="${dto.auth >= 2}">
           <button class="btn btn-outline btn-sm"
             onclick="location.href='${ctx}/notice/edit?boardno=${noticeDTO.boardno}'">수정</button>
           <button class="btn btn-danger btn-sm" onclick="submitDelete()">삭제</button>
